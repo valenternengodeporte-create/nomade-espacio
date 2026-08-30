@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nómade con Sentido — Plataforma</title>
+<meta name="description" content="Espacio privado de acompañamiento para quienes dan el paso de vivir afuera con sentido.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2245%22 fill=%22%23171B26%22/><path d=%22M20 60 Q50 30 80 60%22 stroke=%22%23E3A857%22 stroke-width=%226%22 fill=%22none%22/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root{
+    --bg:#171B26; --bg-raised:#1F2433; --ink:#F2EFE9; --ink-dim:#B9BDC9;
+    --amber:#E3A857; --amber-soft:rgba(227,168,87,0.14);
+    --teal:#5B9AA0; --line:#333B4D; --danger:#C97B63; --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:720px;margin:0 auto;padding:40px 22px 90px;}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);margin-bottom:8px;}
+  h1{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(26px,5vw,34px);line-height:1.15;margin:0 0 12px;}
+  h2{font-family:'Fraunces',serif;font-weight:500;font-size:19px;margin:0 0 10px;}
+  p.lead{color:var(--ink-dim);font-size:15.5px;line-height:1.6;margin:0 0 24px;}
+  .card{background:var(--bg-raised);border:1px solid var(--line);border-radius:var(--radius);padding:22px;margin-bottom:16px;}
+  label{display:block;font-size:13px;color:var(--ink-dim);margin-bottom:6px;}
+  input,select,textarea{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:11px 13px;color:var(--ink);font-family:'Inter',sans-serif;font-size:14.5px;margin-bottom:14px;}
+  textarea{min-height:80px;resize:vertical;}
+  input:focus,select:focus,textarea:focus,button:focus{outline:2px solid var(--amber);outline-offset:2px;}
+  button.primary{padding:13px 20px;border-radius:100px;border:none;background:var(--amber);color:#171B26;font-family:'Inter',sans-serif;font-weight:600;font-size:14.5px;cursor:pointer;}
+  button.primary:hover{filter:brightness(1.08);}
+  button.primary:disabled{opacity:.4;cursor:not-allowed;}
+  button.ghost{background:none;border:1px solid var(--line);color:var(--ink-dim);padding:9px 14px;border-radius:100px;font-size:13px;cursor:pointer;font-family:'Inter',sans-serif;}
+  button.ghost:hover{border-color:var(--teal);color:var(--teal);}
+  .hint{font-size:12.5px;color:var(--ink-dim);}
+  .err{color:var(--danger);font-size:13px;min-height:18px;}
+  .tabs{display:flex;gap:6px;margin-bottom:22px;flex-wrap:wrap;}
+  .tab{padding:9px 16px;border-radius:100px;border:1px solid var(--line);background:var(--bg-raised);color:var(--ink-dim);font-size:13.5px;cursor:pointer;font-family:'Inter',sans-serif;}
+  .tab.active{background:var(--amber-soft);border-color:var(--amber);color:var(--amber);}
+  .resource{border-bottom:1px solid var(--line);padding:16px 0;}
+  .resource:last-child{border-bottom:none;}
+  .resource h3{font-family:'Fraunces',serif;font-size:16px;margin:0 0 6px;font-weight:500;}
+  .resource iframe{width:100%;aspect-ratio:16/9;border:0;border-radius:10px;margin:8px 0;}
+  .resource img{width:100%;border-radius:10px;margin:8px 0;display:block;}
+  .row-between{display:flex;justify-content:space-between;align-items:center;gap:10px;}
+  .back{background:none;border:none;color:var(--ink-dim);font-family:'IBM Plex Mono',monospace;font-size:12px;cursor:pointer;margin-bottom:18px;}
+  .horizon{position:relative;height:56px;margin-bottom:24px;border-radius:100px;background:var(--bg-raised);overflow:hidden;border:1px solid var(--line);}
+  .horizon-fill{position:absolute;inset:0;width:0%;background:linear-gradient(90deg,var(--teal),var(--amber));transition:width .5s ease;}
+  .horizon-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink);mix-blend-mode:difference;}
+  .q{margin-bottom:20px;}
+  .q-text{font-size:15px;line-height:1.5;margin-bottom:10px;}
+  .scale{display:flex;gap:8px;}
+  .opt{flex:1;text-align:center;padding:9px 4px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink-dim);cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:13px;}
+  .opt.selected{background:var(--amber-soft);border-color:var(--amber);color:var(--amber);}
+  .scale-caption{display:flex;justify-content:space-between;font-size:11px;color:var(--ink-dim);margin-top:6px;opacity:0.7;}
+  .section-title{font-family:'Fraunces',serif;font-size:14.5px;color:var(--teal);margin:30px 0 4px;}
+  .tag{font-family:'IBM Plex Mono',monospace;font-size:11px;padding:3px 8px;border-radius:100px;border:1px solid var(--line);}
+  .tag.low{color:var(--danger);border-color:var(--danger);}
+  .tag.high{color:var(--teal);border-color:var(--teal);}
+  .sub-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);cursor:pointer;}
+  .detail{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:16px;margin-top:8px;font-size:13.5px;line-height:1.6;}
+  .hidden{display:none;}
+  .banner{background:var(--amber-soft);border:1px solid var(--amber);border-radius:10px;padding:12px 14px;font-size:13.5px;margin-bottom:16px;}
+  .center{max-width:340px;margin:70px auto;text-align:center;}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<script>
+// ============================================================
+// CONFIGURACIÓN — reemplazá estos dos valores por los tuyos.
+// Los encontrás en Supabase: Project Settings > API
+// ============================================================
+const SUPABASE_URL = 'https://xqazoxxthaupsknqknmb.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_pkFVPhfDQYyTnw7S-FU6XA_rjEMZhLm';
+
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const QUESTIONS = [
+  {id:1,sub:'A',text:'Puedo sostener un esfuerzo aunque no vea resultados en las primeras semanas.'},
+  {id:2,sub:'A',text:'No necesito una señal externa de "voy bien" para seguir adelante.'},
+  {id:3,sub:'A',text:'Cuando algo tarda más de lo esperado, no lo interpreto como fracaso.'},
+  {id:4,sub:'A',text:'Puedo convivir con ingresos irregulares por un tiempo sin que me genere pánico.'},
+  {id:5,sub:'B',text:'Cuando algo sale mal en un plan, mi primer impulso es actuar, no buscar a quién culpar.'},
+  {id:6,sub:'B',text:'Ante un imprevisto, primero pienso en qué puedo hacer yo, no en pedir ayuda inmediata.'},
+  {id:7,sub:'B',text:'Me hago responsable de mis decisiones aunque el contexto haya sido adverso.'},
+  {id:8,sub:'B',text:'No necesito que alguien más me diga qué hacer para empezar a moverme.'},
+  {id:9,sub:'C',text:'Si mi plan A no funciona, puedo rearmar uno nuevo sin sentir que fracasé.'},
+  {id:10,sub:'C',text:'Puedo cambiar de estrategia sin que eso signifique abandonar el objetivo.'},
+  {id:11,sub:'C',text:'No vivo un cambio de rumbo como una pérdida de identidad.'},
+  {id:12,sub:'C',text:'Tolero bien no saber exactamente cómo va a verse mi vida en 6 meses.'},
+];
+const SUB_LABEL = {A:'Tolerancia a la frustración', B:'Locus de control', C:'Flexibilidad de objetivo'};
+
+let state = { screen:'loading', session:null, profile:null, tab:'test', hasTest:null };
+
+function el(html){ const d=document.createElement('div'); d.innerHTML=html.trim(); return d.firstElementChild; }
+function ytEmbed(url){
+  try{ const m = url.match(/(?:youtu\.be\/|v=|embed\/)([\w-]{6,})/); if(m) return 'https://www.youtube.com/embed/'+m[1]; }catch(e){}
+  return null;
+}
+async function refreshHasTest(){
+  const { data } = await sb.from('test_submissions').select('id').eq('user_id', state.session.user.id).maybeSingle();
+  state.hasTest = !!data;
+  return state.hasTest;
+}
+
+async function init(){
+  const { data: { session } } = await sb.auth.getSession();
+  if(session){
+    state.session = session;
+    const { data: profile } = await sb.from('profiles').select('*').eq('id', session.user.id).single();
+    state.profile = profile;
+    await refreshHasTest();
+    state.tab = state.hasTest ? 'experiencia' : 'test';
+    state.screen = (profile && profile.name) ? 'welcome' : 'nameCapture';
+  } else {
+    state.screen = 'login';
+  }
+  render();
+}
+
+sb.auth.onAuthStateChange((event, session) => {
+  if(event === 'SIGNED_OUT'){ state.session=null; state.profile=null; state.screen='login'; render(); }
+  if(event === 'PASSWORD_RECOVERY'){ state.session=session; state.screen='resetPassword'; render(); }
+});
+
+function render(){
+  const app = document.getElementById('app');
+  app.innerHTML = '';
+  if(state.screen==='loading') app.appendChild(el(`<p class="hint" style="text-align:center;margin-top:100px;">Cargando...</p>`));
+  else if(state.screen==='login') app.appendChild(renderLogin());
+  else if(state.screen==='nameCapture') app.appendChild(renderNameCapture());
+  else if(state.screen==='resetPassword') app.appendChild(renderResetPassword());
+  else if(state.screen==='welcome') app.appendChild(renderWelcome());
+  else if(state.screen==='dashboard') app.appendChild(renderDashboard());
+}
+
+// ---------- LOGIN ----------
+function renderLogin(){
+  const wrap = el(`<div>
+    <div class="eyebrow">Nómade con Sentido</div>
+    <h1>Tu espacio</h1>
+    <p class="lead">Ingresá con el mail y la contraseña que definiste al aceptar la invitación que te llegó por correo.</p>
+    <div class="card">
+      <label>Email</label>
+      <input type="email" id="e" autocomplete="username"/>
+      <label>Contraseña</label>
+      <input type="password" id="p" autocomplete="current-password"/>
+      <p class="err" id="err"></p>
+      <button class="primary" id="loginBtn" style="width:100%;">Ingresar</button>
+    </div>
+    <p class="hint" style="text-align:center;">¿No tenés acceso todavía? Escribile a Valentina.</p>
+    <p class="hint" style="text-align:center;"><a href="#" id="forgot" style="color:var(--teal);">Olvidé mi contraseña</a></p>
+  </div>`);
+  wrap.querySelector('#forgot').onclick = async (e)=>{
+    e.preventDefault();
+    const email = wrap.querySelector('#e').value.trim();
+    if(!email){ alert('Escribí tu email arriba primero, y volvé a tocar el link.'); return; }
+    const { error } = await sb.auth.resetPasswordForEmail(email);
+    alert(error ? ('No se pudo enviar: '+error.message) : 'Te enviamos un mail para reestablecer tu contraseña.');
+  };
+  wrap.querySelector('#loginBtn').onclick = async ()=>{
+    const email = wrap.querySelector('#e').value.trim();
+    const password = wrap.querySelector('#p').value;
+    const errEl = wrap.querySelector('#err');
+    const btn = wrap.querySelector('#loginBtn');
+    errEl.textContent = '';
+    if(!email || !password){ errEl.textContent = 'Completá email y contraseña.'; return; }
+    btn.disabled = true; btn.textContent = 'Ingresando...';
+    const { data, error } = await sb.auth.signInWithPassword({ email, password });
+    if(error){ errEl.textContent = 'Email o contraseña incorrectos.'; btn.disabled=false; btn.textContent='Ingresar'; return; }
+    state.session = data.session;
+    const { data: profile } = await sb.from('profiles').select('*').eq('id', data.session.user.id).single();
+    state.profile = profile;
+    await refreshHasTest();
+    state.tab = state.hasTest ? 'experiencia' : 'test';
+    state.screen = (profile && profile.name) ? 'welcome' : 'nameCapture';
+    render();
+  };
+  return wrap;
+}
+
+// ---------- CAPTURA DE NOMBRE (solo si el perfil no tiene nombre) ----------
+function renderNameCapture(){
+  const wrap = el(`<div class="center">
+    <div class="eyebrow">Nómade con Sentido</div>
+    <h1 style="font-size:24px;">¿Cómo te llamás?</h1>
+    <p class="lead">Así sabemos cómo dirigirnos a vos en tu espacio.</p>
+    <input type="text" id="name" placeholder="Tu nombre"/>
+    <p class="err" id="err"></p>
+    <button class="primary" id="saveName" style="width:100%;">Continuar</button>
+  </div>`);
+  wrap.querySelector('#saveName').onclick = async ()=>{
+    const name = wrap.querySelector('#name').value.trim();
+    const errEl = wrap.querySelector('#err');
+    if(!name){ errEl.textContent = 'Contanos tu nombre para continuar.'; return; }
+    const { error } = await sb.from('profiles').update({ name }).eq('id', state.session.user.id);
+    if(error){ errEl.textContent = 'No se pudo guardar, probá de nuevo.'; return; }
+    state.profile = { ...state.profile, name };
+    state.screen = 'welcome';
+    render();
+  };
+  return wrap;
+}
+
+// ---------- DEFINIR CONTRASEÑA NUEVA (llegando desde el mail de recuperación) ----------
+function renderResetPassword(){
+  const wrap = el(`<div class="center">
+    <div class="eyebrow">Nómade con Sentido</div>
+    <h1 style="font-size:24px;">Nueva contraseña</h1>
+    <p class="lead">Elegí tu nueva contraseña para entrar a tu espacio.</p>
+    <input type="password" id="p1" placeholder="Contraseña nueva"/>
+    <input type="password" id="p2" placeholder="Repetila"/>
+    <p class="err" id="err"></p>
+    <button class="primary" id="save" style="width:100%;">Guardar</button>
+  </div>`);
+  wrap.querySelector('#save').onclick = async ()=>{
+    const p1 = wrap.querySelector('#p1').value, p2 = wrap.querySelector('#p2').value;
+    const errEl = wrap.querySelector('#err');
+    if(!p1 || p1.length < 6){ errEl.textContent = 'La contraseña debe tener al menos 6 caracteres.'; return; }
+    if(p1 !== p2){ errEl.textContent = 'Las contraseñas no coinciden.'; return; }
+    const { error } = await sb.auth.updateUser({ password: p1 });
+    if(error){ errEl.textContent = 'No se pudo guardar, probá de nuevo.'; return; }
+    const { data: profile } = await sb.from('profiles').select('*').eq('id', state.session.user.id).single();
+    state.profile = profile;
+    await refreshHasTest();
+    state.tab = state.hasTest ? 'experiencia' : 'test';
+    state.screen = (profile && profile.name) ? 'welcome' : 'nameCapture';
+    render();
+  };
+  return wrap;
+}
+
+// ---------- BIENVENIDA ----------
+function renderWelcome(){
+  const name = state.profile && state.profile.name ? state.profile.name : '';
+  const wrap = el(`<div>
+    <div class="eyebrow">Nómade con Sentido</div>
+    <h1>Hola${name ? ', '+name : ''}. Bienvenida/o a tu espacio.</h1>
+    <p class="lead">
+      Acá vas a encontrar relatos de experiencias reales de personas que ya se
+      animaron a dar este paso, testimonios, y contenido pensado para
+      acompañarte en el proceso — no para apurarte.
+    </p>
+    <p class="lead">
+      Todo lo que compartas en este espacio está protegido por el secreto
+      profesional. Nada de lo que cuentes acá sale de esta plataforma ni de tu
+      sesión con Valentina.
+    </p>
+    ${state.hasTest ? `
+    <p class="lead">Ya completaste tu test pre-sesión — Valentina ya lo tiene para tu sesión.</p>
+    <button class="primary" id="go" style="width:100%;">Entrar a tu espacio</button>
+    ` : `
+    <p class="lead">
+      Estás invitada/o a dar el primer paso dentro del programa: completar el
+      test pre-sesión, para que el acompañamiento sea lo más específico
+      posible para vos.
+    </p>
+    <button class="primary" id="go" style="width:100%;">Comenzar el test</button>
+    `}
+  </div>`);
+  wrap.querySelector('#go').onclick = ()=>{ state.screen='dashboard'; state.tab = state.hasTest ? 'experiencia' : 'test'; render(); };
+  return wrap;
+}
+
+// ---------- DASHBOARD ----------
+function renderDashboard(){
+  const isAdmin = state.profile && state.profile.is_admin;
+  const wrap = el(`<div>
+    <div class="row-between" style="margin-bottom:18px;">
+      <div class="eyebrow" style="margin:0;">Nómade con Sentido</div>
+      <button class="ghost" id="logout">Salir</button>
+    </div>
+    <h1>Hola, ${state.profile && state.profile.name ? state.profile.name : state.session.user.email}</h1>
+    <div class="tabs" id="tabs">
+      ${state.hasTest ? '' : '<button class="tab" data-tab="test">Test pre-sesión</button>'}
+      <button class="tab" data-tab="experiencia">Experiencia de emigrar</button>
+      <button class="tab" data-tab="testimonios">Testimonios</button>
+      <button class="tab" data-tab="seguridad">Seguridad para el nómade</button>
+      ${isAdmin ? '<button class="tab" data-tab="admin">Panel profesional</button>' : ''}
+    </div>
+    <div id="tabContent"></div>
+    <p class="hint" style="text-align:center;margin-top:50px;">Espacio privado y confidencial — protegido por secreto profesional.</p>
+  </div>`);
+  wrap.querySelector('#logout').onclick = async ()=>{ await sb.auth.signOut(); };
+  wrap.querySelectorAll('.tab').forEach(t=>{
+    t.classList.toggle('active', t.dataset.tab===state.tab);
+    t.onclick = ()=>{ state.tab = t.dataset.tab; render(); };
+  });
+  const content = wrap.querySelector('#tabContent');
+  if(state.tab==='test' && !state.hasTest) renderTest(content);
+  else if(state.tab==='experiencia') renderResourceList(content,'experiencia','Todavía no hay contenido cargado en esta sección.');
+  else if(state.tab==='testimonios') renderResourceList(content,'testimonio','Todavía no hay testimonios cargados.');
+  else if(state.tab==='seguridad') content.appendChild(el(`<div class="card"><p class="lead" style="margin:0;">Estamos preparando el kit de emergencia del nómade — con información específica para actuar ante robos, vuelos perdidos y otras situaciones que pueden pasar viajando. Vas a verlo acá apenas esté listo.</p></div>`));
+  else if(state.tab==='admin' && isAdmin) renderAdmin(content);
+  return wrap;
+}
+
+async function renderTest(container){
+  container.appendChild(el(`<p class="hint">Cargando...</p>`));
+  const { data: existing } = await sb.from('test_submissions').select('*').eq('user_id', state.session.user.id).maybeSingle();
+  container.innerHTML = '';
+  if(existing){
+    container.appendChild(el(`<div class="card"><p class="lead" style="margin:0;">Ya completaste tu test el ${new Date(existing.submitted_at).toLocaleDateString('es-AR')}. Valentina ya lo tiene para tu sesión.</p></div>`));
+    return;
+  }
+  const answers = {};
+  const card = el(`<div>
+    <div class="horizon"><div class="horizon-fill" id="hf" style="width:0%"></div><div class="horizon-label" id="hl">0 / ${QUESTIONS.length}</div></div>
+    <div class="banner">Este es un instrumento de autoconocimiento, no un test clínico ni un diagnóstico. Es información para que tu sesión con Valentina sea más precisa.</div>
+    <p class="lead">No hay respuestas correctas. Marcá lo que más se acerca a cómo sos hoy.</p>
+    <div id="qs"></div>
+    <button class="primary" id="sendTest" disabled style="width:100%;">Enviar</button>
+  </div>`);
+  const qs = card.querySelector('#qs');
+  let lastSub=null;
+  QUESTIONS.forEach(q=>{
+    if(q.sub!==lastSub){ lastSub=q.sub; qs.appendChild(el(`<div class="section-title">${SUB_LABEL[q.sub]}</div>`)); }
+    qs.appendChild(el(`<div class="q"><div class="q-text">${q.text}</div>
+      <div class="scale">${[1,2,3,4,5].map(v=>`<div class="opt" data-q="${q.id}" data-v="${v}">${v}</div>`).join('')}</div>
+      <div class="scale-caption"><span>1 = Nunca así</span><span>5 = Totalmente así</span></div></div>`));
+  });
+  qs.querySelectorAll('.opt').forEach(opt=>{
+    opt.onclick = ()=>{
+      const qid=opt.dataset.q, v=parseInt(opt.dataset.v);
+      answers[qid]=v;
+      qs.querySelectorAll(`.opt[data-q="${qid}"]`).forEach(o=>o.classList.toggle('selected',o===opt));
+      const done = Object.keys(answers).length;
+      card.querySelector('#hf').style.width = Math.round(done/QUESTIONS.length*100)+'%';
+      card.querySelector('#hl').textContent = done+' / '+QUESTIONS.length;
+      card.querySelector('#sendTest').disabled = done<QUESTIONS.length;
+    };
+  });
+  card.querySelector('#sendTest').onclick = async ()=>{
+    const btn = card.querySelector('#sendTest');
+    btn.disabled=true; btn.textContent='Enviando...';
+    const { error } = await sb.from('test_submissions').insert({ user_id: state.session.user.id, answers });
+    if(error){ alert('No se pudo enviar. Probá de nuevo.'); btn.disabled=false; btn.textContent='Enviar'; return; }
+    state.hasTest = true;
+    state.tab = 'experiencia';
+    render();
+  };
+  container.appendChild(card);
+}
+
+async function renderResourceList(container, category, emptyMsg){
+  container.appendChild(el(`<p class="hint">Cargando...</p>`));
+  const { data: items } = await sb.from('resources').select('*').eq('category', category).order('created_at', {ascending:false});
+  container.innerHTML = '';
+  if(!items || items.length===0){ container.appendChild(el(`<div class="card"><p class="lead" style="margin:0;">${emptyMsg}</p></div>`)); return; }
+  const card = el(`<div class="card"></div>`);
+  items.forEach(it=>{
+    const r = el(`<div class="resource"><h3>${it.title}</h3></div>`);
+    if(it.type==='video'){
+      const embed = ytEmbed(it.url);
+      r.appendChild(embed ? el(`<iframe src="${embed}" allowfullscreen></iframe>`) : el(`<video controls style="width:100%;border-radius:10px;margin:8px 0;display:block;" src="${it.url}"></video>`));
+    } else if(it.type==='imagen'){
+      r.appendChild(el(`<img src="${it.url}" alt="${it.title}"/>`));
+    }
+    if(it.body) r.appendChild(el(`<p class="lead" style="margin:6px 0 0;">${it.body}</p>`));
+    card.appendChild(r);
+  });
+  container.appendChild(card);
+}
+
+// ---------- ADMIN (solo visible si profiles.is_admin = true) ----------
+function scoreSubmission(answers){
+  const sub={A:0,B:0,C:0};
+  QUESTIONS.forEach(q=>{ sub[q.sub]+=(answers[q.id]||0); });
+  const level = v=> v<=9?'low':v<=14?'mid':'high';
+  const levels = {A:level(sub.A),B:level(sub.B),C:level(sub.C)};
+  const lows = Object.entries(levels).filter(([k,v])=>v==='low').map(([k])=>k);
+  let profile, label;
+  if(lows.length===3){ profile='Alerta — recomendar posponer, trabajar antes de la partida'; label='Alerta'; }
+  else if(lows.length===0 && Object.values(levels).every(v=>v==='high')){ profile='Explorador estable'; label='Explorador estable'; }
+  else if(lows.includes('A')){ profile='Alta motivación, baja regulación emocional'; label='Baja regulación'; }
+  else if(lows.includes('B')){ profile='Buscador de certezas (dependencia de validación externa)'; label='Buscador de certezas'; }
+  else if(lows.includes('C')){ profile='Rígido con plan alto (riesgo si falla plan A)'; label='Rígido con plan'; }
+  else { profile='Perfil mixto — revisar detalle por subescala'; label='Perfil mixto'; }
+  return {sub, levels, profile, label};
+}
+
+function renderAdmin(container){
+  const tabs = el(`<div class="tabs" style="margin-bottom:16px;">
+    <button class="tab active" data-a="contenido">Agregar contenido</button>
+    <button class="tab" data-a="tests">Tests recibidos</button>
+  </div>`);
+  const sub = el(`<div id="adminSub"></div>`);
+  container.appendChild(tabs); container.appendChild(sub);
+  const show = (which)=>{
+    tabs.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t.dataset.a===which));
+    sub.innerHTML='';
+    if(which==='contenido') renderAdminContenido(sub);
+    else renderAdminTests(sub);
+  };
+  tabs.querySelectorAll('.tab').forEach(t=> t.onclick = ()=> show(t.dataset.a));
+  show('contenido');
+}
+
+function renderAdminContenido(container){
+  let editingId = null;
+  const card = el(`<div class="card">
+    <h2 id="formTitle">Agregar contenido</h2>
+    <label>Sección</label>
+    <select id="cat"><option value="experiencia">Experiencia de emigrar</option><option value="testimonio">Testimonios</option></select>
+    <label>Tipo</label>
+    <select id="type"><option value="texto">Texto</option><option value="video">Video (link YouTube)</option><option value="imagen">Imagen (link)</option></select>
+    <label>Título</label><input type="text" id="title"/>
+    <label>Link (si aplica)</label><input type="text" id="url" placeholder="https://..."/>
+    <label>Texto / descripción</label><textarea id="body"></textarea>
+    <p class="err" id="err"></p>
+    <div style="display:flex;gap:10px;">
+      <button class="primary" id="add">Agregar</button>
+      <button class="ghost hidden" id="cancelEdit">Cancelar edición</button>
+    </div>
+  </div>`);
+
+  function clearForm(){
+    editingId = null;
+    card.querySelector('#formTitle').textContent = 'Agregar contenido';
+    card.querySelector('#add').textContent = 'Agregar';
+    card.querySelector('#cancelEdit').classList.add('hidden');
+    card.querySelector('#cat').value='experiencia';
+    card.querySelector('#type').value='texto';
+    card.querySelector('#title').value='';
+    card.querySelector('#url').value='';
+    card.querySelector('#body').value='';
+    card.querySelector('#err').textContent='';
+  }
+
+  function loadIntoForm(it){
+    editingId = it.id;
+    card.querySelector('#formTitle').textContent = 'Editando: '+it.title;
+    card.querySelector('#add').textContent = 'Guardar cambios';
+    card.querySelector('#cancelEdit').classList.remove('hidden');
+    card.querySelector('#cat').value = it.category;
+    card.querySelector('#type').value = it.type;
+    card.querySelector('#title').value = it.title || '';
+    card.querySelector('#url').value = it.url || '';
+    card.querySelector('#body').value = it.body || '';
+    card.querySelector('#err').textContent='';
+    card.scrollIntoView({behavior:'smooth'});
+  }
+
+  card.querySelector('#cancelEdit').onclick = clearForm;
+
+  card.querySelector('#add').onclick = async ()=>{
+    const category = card.querySelector('#cat').value;
+    const type = card.querySelector('#type').value;
+    const title = card.querySelector('#title').value.trim();
+    const url = card.querySelector('#url').value.trim();
+    const body = card.querySelector('#body').value.trim();
+    const errEl = card.querySelector('#err');
+    if(!title || (type!=='texto' && !url)){ errEl.textContent='Completá título y link (si corresponde).'; return; }
+    let error;
+    if(editingId){
+      // UPDATE: no toca created_at, así que el orden en la lista del cliente no se mueve.
+      ({ error } = await sb.from('resources').update({ category, type, title, url, body }).eq('id', editingId));
+    } else {
+      ({ error } = await sb.from('resources').insert({ category, type, title, url, body }));
+    }
+    if(error){ errEl.textContent='No se pudo guardar: '+error.message; return; }
+    clearForm();
+    refreshList();
+  };
+  container.appendChild(card);
+  const listCard = el(`<div class="card"><h2>Contenido cargado</h2><p class="hint">Tocá "Editar" para modificar sin perder el orden. Solo borrá si querés eliminarlo del todo.</p><div id="resList"><p class="hint">Cargando...</p></div></div>`);
+  container.appendChild(listCard);
+  async function refreshList(){
+    const { data: items } = await sb.from('resources').select('*').order('created_at',{ascending:false});
+    const listEl = listCard.querySelector('#resList');
+    listEl.innerHTML='';
+    if(!items || items.length===0){ listEl.innerHTML='<p class="hint">Todavía no agregaste contenido.</p>'; return; }
+    items.forEach(it=>{
+      const row = el(`<div class="sub-row" style="cursor:default;">
+        <div><div style="font-weight:600;">${it.title}</div><div class="hint">${it.category} · ${it.type}</div></div>
+        <div style="display:flex;gap:8px;">
+          <button class="ghost" data-action="edit">Editar</button>
+          <button class="ghost" data-action="del">Borrar</button>
+        </div>
+      </div>`);
+      row.querySelector('[data-action="edit"]').onclick = ()=> loadIntoForm(it);
+      row.querySelector('[data-action="del"]').onclick = async ()=>{
+        if(!confirm('¿Borrar "'+it.title+'"? No se puede deshacer.')) return;
+        await sb.from('resources').delete().eq('id', it.id);
+        if(editingId===it.id) clearForm();
+        refreshList();
+      };
+      listEl.appendChild(row);
+    });
+  }
+  refreshList();
+}
+
+async function renderAdminTests(container){
+  container.appendChild(el(`<div class="card"><h2>Tests recibidos</h2><p class="hint" id="loadMsg">Cargando...</p><div id="testList"></div></div>`));
+  const { data: subs } = await sb.from('test_submissions').select('*, profiles(name)').order('submitted_at',{ascending:false});
+  const loadMsg = container.querySelector('#loadMsg');
+  const listEl = container.querySelector('#testList');
+  loadMsg.remove();
+  if(!subs || subs.length===0){ listEl.innerHTML = '<p class="hint">Todavía no hay tests completados.</p>'; return; }
+  subs.forEach(it=>{
+    const { sub, levels, profile, label } = scoreSubmission(it.answers);
+    const hasLow = Object.values(levels).includes('low');
+    const name = it.profiles && it.profiles.name ? it.profiles.name : it.user_id;
+    const row = el(`<div class="sub-row"><div><div style="font-weight:600;">${name}</div><div class="hint">${new Date(it.submitted_at).toLocaleDateString('es-AR')}</div></div><div class="tag ${hasLow?'low':'high'}">${label}</div></div>`);
+    const detail = el(`<div class="detail hidden">
+      <strong>Perfil:</strong> ${profile}<br/>
+      A — ${SUB_LABEL.A}: ${sub.A}/20 <span class="tag ${levels.A}">${levels.A}</span><br/>
+      B — ${SUB_LABEL.B}: ${sub.B}/20 <span class="tag ${levels.B}">${levels.B}</span><br/>
+      C — ${SUB_LABEL.C}: ${sub.C}/20 <span class="tag ${levels.C}">${levels.C}</span>
+    </div>`);
+    row.onclick = ()=> detail.classList.toggle('hidden');
+    listEl.appendChild(row); listEl.appendChild(detail);
+  });
+}
+
+init();
+</script>
+</body>
+</html>
