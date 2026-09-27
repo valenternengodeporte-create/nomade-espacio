@@ -6,82 +6,273 @@
 <title>Nómade con Sentido — Plataforma</title>
 <meta name="description" content="Espacio privado de acompañamiento para quienes dan el paso de vivir afuera con sentido.">
 <meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#12151F">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2245%22 fill=%22%23171B26%22/><path d=%22M20 60 Q50 30 80 60%22 stroke=%22%23E3A857%22 stroke-width=%226%22 fill=%22none%22/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root{
-    --bg:#171B26; --bg-raised:#1F2433; --ink:#F2EFE9; --ink-dim:#B9BDC9;
-    --amber:#E3A857; --amber-soft:rgba(227,168,87,0.14);
-    --teal:#5B9AA0; --line:#333B4D; --danger:#C97B63; --radius:14px;
+    --bg:#12151F; --bg-solid:#1F2433; --bg-raised:rgba(31,36,51,.62); --bg-deep:rgba(18,21,31,.7);
+    --ink:#F2EFE9; --ink-dim:#B9BDC9; --ink-faint:#7D8395;
+    --amber:#E3A857; --amber-hi:#F6C98A; --amber-soft:rgba(227,168,87,.14);
+    --teal:#5B9AA0; --teal-soft:rgba(91,154,160,.16);
+    --line:rgba(255,255,255,.08); --line-strong:#333B4D; --danger:#C97B63; --danger-soft:rgba(201,123,99,.14);
+    --radius:18px; --ease:cubic-bezier(.16,1,.3,1);
   }
   *{box-sizing:border-box;}
-  body{margin:0;background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;}
-  .wrap{max-width:720px;margin:0 auto;padding:40px 22px 90px;}
-  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);margin-bottom:8px;}
-  h1{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(26px,5vw,34px);line-height:1.15;margin:0 0 12px;}
-  h2{font-family:'Fraunces',serif;font-weight:500;font-size:19px;margin:0 0 10px;}
-  p.lead{color:var(--ink-dim);font-size:15.5px;line-height:1.6;margin:0 0 24px;}
-  .card{background:var(--bg-raised);border:1px solid var(--line);border-radius:var(--radius);padding:22px;margin-bottom:16px;}
-  label{display:block;font-size:13px;color:var(--ink-dim);margin-bottom:6px;}
-  input,select,textarea{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:11px 13px;color:var(--ink);font-family:'Inter',sans-serif;font-size:14.5px;margin-bottom:14px;}
-  textarea{min-height:80px;resize:vertical;}
-  input:focus,select:focus,textarea:focus,button:focus{outline:2px solid var(--amber);outline-offset:2px;}
-  button.primary{padding:13px 20px;border-radius:100px;border:none;background:var(--amber);color:#171B26;font-family:'Inter',sans-serif;font-weight:600;font-size:14.5px;cursor:pointer;}
-  button.primary:hover{filter:brightness(1.08);}
-  button.primary:disabled{opacity:.4;cursor:not-allowed;}
-  button.ghost{background:none;border:1px solid var(--line);color:var(--ink-dim);padding:9px 14px;border-radius:100px;font-size:13px;cursor:pointer;font-family:'Inter',sans-serif;}
-  button.ghost:hover{border-color:var(--teal);color:var(--teal);}
-  .hint{font-size:12.5px;color:var(--ink-dim);}
-  .err{color:var(--danger);font-size:13px;min-height:18px;}
-  .tabs{display:flex;gap:6px;margin-bottom:22px;flex-wrap:wrap;}
-  .tab{padding:9px 16px;border-radius:100px;border:1px solid var(--line);background:var(--bg-raised);color:var(--ink-dim);font-size:13.5px;cursor:pointer;font-family:'Inter',sans-serif;}
-  .tab.active{background:var(--amber-soft);border-color:var(--amber);color:var(--amber);}
-  .resource{border-bottom:1px solid var(--line);padding:16px 0;}
-  .resource:last-child{border-bottom:none;}
-  .resource h3{font-family:'Fraunces',serif;font-size:16px;margin:0 0 6px;font-weight:500;}
-  .resource iframe{width:100%;aspect-ratio:16/9;border:0;border-radius:10px;margin:8px 0;}
-  .resource img{width:100%;border-radius:10px;margin:8px 0;display:block;}
-  .row-between{display:flex;justify-content:space-between;align-items:center;gap:10px;}
-  .back{background:none;border:none;color:var(--ink-dim);font-family:'IBM Plex Mono',monospace;font-size:12px;cursor:pointer;margin-bottom:18px;}
-  .horizon{position:relative;height:56px;margin-bottom:24px;border-radius:100px;background:var(--bg-raised);overflow:hidden;border:1px solid var(--line);}
-  .horizon-fill{position:absolute;inset:0;width:0%;background:linear-gradient(90deg,var(--teal),var(--amber));transition:width .5s ease;}
-  .horizon-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink);mix-blend-mode:difference;}
-  .q{margin-bottom:20px;}
-  .q-text{font-size:15px;line-height:1.5;margin-bottom:10px;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden;}
+  ::selection{background:var(--amber);color:#12151F;}
+
+  /* ---------- fondo vivo ---------- */
+  .bg{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;}
+  .orb{position:absolute;border-radius:50%;filter:blur(70px);opacity:.5;will-change:transform;}
+  .o1{width:560px;height:560px;background:radial-gradient(circle,rgba(227,168,87,.55) 0%,transparent 65%);top:-220px;right:-180px;animation:drift1 28s ease-in-out infinite alternate;}
+  .o2{width:620px;height:620px;background:radial-gradient(circle,rgba(91,154,160,.45) 0%,transparent 65%);bottom:-260px;left:-220px;animation:drift2 34s ease-in-out infinite alternate;}
+  .o3{width:320px;height:320px;background:radial-gradient(circle,rgba(201,123,99,.3) 0%,transparent 65%);top:40%;left:55%;animation:drift3 22s ease-in-out infinite alternate;}
+  @keyframes drift1{to{transform:translate(-120px,160px) scale(1.15);}}
+  @keyframes drift2{to{transform:translate(160px,-120px) scale(1.1);}}
+  @keyframes drift3{to{transform:translate(-200px,-80px) scale(.85);}}
+  .grain{position:absolute;inset:0;opacity:.06;mix-blend-mode:overlay;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");}
+
+  /* ---------- layout y tipografía ---------- */
+  .wrap{max-width:760px;margin:0 auto;padding:36px 20px 90px;}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);margin-bottom:10px;}
+  h1{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(30px,6vw,46px);line-height:1.08;letter-spacing:-.015em;margin:0 0 16px;}
+  h1 em,h2 em{font-style:italic;color:var(--amber);font-weight:400;}
+  h2{font-family:'Fraunces',serif;font-weight:500;font-size:21px;margin:0 0 12px;}
+  p.lead{color:var(--ink-dim);font-size:16px;line-height:1.65;margin:0 0 22px;max-width:580px;}
+  .hint{font-size:13px;color:var(--ink-dim);line-height:1.55;}
+  .center-t{text-align:center;}
+  .link{color:var(--teal);text-decoration:none;border-bottom:1px solid transparent;transition:border-color .2s;}
+  .link:hover{border-color:var(--teal);}
+  .hidden{display:none !important;}
+
+  /* entrada escalonada */
+  .rv{opacity:0;transform:translateY(16px);animation:rise .8s var(--ease) forwards;animation-delay:calc(var(--d,0) * 90ms);}
+  @keyframes rise{to{opacity:1;transform:none;}}
+
+  /* ---------- tarjetas ---------- */
+  .card{background:var(--bg-raised);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--line);border-radius:var(--radius);padding:26px;margin-bottom:16px;box-shadow:0 20px 50px -30px rgba(0,0,0,.7);}
+
+  /* ---------- formularios ---------- */
+  .field{margin-bottom:16px;}
+  label{display:block;font-size:12.5px;color:var(--ink-dim);margin-bottom:7px;letter-spacing:.01em;}
+  input,select,textarea{width:100%;background:var(--bg-deep);border:1px solid var(--line-strong);border-radius:10px;padding:13px 14px;color:var(--ink);font-family:'Inter',sans-serif;font-size:15px;transition:border-color .2s, box-shadow .2s, background .2s;}
+  input:hover,select:hover,textarea:hover{border-color:#46506a;}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--amber);box-shadow:0 0 0 4px var(--amber-soft);background:rgba(18,21,31,.9);}
+  textarea{min-height:100px;resize:vertical;line-height:1.55;}
+  select{appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8'><path d='M1 1l5 5 5-5' stroke='%23B9BDC9' stroke-width='1.6' fill='none'/></svg>");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;}
+  button:focus-visible,a:focus-visible,.opt:focus-visible{outline:2px solid var(--amber);outline-offset:3px;}
+
+  /* ---------- botones ---------- */
+  button.primary{position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 24px;border-radius:100px;border:none;background:linear-gradient(135deg,var(--amber-hi),var(--amber));color:#12151F;font-family:'Inter',sans-serif;font-weight:600;font-size:15px;cursor:pointer;box-shadow:0 10px 30px -12px rgba(227,168,87,.7);transition:transform .25s var(--ease), box-shadow .25s var(--ease), opacity .2s;}
+  button.primary::after{content:'';position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.45),transparent);transform:skewX(-20deg);transition:left .7s var(--ease);}
+  button.primary:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 16px 36px -12px rgba(227,168,87,.85);}
+  button.primary:hover:not(:disabled)::after{left:130%;}
+  button.primary svg{transition:transform .3s var(--ease);}
+  button.primary:hover:not(:disabled) svg{transform:translateX(4px);}
+  button.primary:disabled{opacity:.35;cursor:not-allowed;box-shadow:none;}
+  button.primary.wide{width:100%;}
+  button.primary.loading{pointer-events:none;}
+  button.primary.loading svg{display:none;}
+  button.primary.loading::before{content:'';width:16px;height:16px;border-radius:50%;border:2px solid rgba(18,21,31,.3);border-top-color:#12151F;animation:spin .7s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  button.ghost{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.02);border:1px solid var(--line-strong);color:var(--ink-dim);padding:9px 15px;border-radius:100px;font-size:13px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s var(--ease);}
+  button.ghost:hover:not(:disabled){border-color:var(--teal);color:var(--teal);background:var(--teal-soft);}
+  button.ghost:disabled{opacity:.3;cursor:not-allowed;}
+  button.ghost.danger:hover{border-color:var(--danger);color:var(--danger);background:var(--danger-soft);}
+
+  .err{color:var(--danger);font-size:13px;min-height:18px;margin:0 0 10px;}
+  .err.shake{animation:shake .4s;}
+  @keyframes shake{20%,60%{transform:translateX(-6px);}40%,80%{transform:translateX(6px);}}
+
+  /* ---------- amanecer (firma visual) ---------- */
+  .sunrise{width:100%;max-width:230px;display:block;margin:0 0 18px -6px;overflow:visible;}
+  .sunrise.sm{max-width:170px;margin-left:auto;margin-right:auto;}
+  .sun-rise{transform:translateY(52px);animation:sunUp 2s var(--ease) .15s forwards;}
+  @keyframes sunUp{to{transform:translateY(0);}}
+  .sun-glow{animation:breathe 5s ease-in-out 2s infinite;transform-origin:160px 80px;}
+  @keyframes breathe{50%{opacity:.55;transform:scale(1.12);}}
+  .draw{fill:none;stroke-linecap:round;stroke-dasharray:320;stroke-dashoffset:320;animation:draw 1.8s var(--ease) forwards;}
+  .draw.d2{animation-delay:.25s;} .draw.d3{animation-delay:.45s;}
+  @keyframes draw{to{stroke-dashoffset:0;}}
+
+  /* ---------- auth / pantallas centradas ---------- */
+  .auth{max-width:440px;margin:6vh auto 0;}
+  .center{max-width:380px;margin:9vh auto 0;text-align:center;}
+  .center p.lead{margin-left:auto;margin-right:auto;}
+  .loading-screen{min-height:70vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;}
+
+  /* ---------- bienvenida ---------- */
+  .seal{display:flex;gap:14px;align-items:flex-start;padding:16px 18px;border-radius:14px;background:var(--teal-soft);border:1px solid rgba(91,154,160,.35);margin:0 0 26px;max-width:580px;}
+  .seal svg{color:var(--teal);flex-shrink:0;margin-top:2px;}
+  .seal strong{display:block;font-size:14px;margin-bottom:3px;color:var(--ink);}
+  .seal span{font-size:13.5px;color:var(--ink-dim);line-height:1.55;}
+  .path{display:flex;align-items:flex-start;margin:6px 0 30px;position:relative;}
+  .step{flex:1;position:relative;text-align:center;padding-top:0;}
+  .step::before{content:'';position:absolute;top:15px;left:calc(-50% + 18px);right:calc(50% + 18px);height:2px;background:var(--line-strong);}
+  .step:first-child::before{display:none;}
+  .step.done::before,.step.current::before{background:linear-gradient(90deg,var(--teal),var(--amber));}
+  .step-dot{width:32px;height:32px;margin:0 auto 10px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:12.5px;border:1px solid var(--line-strong);background:var(--bg-solid);color:var(--ink-faint);position:relative;z-index:1;}
+  .step.done .step-dot{background:var(--teal);border-color:var(--teal);color:#12151F;}
+  .step.current .step-dot{border-color:var(--amber);color:var(--amber);box-shadow:0 0 0 0 rgba(227,168,87,.5);animation:ping 2.2s infinite;}
+  @keyframes ping{0%{box-shadow:0 0 0 0 rgba(227,168,87,.45);}80%,100%{box-shadow:0 0 0 12px rgba(227,168,87,0);}}
+  .step-label{font-size:12.5px;color:var(--ink-dim);line-height:1.35;padding:0 4px;}
+  .step.current .step-label{color:var(--ink);}
+
+  /* ---------- dashboard ---------- */
+  .topbar{position:sticky;top:12px;z-index:20;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 8px 8px 14px;margin-bottom:34px;border-radius:100px;background:rgba(23,27,38,.72);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--line);}
+  .brand{display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;font-size:15.5px;}
+  .top-right{display:flex;align-items:center;gap:8px;}
+  .avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-weight:600;font-size:15px;color:#12151F;background:linear-gradient(135deg,var(--amber-hi),var(--teal));}
+  .dash-hero{margin-bottom:24px;}
+  .dash-hero h1{margin-bottom:6px;}
+
+  .tabs{position:relative;display:flex;gap:4px;padding:5px;margin-bottom:26px;border-radius:100px;background:var(--bg-raised);border:1px solid var(--line);overflow-x:auto;scrollbar-width:none;}
+  .tabs::-webkit-scrollbar{display:none;}
+  .tab-ind{position:absolute;top:5px;left:0;height:calc(100% - 10px);border-radius:100px;background:var(--amber-soft);border:1px solid rgba(227,168,87,.55);transition:transform .45s var(--ease), width .45s var(--ease);pointer-events:none;}
+  .tab{position:relative;z-index:1;display:inline-flex;align-items:center;gap:8px;white-space:nowrap;padding:10px 16px;border-radius:100px;border:none;background:none;color:var(--ink-dim);font-size:13.5px;cursor:pointer;font-family:'Inter',sans-serif;transition:color .25s;}
+  .tab:hover{color:var(--ink);}
+  .tab.active{color:var(--amber);}
+  .tab-pane{animation:paneIn .55s var(--ease);}
+  @keyframes paneIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+  .foot-note{display:flex;align-items:center;justify-content:center;gap:8px;text-align:center;margin-top:56px;font-size:12.5px;color:var(--ink-faint);}
+
+  /* ---------- skeleton ---------- */
+  .skel{border-radius:var(--radius);border:1px solid var(--line);background:var(--bg-raised);padding:24px;margin-bottom:14px;}
+  .skel i{display:block;height:12px;border-radius:6px;margin-bottom:12px;background:linear-gradient(90deg,rgba(255,255,255,.04) 25%,rgba(255,255,255,.1) 50%,rgba(255,255,255,.04) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;}
+  @keyframes shimmer{to{background-position:-200% 0;}}
+
+  /* ---------- test ---------- */
+  .journey{margin-bottom:18px;}
+  .journey-track{position:relative;height:6px;border-radius:6px;background:rgba(255,255,255,.07);}
+  .journey-fill{position:absolute;inset:0 auto 0 0;width:0;border-radius:6px;background:linear-gradient(90deg,var(--teal),var(--amber));transition:width .6s var(--ease);}
+  .journey-sun{position:absolute;top:50%;left:0;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;background:radial-gradient(circle,var(--amber-hi),var(--amber));box-shadow:0 0 18px 4px rgba(227,168,87,.55);transition:left .6s var(--ease);}
+  .journey-meta{display:flex;justify-content:space-between;margin-top:12px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--ink-dim);letter-spacing:.04em;}
+  .banner{display:flex;gap:12px;align-items:flex-start;background:var(--amber-soft);border:1px solid rgba(227,168,87,.4);border-radius:12px;padding:13px 15px;font-size:13.5px;line-height:1.5;margin-bottom:16px;}
+  .banner svg{color:var(--amber);flex-shrink:0;margin-top:1px;}
+  .kbd-hint{color:var(--ink-faint);}
+  .q-stage{position:relative;min-height:300px;}
+  .q-card{background:var(--bg-raised);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--line);border-radius:var(--radius);padding:28px 26px 22px;}
+  .q-card.in-right{animation:inRight .5s var(--ease);}
+  .q-card.in-left{animation:inLeft .5s var(--ease);}
+  @keyframes inRight{from{opacity:0;transform:translateX(36px);}to{opacity:1;transform:none;}}
+  @keyframes inLeft{from{opacity:0;transform:translateX(-36px);}to{opacity:1;transform:none;}}
+  .q-chip{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);background:var(--teal-soft);padding:5px 10px;border-radius:100px;margin-bottom:18px;}
+  .q-num{font-family:'Fraunces',serif;font-style:italic;font-size:44px;line-height:1;color:rgba(227,168,87,.35);margin-bottom:8px;}
+  .q-text{font-family:'Fraunces',serif;font-size:clamp(19px,3.6vw,23px);line-height:1.4;margin:0 0 24px;}
   .scale{display:flex;gap:8px;}
-  .opt{flex:1;text-align:center;padding:9px 4px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink-dim);cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:13px;}
-  .opt.selected{background:var(--amber-soft);border-color:var(--amber);color:var(--amber);}
-  .scale-caption{display:flex;justify-content:space-between;font-size:11px;color:var(--ink-dim);margin-top:6px;opacity:0.7;}
-  .section-title{font-family:'Fraunces',serif;font-size:14.5px;color:var(--teal);margin:30px 0 4px;}
-  .tag{font-family:'IBM Plex Mono',monospace;font-size:11px;padding:3px 8px;border-radius:100px;border:1px solid var(--line);}
-  .tag.low{color:var(--danger);border-color:var(--danger);}
-  .tag.high{color:var(--teal);border-color:var(--teal);}
-  .sub-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);cursor:pointer;}
-  .detail{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:16px;margin-top:8px;font-size:13.5px;line-height:1.6;}
-  .hidden{display:none;}
-  .banner{background:var(--amber-soft);border:1px solid var(--amber);border-radius:10px;padding:12px 14px;font-size:13.5px;margin-bottom:16px;}
-  .center{max-width:340px;margin:70px auto;text-align:center;}
-  .prewrap{white-space:pre-wrap;}
-  .plan-list{margin:10px 0 0;padding-left:0;list-style:none;}
-  .plan-list li{padding:8px 0 8px 26px;position:relative;border-bottom:1px solid var(--line);font-size:14.5px;line-height:1.5;}
-  .plan-list li:last-child{border-bottom:none;}
-  .plan-list li::before{content:'→';position:absolute;left:4px;color:var(--amber);font-family:'IBM Plex Mono',monospace;}
-  .check{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--ink-dim);margin-bottom:14px;cursor:pointer;}
-  .check input{width:auto;margin:0;}
-  .tag.draft{color:var(--ink-dim);}
-  .tag.pub{color:var(--teal);border-color:var(--teal);}
-  .private-badge{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--danger);}
+  .opt{flex:1;height:54px;border-radius:12px;border:1px solid var(--line-strong);background:var(--bg-deep);color:var(--ink-dim);cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:16px;transition:all .22s var(--ease);}
+  .opt:hover{border-color:var(--amber);color:var(--ink);transform:translateY(-3px);}
+  .opt.selected{background:linear-gradient(135deg,var(--amber-hi),var(--amber));border-color:var(--amber);color:#12151F;transform:translateY(-3px) scale(1.04);box-shadow:0 10px 24px -10px rgba(227,168,87,.8);}
+  .scale-caption{display:flex;justify-content:space-between;font-size:11.5px;color:var(--ink-faint);margin-top:9px;}
+  .q-nav{display:flex;justify-content:space-between;margin-top:24px;}
+  .done-mark{width:64px;height:64px;border-radius:50%;margin:0 auto 18px;display:flex;align-items:center;justify-content:center;background:var(--teal-soft);border:1px solid var(--teal);color:var(--teal);animation:pop .6s var(--ease);}
+  .done-mark svg{width:30px;height:30px;stroke-dasharray:30;stroke-dashoffset:30;animation:draw .6s .25s var(--ease) forwards;}
+  @keyframes pop{from{transform:scale(.4);opacity:0;}to{transform:none;opacity:1;}}
+
+  /* ---------- recursos ---------- */
+  .res-grid{display:grid;gap:14px;}
+  .res-card{background:var(--bg-raised);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--line);border-radius:var(--radius);padding:22px;transition:transform .35s var(--ease), border-color .3s, box-shadow .35s var(--ease);}
+  .res-card:hover{transform:translateY(-3px);border-color:rgba(227,168,87,.3);box-shadow:0 24px 50px -30px rgba(227,168,87,.35);}
+  .res-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+  .badge{display:inline-flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:100px;}
+  .badge svg{width:13px;height:13px;}
+  .b-video{color:var(--amber);background:var(--amber-soft);}
+  .b-imagen{color:var(--teal);background:var(--teal-soft);}
+  .b-texto{color:var(--ink-dim);background:rgba(255,255,255,.05);}
+  .res-date{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-faint);}
+  .res-card h3{font-family:'Fraunces',serif;font-size:20px;font-weight:500;line-height:1.3;margin:0 0 6px;}
+  .media{position:relative;border-radius:12px;overflow:hidden;margin:12px 0 4px;background:#0c0e15;}
+  .media iframe{width:100%;aspect-ratio:16/9;border:0;display:block;}
+  .media video{width:100%;display:block;}
+  .media img{width:100%;display:block;cursor:zoom-in;transition:transform .6s var(--ease);}
+  .media:hover img{transform:scale(1.03);}
+  .res-body{color:var(--ink-dim);font-size:15px;line-height:1.7;margin:10px 0 0;}
+  .res-body.clamp{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;}
+  .more{background:none;border:none;padding:0;margin-top:8px;color:var(--amber);font-size:13px;cursor:pointer;font-family:'Inter',sans-serif;}
+  .empty{text-align:center;padding:44px 24px;}
+  .empty-icon{width:58px;height:58px;margin:0 auto 16px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--amber-soft);color:var(--amber);animation:float 4s ease-in-out infinite;}
+  @keyframes float{50%{transform:translateY(-6px);}}
+  .lightbox{position:fixed;inset:0;z-index:50;background:rgba(8,10,15,.88);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:20px;cursor:zoom-out;animation:paneIn .3s var(--ease);}
+  .lightbox img{max-width:100%;max-height:90vh;border-radius:12px;}
+
+  /* ---------- seguridad (próximamente) ---------- */
+  .soon{text-align:center;padding:40px 26px;}
+  .soon-icon{width:72px;height:72px;margin:0 auto 18px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--teal);background:var(--teal-soft);position:relative;}
+  .soon-icon svg{width:32px;height:32px;}
+  .soon-icon::after{content:'';position:absolute;inset:-8px;border-radius:50%;border:1px solid rgba(91,154,160,.4);animation:ring 2.6s ease-out infinite;}
+  @keyframes ring{from{transform:scale(.85);opacity:1;}to{transform:scale(1.35);opacity:0;}}
+  .soon-tag{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);border:1px solid rgba(227,168,87,.45);padding:4px 10px;border-radius:100px;margin-bottom:14px;}
+  .soon p.lead{margin-left:auto;margin-right:auto;}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;}
+  .chip{font-size:12.5px;color:var(--ink-dim);border:1px dashed var(--line-strong);padding:7px 12px;border-radius:100px;}
+
+  /* ---------- admin ---------- */
+  .sub-tabs{display:flex;gap:6px;margin-bottom:18px;}
+  .sub-tab{padding:8px 14px;border-radius:100px;border:1px solid var(--line-strong);background:none;color:var(--ink-dim);font-size:13px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;}
+  .sub-tab.active{background:var(--teal-soft);border-color:var(--teal);color:var(--teal);}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .adm-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--line);animation:paneIn .4s var(--ease) both;}
+  .adm-row:last-child{border-bottom:none;}
+  .adm-actions{display:flex;gap:6px;flex-shrink:0;}
+  .t-row{border-bottom:1px solid var(--line);}
+  .t-row:last-child{border-bottom:none;}
+  .t-head{width:100%;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 4px;background:none;border:none;color:var(--ink);font-family:'Inter',sans-serif;text-align:left;cursor:pointer;}
+  .t-head:hover .t-name{color:var(--amber);}
+  .t-name{font-weight:600;transition:color .2s;}
+  .t-right{display:flex;align-items:center;gap:10px;}
+  .t-right svg{transition:transform .35s var(--ease);color:var(--ink-faint);}
+  .t-row.open .t-right svg{transform:rotate(180deg);}
+  .t-detail{display:grid;grid-template-rows:0fr;transition:grid-template-rows .45s var(--ease);}
+  .t-row.open .t-detail{grid-template-rows:1fr;}
+  .t-inner{overflow:hidden;}
+  .t-box{background:var(--bg-deep);border:1px solid var(--line);border-radius:12px;padding:16px;margin:0 0 14px;font-size:13.5px;line-height:1.6;}
+  .metric{margin-top:12px;}
+  .metric-top{display:flex;justify-content:space-between;gap:8px;margin-bottom:6px;font-size:12.5px;color:var(--ink-dim);}
+  .bar{height:6px;border-radius:6px;background:rgba(255,255,255,.07);overflow:hidden;}
+  .bar-fill{height:100%;width:0;border-radius:6px;transition:width .8s var(--ease) .1s;}
+  .t-row.open .bar-fill{width:var(--w);}
+  .bar-fill.low{background:var(--danger);} .bar-fill.mid{background:var(--amber);} .bar-fill.high{background:var(--teal);}
+  .tag{font-family:'IBM Plex Mono',monospace;font-size:11px;padding:3px 9px;border-radius:100px;border:1px solid var(--line-strong);white-space:nowrap;}
+  .tag.low{color:var(--danger);border-color:var(--danger);background:var(--danger-soft);}
+  .tag.mid{color:var(--amber);border-color:var(--amber);background:var(--amber-soft);}
+  .tag.high{color:var(--teal);border-color:var(--teal);background:var(--teal-soft);}
+
+  /* ---------- toasts ---------- */
+  #toasts{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:60;display:flex;flex-direction:column;gap:8px;align-items:center;width:calc(100% - 32px);max-width:420px;}
+  .toast{padding:12px 18px;border-radius:12px;font-size:14px;background:rgba(31,36,51,.95);backdrop-filter:blur(12px);border:1px solid var(--line-strong);box-shadow:0 20px 40px -20px rgba(0,0,0,.8);animation:toastIn .45s var(--ease);}
+  .toast.ok{border-color:rgba(91,154,160,.6);}
+  .toast.bad{border-color:rgba(201,123,99,.7);}
+  .toast.out{opacity:0;transform:translateY(10px);transition:all .35s ease;}
+  @keyframes toastIn{from{opacity:0;transform:translateY(16px) scale(.96);}to{opacity:1;transform:none;}}
+
+  @media (max-width:560px){
+    .wrap{padding:24px 16px 80px;}
+    .card,.res-card{padding:20px;}
+    .q-card{padding:22px 18px 18px;}
+    .brand span{display:none;}
+    .grid-2{grid-template-columns:1fr;}
+    .scale{gap:6px;}
+    .opt{height:50px;}
+    .adm-row{flex-direction:column;align-items:flex-start;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;}
+    .rv{opacity:1;transform:none;}
+  }
 </style>
 </head>
 <body>
+<div class="bg" aria-hidden="true"><div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div><div class="grain"></div></div>
 <div class="wrap" id="app"></div>
+<div id="toasts" aria-live="polite"></div>
 
 <script>
 // ============================================================
-// CONFIGURACIÓN — reemplazá estos dos valores por los tuyos.
-// Los encontrás en Supabase: Project Settings > API
+// CONFIGURACIÓN — Supabase: Project Settings > API
 // ============================================================
 const SUPABASE_URL = 'https://xqazoxxthaupsknqknmb.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_pkFVPhfDQYyTnw7S-FU6XA_rjEMZhLm';
@@ -106,32 +297,82 @@ const SUB_LABEL = {A:'Tolerancia a la frustración', B:'Locus de control', C:'Fl
 
 let state = { screen:'loading', session:null, profile:null, tab:'test', hasTest:null };
 
-function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-function fmtDate(d){ return new Date(d.length===10 ? d+'T12:00:00' : d).toLocaleDateString('es-AR'); }
+// ---------- utilidades ----------
 function el(html){ const d=document.createElement('div'); d.innerHTML=html.trim(); return d.firstElementChild; }
+// Escapa texto antes de meterlo en HTML (evita que un nombre o título ejecute código)
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const nl2br = s => esc(s).replace(/\n/g,'<br>');
 function ytEmbed(url){
   try{ const m = url.match(/(?:youtu\.be\/|v=|embed\/)([\w-]{6,})/); if(m) return 'https://www.youtube.com/embed/'+m[1]; }catch(e){}
   return null;
 }
+function greeting(){ const h=new Date().getHours(); return h<12?'Buen día':h<20?'Buenas tardes':'Buenas noches'; }
+function fmtDate(d){ try{ return new Date(d).toLocaleDateString('es-AR',{day:'numeric',month:'short',year:'numeric'}); }catch(e){ return ''; } }
+function toast(msg, kind='ok'){
+  const t=document.createElement('div'); t.className='toast '+kind; t.textContent=msg;
+  document.getElementById('toasts').appendChild(t);
+  setTimeout(()=>{ t.classList.add('out'); setTimeout(()=>t.remove(),400); }, 3400);
+}
+function showErr(node, msg){ node.textContent=msg; node.classList.remove('shake'); void node.offsetWidth; node.classList.add('shake'); }
+function skeleton(n=2){ return Array.from({length:n}).map(()=>`<div class="skel"><i style="width:30%"></i><i style="width:70%;height:18px"></i><i style="width:92%"></i><i style="width:80%;margin:0"></i></div>`).join(''); }
+let keyHandler=null;
+function setKeys(fn){ if(keyHandler) document.removeEventListener('keydown',keyHandler); keyHandler=fn; if(fn) document.addEventListener('keydown',fn); }
+
+const svg=(d)=>`<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+const ICON={
+  arrow: svg('<path d="M5 12h14M13 6l6 6-6 6"/>'),
+  lock: svg('<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>'),
+  compass: svg('<circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/>'),
+  quote: svg('<path d="M7 17c-2 0-3-1.5-3-4 0-3 2-6 5-7M17 17c-2 0-3-1.5-3-4 0-3 2-6 5-7"/>'),
+  shield: svg('<path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/>'),
+  clip: svg('<rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4h6v3H9zM9 12h6M9 16h4"/>'),
+  panel: svg('<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 20V9"/>'),
+  check: svg('<path d="M5 12l5 5 9-10"/>'),
+  info: svg('<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>'),
+  chevron: svg('<path d="M6 9l6 6 6-6"/>'),
+  play: svg('<path d="M8 5l11 7-11 7z"/>'),
+  image: svg('<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-8 8"/>'),
+  text: svg('<path d="M5 6h14M5 11h14M5 16h9"/>'),
+  mark: `<svg viewBox="0 0 100 100" width="28" height="28" aria-hidden="true"><circle cx="50" cy="50" r="45" fill="#1F2433" stroke="#333B4D" stroke-width="2"/><path d="M20 60 Q50 30 80 60" stroke="#E3A857" stroke-width="7" fill="none" stroke-linecap="round"/></svg>`
+};
+
+function sunrise(cls=''){
+  return `<svg class="sunrise ${cls}" viewBox="0 0 320 110" aria-hidden="true">
+    <defs>
+      <radialGradient id="sunG"><stop offset="0%" stop-color="#FBE0B4"/><stop offset="100%" stop-color="#E3A857"/></radialGradient>
+      <radialGradient id="glowG"><stop offset="0%" stop-color="#E3A857" stop-opacity=".55"/><stop offset="100%" stop-color="#E3A857" stop-opacity="0"/></radialGradient>
+      <clipPath id="above"><rect x="0" y="0" width="320" height="80"/></clipPath>
+    </defs>
+    <g clip-path="url(#above)"><g class="sun-rise">
+      <circle class="sun-glow" cx="160" cy="80" r="72" fill="url(#glowG)"/>
+      <circle cx="160" cy="80" r="30" fill="url(#sunG)"/>
+    </g></g>
+    <path class="draw" d="M12 80 H308" stroke="#E3A857" stroke-width="2"/>
+    <path class="draw d2" d="M62 93 Q160 87 258 93" stroke="#5B9AA0" stroke-width="2" opacity=".75"/>
+    <path class="draw d3" d="M104 104 Q160 100 216 104" stroke="#5B9AA0" stroke-width="2" opacity=".4"/>
+  </svg>`;
+}
+
 async function refreshHasTest(){
   const { data } = await sb.from('test_submissions').select('id').eq('user_id', state.session.user.id).maybeSingle();
   state.hasTest = !!data;
   return state.hasTest;
 }
 
-async function init(){
-  const { data: { session } } = await sb.auth.getSession();
-  if(session){
-    state.session = session;
-    const { data: profile } = await sb.from('profiles').select('*').eq('id', session.user.id).single();
-    state.profile = profile;
-    await refreshHasTest();
-    state.tab = state.hasTest ? 'experiencia' : 'test';
-    state.screen = (profile && profile.name) ? 'welcome' : 'nameCapture';
-  } else {
-    state.screen = 'login';
-  }
+async function loadUserAndRoute(){
+  const { data: profile } = await sb.from('profiles').select('*').eq('id', state.session.user.id).single();
+  state.profile = profile;
+  await refreshHasTest();
+  state.tab = state.hasTest ? 'experiencia' : 'test';
+  state.screen = (profile && profile.name) ? 'welcome' : 'nameCapture';
   render();
+}
+
+async function init(){
+  render();
+  const { data: { session } } = await sb.auth.getSession();
+  if(session){ state.session = session; await loadUserAndRoute(); }
+  else { state.screen = 'login'; render(); }
 }
 
 sb.auth.onAuthStateChange((event, session) => {
@@ -140,77 +381,84 @@ sb.auth.onAuthStateChange((event, session) => {
 });
 
 function render(){
+  setKeys(null);
   const app = document.getElementById('app');
   app.innerHTML = '';
-  if(state.screen==='loading') app.appendChild(el(`<p class="hint" style="text-align:center;margin-top:100px;">Cargando...</p>`));
-  else if(state.screen==='login') app.appendChild(renderLogin());
-  else if(state.screen==='nameCapture') app.appendChild(renderNameCapture());
-  else if(state.screen==='resetPassword') app.appendChild(renderResetPassword());
-  else if(state.screen==='welcome') app.appendChild(renderWelcome());
-  else if(state.screen==='dashboard') app.appendChild(renderDashboard());
+  let node;
+  if(state.screen==='loading') node = el(`<div class="loading-screen">${sunrise('sm')}<p class="hint">Preparando tu espacio…</p></div>`);
+  else if(state.screen==='login') node = renderLogin();
+  else if(state.screen==='nameCapture') node = renderNameCapture();
+  else if(state.screen==='resetPassword') node = renderResetPassword();
+  else if(state.screen==='welcome') node = renderWelcome();
+  else if(state.screen==='dashboard') node = renderDashboard();
+  app.appendChild(node);
+  if(node._after) node._after();
+  window.scrollTo({top:0});
 }
 
 // ---------- LOGIN ----------
 function renderLogin(){
-  const wrap = el(`<div>
-    <div class="eyebrow">Nómade con Sentido</div>
-    <h1>Tu espacio</h1>
-    <p class="lead">Ingresá con el mail y la contraseña que definiste al aceptar la invitación que te llegó por correo.</p>
-    <div class="card">
-      <label>Email</label>
-      <input type="email" id="e" autocomplete="username"/>
-      <label>Contraseña</label>
-      <input type="password" id="p" autocomplete="current-password"/>
+  const wrap = el(`<div class="auth">
+    <div class="rv" style="--d:0">${sunrise()}</div>
+    <div class="eyebrow rv" style="--d:1">Nómade con Sentido</div>
+    <h1 class="rv" style="--d:2">Tu espacio, <em>a tu ritmo.</em></h1>
+    <p class="lead rv" style="--d:3">Ingresá con el mail y la contraseña que definiste al aceptar la invitación que te llegó por correo.</p>
+    <form class="card rv" style="--d:4" id="loginForm" novalidate>
+      <div class="field"><label for="e">Email</label><input type="email" id="e" autocomplete="username"/></div>
+      <div class="field"><label for="p">Contraseña</label><input type="password" id="p" autocomplete="current-password"/></div>
       <p class="err" id="err"></p>
-      <button class="primary" id="loginBtn" style="width:100%;">Ingresar</button>
-    </div>
-    <p class="hint" style="text-align:center;">¿No tenés acceso todavía? Escribile a Valentina.</p>
-    <p class="hint" style="text-align:center;"><a href="#" id="forgot" style="color:var(--teal);">Olvidé mi contraseña</a></p>
+      <button type="submit" class="primary wide" id="loginBtn"><span>Ingresar</span>${ICON.arrow}</button>
+    </form>
+    <p class="hint center-t rv" style="--d:5">¿No tenés acceso todavía? Escribile a Valentina.</p>
+    <p class="hint center-t rv" style="--d:6"><a href="#" id="forgot" class="link">Olvidé mi contraseña</a></p>
   </div>`);
   wrap.querySelector('#forgot').onclick = async (e)=>{
     e.preventDefault();
     const email = wrap.querySelector('#e').value.trim();
-    if(!email){ alert('Escribí tu email arriba primero, y volvé a tocar el link.'); return; }
+    if(!email){ toast('Escribí tu email arriba primero y volvé a tocar el link.','bad'); wrap.querySelector('#e').focus(); return; }
     const { error } = await sb.auth.resetPasswordForEmail(email);
-    alert(error ? ('No se pudo enviar: '+error.message) : 'Te enviamos un mail para reestablecer tu contraseña.');
+    toast(error ? ('No se pudo enviar: '+error.message) : 'Te enviamos un mail para restablecer tu contraseña.', error?'bad':'ok');
   };
-  wrap.querySelector('#loginBtn').onclick = async ()=>{
+  wrap.querySelector('#loginForm').onsubmit = async (e)=>{
+    e.preventDefault();
     const email = wrap.querySelector('#e').value.trim();
     const password = wrap.querySelector('#p').value;
     const errEl = wrap.querySelector('#err');
     const btn = wrap.querySelector('#loginBtn');
     errEl.textContent = '';
-    if(!email || !password){ errEl.textContent = 'Completá email y contraseña.'; return; }
-    btn.disabled = true; btn.textContent = 'Ingresando...';
+    if(!email || !password){ showErr(errEl,'Completá email y contraseña.'); return; }
+    btn.classList.add('loading'); btn.querySelector('span').textContent='Ingresando';
     const { data, error } = await sb.auth.signInWithPassword({ email, password });
-    if(error){ errEl.textContent = 'Email o contraseña incorrectos.'; btn.disabled=false; btn.textContent='Ingresar'; return; }
+    if(error){ showErr(errEl,'Email o contraseña incorrectos.'); btn.classList.remove('loading'); btn.querySelector('span').textContent='Ingresar'; return; }
     state.session = data.session;
-    const { data: profile } = await sb.from('profiles').select('*').eq('id', data.session.user.id).single();
-    state.profile = profile;
-    await refreshHasTest();
-    state.tab = state.hasTest ? 'experiencia' : 'test';
-    state.screen = (profile && profile.name) ? 'welcome' : 'nameCapture';
-    render();
+    await loadUserAndRoute();
   };
   return wrap;
 }
 
-// ---------- CAPTURA DE NOMBRE (solo si el perfil no tiene nombre) ----------
+// ---------- CAPTURA DE NOMBRE ----------
 function renderNameCapture(){
   const wrap = el(`<div class="center">
-    <div class="eyebrow">Nómade con Sentido</div>
-    <h1 style="font-size:24px;">¿Cómo te llamás?</h1>
-    <p class="lead">Así sabemos cómo dirigirnos a vos en tu espacio.</p>
-    <input type="text" id="name" placeholder="Tu nombre"/>
-    <p class="err" id="err"></p>
-    <button class="primary" id="saveName" style="width:100%;">Continuar</button>
+    <div class="rv" style="--d:0">${sunrise('sm')}</div>
+    <div class="eyebrow rv" style="--d:1">Nómade con Sentido</div>
+    <h1 class="rv" style="--d:2;font-size:30px;">¿Cómo te <em>llamás?</em></h1>
+    <p class="lead rv" style="--d:3">Así sabemos cómo dirigirnos a vos en tu espacio.</p>
+    <form class="rv" style="--d:4" id="f">
+      <input type="text" id="name" placeholder="Tu nombre" autocomplete="given-name"/>
+      <p class="err" id="err" style="margin-top:10px;"></p>
+      <button type="submit" class="primary wide" id="saveName"><span>Continuar</span>${ICON.arrow}</button>
+    </form>
   </div>`);
-  wrap.querySelector('#saveName').onclick = async ()=>{
+  wrap._after = ()=> wrap.querySelector('#name').focus();
+  wrap.querySelector('#f').onsubmit = async (e)=>{
+    e.preventDefault();
     const name = wrap.querySelector('#name').value.trim();
     const errEl = wrap.querySelector('#err');
-    if(!name){ errEl.textContent = 'Contanos tu nombre para continuar.'; return; }
+    const btn = wrap.querySelector('#saveName');
+    if(!name){ showErr(errEl,'Contanos tu nombre para continuar.'); return; }
+    btn.classList.add('loading');
     const { error } = await sb.from('profiles').update({ name }).eq('id', state.session.user.id);
-    if(error){ errEl.textContent = 'No se pudo guardar, probá de nuevo.'; return; }
+    if(error){ btn.classList.remove('loading'); showErr(errEl,'No se pudo guardar, probá de nuevo.'); return; }
     state.profile = { ...state.profile, name };
     state.screen = 'welcome';
     render();
@@ -218,30 +466,32 @@ function renderNameCapture(){
   return wrap;
 }
 
-// ---------- DEFINIR CONTRASEÑA NUEVA (llegando desde el mail de recuperación) ----------
+// ---------- NUEVA CONTRASEÑA ----------
 function renderResetPassword(){
   const wrap = el(`<div class="center">
-    <div class="eyebrow">Nómade con Sentido</div>
-    <h1 style="font-size:24px;">Nueva contraseña</h1>
-    <p class="lead">Elegí tu nueva contraseña para entrar a tu espacio.</p>
-    <input type="password" id="p1" placeholder="Contraseña nueva"/>
-    <input type="password" id="p2" placeholder="Repetila"/>
-    <p class="err" id="err"></p>
-    <button class="primary" id="save" style="width:100%;">Guardar</button>
+    <div class="rv" style="--d:0">${sunrise('sm')}</div>
+    <div class="eyebrow rv" style="--d:1">Nómade con Sentido</div>
+    <h1 class="rv" style="--d:2;font-size:30px;">Nueva <em>contraseña</em></h1>
+    <p class="lead rv" style="--d:3">Elegí tu nueva contraseña para entrar a tu espacio.</p>
+    <form class="rv" style="--d:4;text-align:left;" id="f">
+      <div class="field"><input type="password" id="p1" placeholder="Contraseña nueva" autocomplete="new-password"/></div>
+      <div class="field"><input type="password" id="p2" placeholder="Repetila" autocomplete="new-password"/></div>
+      <p class="err" id="err"></p>
+      <button type="submit" class="primary wide" id="save"><span>Guardar</span>${ICON.arrow}</button>
+    </form>
   </div>`);
-  wrap.querySelector('#save').onclick = async ()=>{
+  wrap.querySelector('#f').onsubmit = async (e)=>{
+    e.preventDefault();
     const p1 = wrap.querySelector('#p1').value, p2 = wrap.querySelector('#p2').value;
     const errEl = wrap.querySelector('#err');
-    if(!p1 || p1.length < 6){ errEl.textContent = 'La contraseña debe tener al menos 6 caracteres.'; return; }
-    if(p1 !== p2){ errEl.textContent = 'Las contraseñas no coinciden.'; return; }
+    const btn = wrap.querySelector('#save');
+    if(!p1 || p1.length < 6){ showErr(errEl,'La contraseña debe tener al menos 6 caracteres.'); return; }
+    if(p1 !== p2){ showErr(errEl,'Las contraseñas no coinciden.'); return; }
+    btn.classList.add('loading');
     const { error } = await sb.auth.updateUser({ password: p1 });
-    if(error){ errEl.textContent = 'No se pudo guardar, probá de nuevo.'; return; }
-    const { data: profile } = await sb.from('profiles').select('*').eq('id', state.session.user.id).single();
-    state.profile = profile;
-    await refreshHasTest();
-    state.tab = state.hasTest ? 'experiencia' : 'test';
-    state.screen = (profile && profile.name) ? 'welcome' : 'nameCapture';
-    render();
+    if(error){ btn.classList.remove('loading'); showErr(errEl,'No se pudo guardar, probá de nuevo.'); return; }
+    toast('Contraseña actualizada.');
+    await loadUserAndRoute();
   };
   return wrap;
 }
@@ -249,30 +499,26 @@ function renderResetPassword(){
 // ---------- BIENVENIDA ----------
 function renderWelcome(){
   const name = state.profile && state.profile.name ? state.profile.name : '';
-  const wrap = el(`<div>
-    <div class="eyebrow">Nómade con Sentido</div>
-    <h1>Hola${name ? ', '+name : ''}. Bienvenida/o a tu espacio.</h1>
-    <p class="lead">
+  const t = state.hasTest;
+  const wrap = el(`<div style="max-width:640px;margin:4vh auto 0;">
+    <div class="rv" style="--d:0">${sunrise()}</div>
+    <div class="eyebrow rv" style="--d:1">${greeting()}</div>
+    <h1 class="rv" style="--d:2">Hola${name ? ', <em>'+esc(name)+'</em>' : ''}.<br>Bienvenida/o a tu espacio.</h1>
+    <p class="lead rv" style="--d:3">
       Acá vas a encontrar relatos de experiencias reales de personas que ya se
       animaron a dar este paso, testimonios, y contenido pensado para
       acompañarte en el proceso — no para apurarte.
     </p>
-    <p class="lead">
-      Todo lo que compartas en este espacio está protegido por el secreto
-      profesional. Nada de lo que cuentes acá sale de esta plataforma ni de tu
-      sesión con Valentina.
-    </p>
-    ${state.hasTest ? `
-    <p class="lead">Ya completaste tu test pre-sesión — Valentina ya lo tiene para tu sesión.</p>
-    <button class="primary" id="go" style="width:100%;">Entrar a tu espacio</button>
-    ` : `
-    <p class="lead">
-      Estás invitada/o a dar el primer paso dentro del programa: completar el
-      test pre-sesión, para que el acompañamiento sea lo más específico
-      posible para vos.
-    </p>
-    <button class="primary" id="go" style="width:100%;">Comenzar el test</button>
-    `}
+    <div class="seal rv" style="--d:4">${ICON.lock}<div><strong>Protegido por secreto profesional</strong><span>Todo lo que compartas en este espacio está protegido por el secreto profesional. Nada de lo que cuentes acá sale de esta plataforma ni de tu sesión con Valentina.</span></div></div>
+    <div class="path rv" style="--d:5">
+      <div class="step ${t?'done':'current'}"><div class="step-dot">${t?ICON.check:'1'}</div><div class="step-label">Test pre-sesión</div></div>
+      <div class="step ${t?'current':''}"><div class="step-dot">2</div><div class="step-label">Sesión con Valentina</div></div>
+      <div class="step"><div class="step-dot">3</div><div class="step-label">Contenido y acompañamiento</div></div>
+    </div>
+    <p class="lead rv" style="--d:6">${t
+      ? 'Ya completaste tu test pre-sesión — Valentina ya lo tiene para tu sesión.'
+      : 'Estás invitada/o a dar el primer paso dentro del programa: completar el test pre-sesión, para que el acompañamiento sea lo más específico posible para vos.'}</p>
+    <div class="rv" style="--d:7"><button class="primary" id="go"><span>${t?'Entrar a tu espacio':'Comenzar el test'}</span>${ICON.arrow}</button></div>
   </div>`);
   wrap.querySelector('#go').onclick = ()=>{ state.screen='dashboard'; state.tab = state.hasTest ? 'experiencia' : 'test'; render(); };
   return wrap;
@@ -281,123 +527,218 @@ function renderWelcome(){
 // ---------- DASHBOARD ----------
 function renderDashboard(){
   const isAdmin = state.profile && state.profile.is_admin;
+  const display = (state.profile && state.profile.name) ? state.profile.name : state.session.user.email;
+  const tabs = [
+    !state.hasTest && {id:'test', label:'Test pre-sesión', icon:ICON.clip},
+    {id:'experiencia', label:'Experiencia de emigrar', icon:ICON.compass},
+    {id:'testimonios', label:'Testimonios', icon:ICON.quote},
+    {id:'seguridad', label:'Seguridad para el nómade', icon:ICON.shield},
+    isAdmin && {id:'admin', label:'Panel profesional', icon:ICON.panel},
+  ].filter(Boolean);
+
   const wrap = el(`<div>
-    <div class="row-between" style="margin-bottom:18px;">
-      <div class="eyebrow" style="margin:0;">Nómade con Sentido</div>
-      <button class="ghost" id="logout">Salir</button>
-    </div>
-    <h1>Hola, ${state.profile && state.profile.name ? state.profile.name : state.session.user.email}</h1>
-    <div class="tabs" id="tabs">
-      ${state.hasTest ? '' : '<button class="tab" data-tab="test">Test pre-sesión</button>'}
-      <button class="tab" data-tab="plan">Tu plan</button>
-      <button class="tab" data-tab="experiencia">Experiencia de emigrar</button>
-      <button class="tab" data-tab="testimonios">Testimonios</button>
-      <button class="tab" data-tab="seguridad">Seguridad para el nómade</button>
-      ${isAdmin ? '<button class="tab" data-tab="admin">Panel profesional</button>' : ''}
-    </div>
-    <div id="tabContent"></div>
-    <p class="hint" style="text-align:center;margin-top:50px;">Espacio privado y confidencial — protegido por secreto profesional.</p>
+    <header class="topbar rv" style="--d:0">
+      <div class="brand">${ICON.mark}<span>Nómade con Sentido</span></div>
+      <div class="top-right">
+        <div class="avatar" title="${esc(state.session.user.email)}">${esc(String(display).trim().charAt(0).toUpperCase())}</div>
+        <button class="ghost" id="logout">Salir</button>
+      </div>
+    </header>
+    <section class="dash-hero">
+      <div class="eyebrow rv" style="--d:1">${greeting()}</div>
+      <h1 class="rv" style="--d:2">Hola, <em>${esc(display)}</em></h1>
+    </section>
+    <nav class="tabs rv" style="--d:3" role="tablist">
+      <span class="tab-ind"></span>
+      ${tabs.map(t=>`<button class="tab" role="tab" data-tab="${t.id}">${t.icon}<span>${t.label}</span></button>`).join('')}
+    </nav>
+    <div id="tabContent" class="rv" style="--d:4"></div>
+    <p class="foot-note">${ICON.lock} Espacio privado y confidencial — protegido por secreto profesional.</p>
   </div>`);
   wrap.querySelector('#logout').onclick = async ()=>{ await sb.auth.signOut(); };
-  wrap.querySelectorAll('.tab').forEach(t=>{
-    t.classList.toggle('active', t.dataset.tab===state.tab);
-    t.onclick = ()=>{ state.tab = t.dataset.tab; render(); };
-  });
-  const content = wrap.querySelector('#tabContent');
-  if(state.tab==='test' && !state.hasTest) renderTest(content);
-  else if(state.tab==='plan') renderClientPlan(content);
-  else if(state.tab==='experiencia') renderResourceList(content,'experiencia','Todavía no hay contenido cargado en esta sección.');
-  else if(state.tab==='testimonios') renderResourceList(content,'testimonio','Todavía no hay testimonios cargados.');
-  else if(state.tab==='seguridad') content.appendChild(el(`<div class="card"><p class="lead" style="margin:0;">Estamos preparando el kit de emergencia del nómade — con información específica para actuar ante robos, vuelos perdidos y otras situaciones que pueden pasar viajando. Vas a verlo acá apenas esté listo.</p></div>`));
-  else if(state.tab==='admin' && isAdmin) renderAdmin(content);
+  wrap.querySelectorAll('.tab').forEach(t=>{ t.onclick = ()=>{ if(state.tab!==t.dataset.tab){ state.tab = t.dataset.tab; paintTab(wrap); } }; });
+  wrap._after = ()=>{ paintTab(wrap); if(document.fonts) document.fonts.ready.then(()=>moveIndicator(wrap)); };
   return wrap;
 }
 
+function moveIndicator(wrap){
+  const nav = wrap.querySelector('.tabs'); if(!nav) return;
+  const active = nav.querySelector('.tab.active'); const ind = nav.querySelector('.tab-ind');
+  if(!active) return;
+  ind.style.width = active.offsetWidth+'px';
+  ind.style.transform = `translateX(${active.offsetLeft}px)`;
+  if(nav.scrollWidth > nav.clientWidth) nav.scrollTo({left: active.offsetLeft - 24, behavior:'smooth'});
+}
+window.addEventListener('resize', ()=>{ const w=document.querySelector('#app > div'); if(w && state.screen==='dashboard') moveIndicator(w); });
+
+function paintTab(wrap){
+  setKeys(null);
+  const isAdmin = state.profile && state.profile.is_admin;
+  wrap.querySelectorAll('.tab').forEach(t=>{ const on = t.dataset.tab===state.tab; t.classList.toggle('active',on); t.setAttribute('aria-selected',on); });
+  moveIndicator(wrap);
+  const content = wrap.querySelector('#tabContent');
+  content.innerHTML = '';
+  const pane = el(`<div class="tab-pane"></div>`);
+  content.appendChild(pane);
+  if(state.tab==='test' && !state.hasTest) renderTest(pane);
+  else if(state.tab==='experiencia') renderResourceList(pane,'experiencia','Todavía no hay contenido cargado en esta sección.');
+  else if(state.tab==='testimonios') renderResourceList(pane,'testimonio','Todavía no hay testimonios cargados.');
+  else if(state.tab==='seguridad') pane.appendChild(el(`<div class="card soon">
+      <div class="soon-icon">${ICON.shield}</div>
+      <div class="soon-tag">En preparación</div>
+      <h2>Kit de emergencia del <em>nómade</em></h2>
+      <p class="lead">Estamos preparando el kit de emergencia del nómade — con información específica para actuar ante robos, vuelos perdidos y otras situaciones que pueden pasar viajando. Vas a verlo acá apenas esté listo.</p>
+      <div class="chips"><span class="chip">Robos</span><span class="chip">Vuelos perdidos</span><span class="chip">Y más situaciones</span></div>
+    </div>`));
+  else if(state.tab==='admin' && isAdmin) renderAdmin(pane);
+}
+
+// ---------- TEST (una afirmación por vez) ----------
 async function renderTest(container){
-  container.appendChild(el(`<p class="hint">Cargando...</p>`));
+  container.innerHTML = skeleton(1);
   const { data: existing } = await sb.from('test_submissions').select('*').eq('user_id', state.session.user.id).maybeSingle();
   container.innerHTML = '';
   if(existing){
-    container.appendChild(el(`<div class="card"><p class="lead" style="margin:0;">Ya completaste tu test el ${new Date(existing.submitted_at).toLocaleDateString('es-AR')}. Valentina ya lo tiene para tu sesión.</p></div>`));
+    container.appendChild(el(`<div class="card" style="text-align:center;"><div class="done-mark">${ICON.check}</div><p class="lead" style="margin:0 auto;">Ya completaste tu test el ${new Date(existing.submitted_at).toLocaleDateString('es-AR')}. Valentina ya lo tiene para tu sesión.</p></div>`));
     return;
   }
   const answers = {};
-  const card = el(`<div>
-    <div class="horizon"><div class="horizon-fill" id="hf" style="width:0%"></div><div class="horizon-label" id="hl">0 / ${QUESTIONS.length}</div></div>
-    <div class="banner">Este es un instrumento de autoconocimiento, no un test clínico ni un diagnóstico. Es información para que tu sesión con Valentina sea más precisa.</div>
-    <p class="lead">No hay respuestas correctas. Marcá lo que más se acerca a cómo sos hoy.</p>
-    <div id="qs"></div>
-    <button class="primary" id="sendTest" disabled style="width:100%;">Enviar</button>
+  let idx = 0, locked = false;
+  const root = el(`<div>
+    <div class="journey">
+      <div class="journey-track"><div class="journey-fill" id="jf"></div><div class="journey-sun" id="js"></div></div>
+      <div class="journey-meta"><span id="jc">0 / ${QUESTIONS.length}</span><span id="jsub"></span></div>
+    </div>
+    <div class="banner">${ICON.info}<span>Este es un instrumento de autoconocimiento, no un test clínico ni un diagnóstico. Es información para que tu sesión con Valentina sea más precisa.</span></div>
+    <p class="hint" style="margin:0 0 16px;">No hay respuestas correctas. Marcá lo que más se acerca a cómo sos hoy. <span class="kbd-hint">También podés usar las teclas 1–5.</span></p>
+    <div class="q-stage" id="stage"></div>
   </div>`);
-  const qs = card.querySelector('#qs');
-  let lastSub=null;
-  QUESTIONS.forEach(q=>{
-    if(q.sub!==lastSub){ lastSub=q.sub; qs.appendChild(el(`<div class="section-title">${SUB_LABEL[q.sub]}</div>`)); }
-    qs.appendChild(el(`<div class="q"><div class="q-text">${q.text}</div>
-      <div class="scale">${[1,2,3,4,5].map(v=>`<div class="opt" data-q="${q.id}" data-v="${v}">${v}</div>`).join('')}</div>
-      <div class="scale-caption"><span>1 = Nunca así</span><span>5 = Totalmente así</span></div></div>`));
-  });
-  qs.querySelectorAll('.opt').forEach(opt=>{
-    opt.onclick = ()=>{
-      const qid=opt.dataset.q, v=parseInt(opt.dataset.v);
-      answers[qid]=v;
-      qs.querySelectorAll(`.opt[data-q="${qid}"]`).forEach(o=>o.classList.toggle('selected',o===opt));
-      const done = Object.keys(answers).length;
-      card.querySelector('#hf').style.width = Math.round(done/QUESTIONS.length*100)+'%';
-      card.querySelector('#hl').textContent = done+' / '+QUESTIONS.length;
-      card.querySelector('#sendTest').disabled = done<QUESTIONS.length;
-    };
-  });
-  card.querySelector('#sendTest').onclick = async ()=>{
-    const btn = card.querySelector('#sendTest');
-    btn.disabled=true; btn.textContent='Enviando...';
-    const { error } = await sb.from('test_submissions').insert({ user_id: state.session.user.id, answers });
-    if(error){ alert('No se pudo enviar. Probá de nuevo.'); btn.disabled=false; btn.textContent='Enviar'; return; }
-    state.hasTest = true;
-    state.tab = 'experiencia';
-    render();
-  };
-  container.appendChild(card);
-}
+  container.appendChild(root);
+  const stage = root.querySelector('#stage');
 
-// ---------- TU PLAN (devoluciones publicadas por Valentina) ----------
-async function renderClientPlan(container){
-  container.appendChild(el(`<p class="hint">Cargando...</p>`));
-  const { data: items, error } = await sb.from('client_feedback').select('*').eq('client_id', state.session.user.id).eq('published', true).order('created_at',{ascending:false});
-  container.innerHTML = '';
-  if(error || !items || items.length===0){
-    container.appendChild(el(`<div class="card"><p class="lead" style="margin:0;">Después de tu sesión, Valentina va a dejarte acá tu devolución y tu plan de acción personalizado.</p></div>`));
-    return;
+  function progress(){
+    const done = Object.keys(answers).length;
+    const pct = done/QUESTIONS.length*100;
+    root.querySelector('#jf').style.width = pct+'%';
+    root.querySelector('#js').style.left = pct+'%';
+    root.querySelector('#jc').textContent = done+' / '+QUESTIONS.length;
   }
-  items.forEach(it=>{
-    const steps = (it.action_plan||'').split('\n').map(x=>x.trim()).filter(Boolean);
-    container.appendChild(el(`<div class="card">
-      <div class="eyebrow">${fmtDate(it.created_at)}</div>
-      <h2>${esc(it.title)}</h2>
-      ${it.body ? `<p class="lead prewrap" style="margin:0 0 6px;">${esc(it.body)}</p>` : ''}
-      ${steps.length ? `<div class="section-title" style="margin-top:16px;">Tu plan de acción</div><ul class="plan-list">${steps.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>` : ''}
-    </div>`));
+
+  function showQ(dir=1){
+    if(idx >= QUESTIONS.length){ showSummary(dir); return; }
+    locked = false;
+    const q = QUESTIONS[idx];
+    root.querySelector('#jsub').textContent = 'Parte '+q.sub;
+    const qc = el(`<div class="q-card ${dir>0?'in-right':'in-left'}">
+      <div class="q-chip">Parte ${q.sub} · ${SUB_LABEL[q.sub]}</div>
+      <div class="q-num">${String(idx+1).padStart(2,'0')}</div>
+      <p class="q-text">${q.text}</p>
+      <div class="scale" role="radiogroup" aria-label="Qué tan así sos, de 1 a 5">
+        ${[1,2,3,4,5].map(v=>`<button type="button" class="opt ${answers[q.id]===v?'selected':''}" role="radio" aria-checked="${answers[q.id]===v}" data-v="${v}">${v}</button>`).join('')}
+      </div>
+      <div class="scale-caption"><span>1 = Nunca así</span><span>5 = Totalmente así</span></div>
+      <div class="q-nav">
+        <button type="button" class="ghost" id="prev" ${idx===0?'disabled':''}>← Anterior</button>
+        ${answers[q.id] ? '<button type="button" class="ghost" id="next">Siguiente →</button>' : ''}
+      </div>
+    </div>`);
+    stage.innerHTML = ''; stage.appendChild(qc);
+    qc.querySelectorAll('.opt').forEach(o=> o.onclick = ()=> pick(parseInt(o.dataset.v)));
+    qc.querySelector('#prev').onclick = ()=>{ if(idx>0){ idx--; showQ(-1); } };
+    const nx = qc.querySelector('#next'); if(nx) nx.onclick = ()=>{ idx++; showQ(1); };
+  }
+
+  function pick(v){
+    if(locked || idx>=QUESTIONS.length) return;
+    locked = true;
+    const q = QUESTIONS[idx];
+    answers[q.id] = v;
+    stage.querySelectorAll('.opt').forEach(o=>{ const on = parseInt(o.dataset.v)===v; o.classList.toggle('selected',on); o.setAttribute('aria-checked',on); });
+    progress();
+    setTimeout(()=>{ idx++; showQ(1); }, 340);
+  }
+
+  function showSummary(dir){
+    root.querySelector('#jsub').textContent = 'Completo';
+    const sc = el(`<div class="q-card ${dir>0?'in-right':'in-left'}" style="text-align:center;">
+      <div class="done-mark">${ICON.check}</div>
+      <h2>Respondiste las <em>${QUESTIONS.length}</em> afirmaciones</h2>
+      <p class="lead" style="margin:0 auto 22px;">Si querés, revisá tus respuestas antes de enviarlas. Una vez enviadas, le llegan a Valentina para preparar tu sesión.</p>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+        <button type="button" class="ghost" id="review">Revisar respuestas</button>
+        <button type="button" class="primary" id="sendTest"><span>Enviar</span>${ICON.arrow}</button>
+      </div>
+    </div>`);
+    stage.innerHTML = ''; stage.appendChild(sc);
+    sc.querySelector('#review').onclick = ()=>{ idx=0; showQ(-1); };
+    sc.querySelector('#sendTest').onclick = async ()=>{
+      const btn = sc.querySelector('#sendTest');
+      btn.classList.add('loading'); btn.querySelector('span').textContent='Enviando';
+      const { error } = await sb.from('test_submissions').insert({ user_id: state.session.user.id, answers });
+      if(error){ toast('No se pudo enviar. Probá de nuevo.','bad'); btn.classList.remove('loading'); btn.querySelector('span').textContent='Enviar'; return; }
+      setKeys(null);
+      stage.innerHTML = '';
+      stage.appendChild(el(`<div class="q-card in-right" style="text-align:center;padding:44px 26px;">
+        <div class="done-mark">${ICON.check}</div>
+        <h2>¡Listo! <em>Gracias.</em></h2>
+        <p class="lead" style="margin:0 auto;">Valentina ya tiene tu test para la sesión. Te llevamos a tu espacio…</p>
+      </div>`));
+      state.hasTest = true;
+      state.tab = 'experiencia';
+      setTimeout(render, 2200);
+    };
+  }
+
+  setKeys(e=>{
+    if(e.target.matches('input,textarea,select')) return;
+    const n = parseInt(e.key);
+    if(n>=1 && n<=5) pick(n);
+    else if(e.key==='ArrowLeft' && idx>0 && !locked){ idx--; showQ(-1); }
   });
+  progress();
+  showQ(1);
 }
 
+// ---------- RECURSOS ----------
 async function renderResourceList(container, category, emptyMsg){
-  container.appendChild(el(`<p class="hint">Cargando...</p>`));
+  container.innerHTML = skeleton(2);
   const { data: items } = await sb.from('resources').select('*').eq('category', category).order('created_at', {ascending:false});
   container.innerHTML = '';
-  if(!items || items.length===0){ container.appendChild(el(`<div class="card"><p class="lead" style="margin:0;">${emptyMsg}</p></div>`)); return; }
-  const card = el(`<div class="card"></div>`);
-  items.forEach(it=>{
-    const r = el(`<div class="resource"><h3>${it.title}</h3></div>`);
+  if(!items || items.length===0){
+    container.appendChild(el(`<div class="card empty"><div class="empty-icon">${category==='testimonio'?ICON.quote:ICON.compass}</div><p class="lead" style="margin:0 auto;">${emptyMsg}</p><p class="hint" style="margin-top:6px;">Valentina va sumando material de a poco. Volvé pronto.</p></div>`));
+    return;
+  }
+  const TYPE = { video:['Video',ICON.play], imagen:['Imagen',ICON.image], texto:['Lectura',ICON.text] };
+  const grid = el(`<div class="res-grid"></div>`);
+  items.forEach((it,i)=>{
+    const [tLabel, tIcon] = TYPE[it.type] || TYPE.texto;
+    const card = el(`<article class="res-card rv" style="--d:${Math.min(i,8)}">
+      <div class="res-meta"><span class="badge b-${esc(it.type)}">${tIcon}${tLabel}</span><span class="res-date">${it.created_at?fmtDate(it.created_at):''}</span></div>
+      <h3>${esc(it.title)}</h3>
+    </article>`);
     if(it.type==='video'){
-      const embed = ytEmbed(it.url);
-      r.appendChild(embed ? el(`<iframe src="${embed}" allowfullscreen></iframe>`) : el(`<video controls style="width:100%;border-radius:10px;margin:8px 0;display:block;" src="${it.url}"></video>`));
+      const embed = ytEmbed(it.url || '');
+      card.appendChild(el(`<div class="media">${embed
+        ? `<iframe src="${esc(embed)}" title="${esc(it.title)}" loading="lazy" allowfullscreen></iframe>`
+        : `<video controls preload="metadata" src="${esc(it.url)}"></video>`}</div>`));
     } else if(it.type==='imagen'){
-      r.appendChild(el(`<img src="${it.url}" alt="${it.title}"/>`));
+      const m = el(`<div class="media"><img src="${esc(it.url)}" alt="${esc(it.title)}" loading="lazy"/></div>`);
+      m.querySelector('img').onclick = ()=>{ const lb = el(`<div class="lightbox"><img src="${esc(it.url)}" alt="${esc(it.title)}"/></div>`); lb.onclick = ()=>lb.remove(); document.body.appendChild(lb); };
+      card.appendChild(m);
     }
-    if(it.body) r.appendChild(el(`<p class="lead" style="margin:6px 0 0;">${it.body}</p>`));
-    card.appendChild(r);
+    if(it.body) card.appendChild(el(`<p class="res-body clamp">${nl2br(it.body)}</p>`));
+    grid.appendChild(card);
   });
-  container.appendChild(card);
+  container.appendChild(grid);
+  requestAnimationFrame(()=>{
+    grid.querySelectorAll('.res-body.clamp').forEach(p=>{
+      if(p.scrollHeight > p.clientHeight + 2){
+        const b = el(`<button class="more">Leer más</button>`);
+        b.onclick = ()=>{ const open = p.classList.toggle('clamp'); b.textContent = open ? 'Leer más' : 'Leer menos'; };
+        p.after(b);
+      }
+    });
+  });
 }
 
 // ---------- ADMIN (solo visible si profiles.is_admin = true) ----------
@@ -418,21 +759,20 @@ function scoreSubmission(answers){
 }
 
 function renderAdmin(container){
-  const tabs = el(`<div class="tabs" style="margin-bottom:16px;">
-    <button class="tab active" data-a="contenido">Agregar contenido</button>
-    <button class="tab" data-a="tests">Tests recibidos</button>
-    <button class="tab" data-a="clientes">Clientes y notas</button>
+  const tabs = el(`<div class="sub-tabs">
+    <button class="sub-tab active" data-a="contenido">Agregar contenido</button>
+    <button class="sub-tab" data-a="tests">Tests recibidos</button>
   </div>`);
-  const sub = el(`<div id="adminSub"></div>`);
+  const sub = el(`<div></div>`);
   container.appendChild(tabs); container.appendChild(sub);
   const show = (which)=>{
-    tabs.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t.dataset.a===which));
+    tabs.querySelectorAll('.sub-tab').forEach(t=>t.classList.toggle('active', t.dataset.a===which));
     sub.innerHTML='';
-    if(which==='contenido') renderAdminContenido(sub);
-    else if(which==='clientes') renderAdminClientes(sub);
-    else renderAdminTests(sub);
+    const pane = el(`<div class="tab-pane"></div>`); sub.appendChild(pane);
+    if(which==='contenido') renderAdminContenido(pane);
+    else renderAdminTests(pane);
   };
-  tabs.querySelectorAll('.tab').forEach(t=> t.onclick = ()=> show(t.dataset.a));
+  tabs.querySelectorAll('.sub-tab').forEach(t=> t.onclick = ()=> show(t.dataset.a));
   show('contenido');
 }
 
@@ -440,16 +780,16 @@ function renderAdminContenido(container){
   let editingId = null;
   const card = el(`<div class="card">
     <h2 id="formTitle">Agregar contenido</h2>
-    <label>Sección</label>
-    <select id="cat"><option value="experiencia">Experiencia de emigrar</option><option value="testimonio">Testimonios</option></select>
-    <label>Tipo</label>
-    <select id="type"><option value="texto">Texto</option><option value="video">Video (link YouTube)</option><option value="imagen">Imagen (link)</option></select>
-    <label>Título</label><input type="text" id="title"/>
-    <label>Link (si aplica)</label><input type="text" id="url" placeholder="https://..."/>
-    <label>Texto / descripción</label><textarea id="body"></textarea>
+    <div class="grid-2">
+      <div class="field"><label for="cat">Sección</label><select id="cat"><option value="experiencia">Experiencia de emigrar</option><option value="testimonio">Testimonios</option></select></div>
+      <div class="field"><label for="type">Tipo</label><select id="type"><option value="texto">Texto</option><option value="video">Video (link YouTube)</option><option value="imagen">Imagen (link)</option></select></div>
+    </div>
+    <div class="field"><label for="title">Título</label><input type="text" id="title"/></div>
+    <div class="field"><label for="url">Link (si aplica)</label><input type="text" id="url" placeholder="https://..."/></div>
+    <div class="field"><label for="body">Texto / descripción</label><textarea id="body"></textarea></div>
     <p class="err" id="err"></p>
-    <div style="display:flex;gap:10px;">
-      <button class="primary" id="add">Agregar</button>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <button class="primary" id="add"><span>Agregar</span>${ICON.arrow}</button>
       <button class="ghost hidden" id="cancelEdit">Cancelar edición</button>
     </div>
   </div>`);
@@ -457,7 +797,7 @@ function renderAdminContenido(container){
   function clearForm(){
     editingId = null;
     card.querySelector('#formTitle').textContent = 'Agregar contenido';
-    card.querySelector('#add').textContent = 'Agregar';
+    card.querySelector('#add span').textContent = 'Agregar';
     card.querySelector('#cancelEdit').classList.add('hidden');
     card.querySelector('#cat').value='experiencia';
     card.querySelector('#type').value='texto';
@@ -470,7 +810,7 @@ function renderAdminContenido(container){
   function loadIntoForm(it){
     editingId = it.id;
     card.querySelector('#formTitle').textContent = 'Editando: '+it.title;
-    card.querySelector('#add').textContent = 'Guardar cambios';
+    card.querySelector('#add span').textContent = 'Guardar cambios';
     card.querySelector('#cancelEdit').classList.remove('hidden');
     card.querySelector('#cat').value = it.category;
     card.querySelector('#type').value = it.type;
@@ -478,7 +818,7 @@ function renderAdminContenido(container){
     card.querySelector('#url').value = it.url || '';
     card.querySelector('#body').value = it.body || '';
     card.querySelector('#err').textContent='';
-    card.scrollIntoView({behavior:'smooth'});
+    card.scrollIntoView({behavior:'smooth', block:'start'});
   }
 
   card.querySelector('#cancelEdit').onclick = clearForm;
@@ -490,32 +830,37 @@ function renderAdminContenido(container){
     const url = card.querySelector('#url').value.trim();
     const body = card.querySelector('#body').value.trim();
     const errEl = card.querySelector('#err');
-    if(!title || (type!=='texto' && !url)){ errEl.textContent='Completá título y link (si corresponde).'; return; }
+    const btn = card.querySelector('#add');
+    if(!title || (type!=='texto' && !url)){ showErr(errEl,'Completá título y link (si corresponde).'); return; }
+    btn.classList.add('loading');
     let error;
+    const wasEditing = !!editingId;
     if(editingId){
       // UPDATE: no toca created_at, así que el orden en la lista del cliente no se mueve.
       ({ error } = await sb.from('resources').update({ category, type, title, url, body }).eq('id', editingId));
     } else {
       ({ error } = await sb.from('resources').insert({ category, type, title, url, body }));
     }
-    if(error){ errEl.textContent='No se pudo guardar: '+error.message; return; }
+    btn.classList.remove('loading');
+    if(error){ showErr(errEl,'No se pudo guardar: '+error.message); return; }
+    toast(wasEditing ? 'Cambios guardados.' : 'Contenido publicado.');
     clearForm();
     refreshList();
   };
   container.appendChild(card);
-  const listCard = el(`<div class="card"><h2>Contenido cargado</h2><p class="hint">Tocá "Editar" para modificar sin perder el orden. Solo borrá si querés eliminarlo del todo.</p><div id="resList"><p class="hint">Cargando...</p></div></div>`);
+  const listCard = el(`<div class="card"><h2>Contenido cargado</h2><p class="hint" style="margin-top:-4px;">Tocá "Editar" para modificar sin perder el orden. Solo borrá si querés eliminarlo del todo.</p><div id="resList">${skeleton(1)}</div></div>`);
   container.appendChild(listCard);
   async function refreshList(){
     const { data: items } = await sb.from('resources').select('*').order('created_at',{ascending:false});
     const listEl = listCard.querySelector('#resList');
     listEl.innerHTML='';
     if(!items || items.length===0){ listEl.innerHTML='<p class="hint">Todavía no agregaste contenido.</p>'; return; }
-    items.forEach(it=>{
-      const row = el(`<div class="sub-row" style="cursor:default;">
-        <div><div style="font-weight:600;">${it.title}</div><div class="hint">${it.category} · ${it.type}</div></div>
-        <div style="display:flex;gap:8px;">
+    items.forEach((it,i)=>{
+      const row = el(`<div class="adm-row" style="animation-delay:${Math.min(i,10)*40}ms">
+        <div><div style="font-weight:600;">${esc(it.title)}</div><div class="hint">${esc(it.category)} · ${esc(it.type)}</div></div>
+        <div class="adm-actions">
           <button class="ghost" data-action="edit">Editar</button>
-          <button class="ghost" data-action="del">Borrar</button>
+          <button class="ghost danger" data-action="del">Borrar</button>
         </div>
       </div>`);
       row.querySelector('[data-action="edit"]').onclick = ()=> loadIntoForm(it);
@@ -523,6 +868,7 @@ function renderAdminContenido(container){
         if(!confirm('¿Borrar "'+it.title+'"? No se puede deshacer.')) return;
         await sb.from('resources').delete().eq('id', it.id);
         if(editingId===it.id) clearForm();
+        toast('Contenido eliminado.');
         refreshList();
       };
       listEl.appendChild(row);
@@ -532,162 +878,30 @@ function renderAdminContenido(container){
 }
 
 async function renderAdminTests(container){
-  container.appendChild(el(`<div class="card"><h2>Tests recibidos</h2><p class="hint" id="loadMsg">Cargando...</p><div id="testList"></div></div>`));
+  const card = el(`<div class="card"><h2>Tests recibidos</h2><div id="testList">${skeleton(1)}</div></div>`);
+  container.appendChild(card);
   const { data: subs } = await sb.from('test_submissions').select('*, profiles(name)').order('submitted_at',{ascending:false});
-  const loadMsg = container.querySelector('#loadMsg');
-  const listEl = container.querySelector('#testList');
-  loadMsg.remove();
+  const listEl = card.querySelector('#testList');
+  listEl.innerHTML = '';
   if(!subs || subs.length===0){ listEl.innerHTML = '<p class="hint">Todavía no hay tests completados.</p>'; return; }
   subs.forEach(it=>{
     const { sub, levels, profile, label } = scoreSubmission(it.answers);
     const hasLow = Object.values(levels).includes('low');
     const name = it.profiles && it.profiles.name ? it.profiles.name : it.user_id;
-    const row = el(`<div class="sub-row"><div><div style="font-weight:600;">${name}</div><div class="hint">${new Date(it.submitted_at).toLocaleDateString('es-AR')}</div></div><div class="tag ${hasLow?'low':'high'}">${label}</div></div>`);
-    const detail = el(`<div class="detail hidden">
-      <strong>Perfil:</strong> ${profile}<br/>
-      A — ${SUB_LABEL.A}: ${sub.A}/20 <span class="tag ${levels.A}">${levels.A}</span><br/>
-      B — ${SUB_LABEL.B}: ${sub.B}/20 <span class="tag ${levels.B}">${levels.B}</span><br/>
-      C — ${SUB_LABEL.C}: ${sub.C}/20 <span class="tag ${levels.C}">${levels.C}</span>
+    const metric = k => `<div class="metric"><div class="metric-top"><span>${k} — ${SUB_LABEL[k]}</span><span>${sub[k]}/20 <span class="tag ${levels[k]}">${levels[k]}</span></span></div><div class="bar"><div class="bar-fill ${levels[k]}" style="--w:${Math.round(sub[k]/20*100)}%"></div></div></div>`;
+    const row = el(`<div class="t-row">
+      <button class="t-head" aria-expanded="false">
+        <div><div class="t-name">${esc(name)}</div><div class="hint">${new Date(it.submitted_at).toLocaleDateString('es-AR')}</div></div>
+        <div class="t-right"><span class="tag ${hasLow?'low':'high'}">${esc(label)}</span>${ICON.chevron}</div>
+      </button>
+      <div class="t-detail"><div class="t-inner"><div class="t-box">
+        <strong>Perfil:</strong> ${esc(profile)}
+        ${metric('A')}${metric('B')}${metric('C')}
+      </div></div></div>
     </div>`);
-    row.onclick = ()=> detail.classList.toggle('hidden');
-    listEl.appendChild(row); listEl.appendChild(detail);
+    row.querySelector('.t-head').onclick = ()=>{ const open = row.classList.toggle('open'); row.querySelector('.t-head').setAttribute('aria-expanded',open); };
+    listEl.appendChild(row);
   });
-}
-
-// ---------- ADMIN: CLIENTES Y NOTAS (dos capas) ----------
-async function renderAdminClientes(container){
-  container.innerHTML = '';
-  container.appendChild(el(`<p class="hint">Cargando...</p>`));
-  const [{ data: clients, error }, { data: subs }] = await Promise.all([
-    sb.from('profiles').select('id,name,is_admin').order('name',{ascending:true}),
-    sb.from('test_submissions').select('user_id,answers,submitted_at')
-  ]);
-  container.innerHTML = '';
-  if(error){ container.appendChild(el(`<div class="card"><p class="err">No se pudo cargar: ${esc(error.message)}. ¿Corriste el SQL supabase/02_notas.sql?</p></div>`)); return; }
-  const list = (clients||[]).filter(c=>!c.is_admin);
-  const subBy = {}; (subs||[]).forEach(x=> subBy[x.user_id]=x);
-  const card = el(`<div class="card"><h2>Clientes</h2><div id="cl"></div></div>`);
-  const cl = card.querySelector('#cl');
-  if(list.length===0) cl.innerHTML = '<p class="hint">Todavía no hay clientes invitados.</p>';
-  list.forEach(c=>{
-    const t = subBy[c.id];
-    const tag = t ? (()=>{ const r=scoreSubmission(t.answers); const low=Object.values(r.levels).includes('low'); return `<div class="tag ${low?'low':'high'}">${esc(r.label)}</div>`; })() : '<div class="tag draft">Sin test</div>';
-    const row = el(`<div class="sub-row"><div style="font-weight:600;">${esc(c.name || 'Sin nombre')}</div>${tag}</div>`);
-    row.onclick = ()=> renderAdminCliente(container, c, t);
-    cl.appendChild(row);
-  });
-  container.appendChild(card);
-}
-
-function renderAdminCliente(container, client, test){
-  container.innerHTML = '';
-  const back = el(`<button class="back">← Todos los clientes</button>`);
-  back.onclick = ()=> renderAdminClientes(container);
-  container.appendChild(back);
-  container.appendChild(el(`<h2 style="font-size:22px;">${esc(client.name || 'Sin nombre')}</h2>`));
-
-  if(test){
-    const { sub, levels, profile } = scoreSubmission(test.answers);
-    container.appendChild(el(`<div class="detail" style="margin-bottom:16px;">
-      <strong>Test (${fmtDate(test.submitted_at)}):</strong> ${esc(profile)}<br/>
-      A — ${SUB_LABEL.A}: ${sub.A}/20 <span class="tag ${levels.A}">${levels.A}</span><br/>
-      B — ${SUB_LABEL.B}: ${sub.B}/20 <span class="tag ${levels.B}">${levels.B}</span><br/>
-      C — ${SUB_LABEL.C}: ${sub.C}/20 <span class="tag ${levels.C}">${levels.C}</span>
-    </div>`));
-  } else {
-    container.appendChild(el(`<p class="hint" style="margin-bottom:16px;">Todavía no completó el test pre-sesión.</p>`));
-  }
-
-  // ===== CAPA 1: notas privadas =====
-  let noteEditing = null;
-  const notes = el(`<div class="card">
-    <div class="private-badge">Privado · solo vos</div>
-    <h2 id="nTitle">Notas de sesión</h2>
-    <label>Fecha de sesión</label><input type="date" id="nDate"/>
-    <label>Notas</label><textarea id="nBody" style="min-height:140px;" placeholder="Observaciones clínicas, hipótesis, lo que dijo, lo que no dijo..."></textarea>
-    <p class="err" id="nErr"></p>
-    <div style="display:flex;gap:10px;"><button class="primary" id="nSave">Guardar nota</button><button class="ghost hidden" id="nCancel">Cancelar</button></div>
-    <div id="nList" style="margin-top:18px;"></div>
-  </div>`);
-  const today = ()=> new Date().toLocaleDateString('en-CA');
-  const nClear = ()=>{ noteEditing=null; notes.querySelector('#nDate').value=today(); notes.querySelector('#nBody').value=''; notes.querySelector('#nSave').textContent='Guardar nota'; notes.querySelector('#nCancel').classList.add('hidden'); notes.querySelector('#nErr').textContent=''; };
-  nClear();
-  notes.querySelector('#nCancel').onclick = nClear;
-  notes.querySelector('#nSave').onclick = async ()=>{
-    const session_date = notes.querySelector('#nDate').value || today();
-    const body = notes.querySelector('#nBody').value.trim();
-    if(!body){ notes.querySelector('#nErr').textContent='La nota está vacía.'; return; }
-    const q = noteEditing
-      ? sb.from('session_notes').update({ session_date, body }).eq('id', noteEditing)
-      : sb.from('session_notes').insert({ client_id: client.id, session_date, body });
-    const { error } = await q;
-    if(error){ notes.querySelector('#nErr').textContent='No se pudo guardar: '+error.message; return; }
-    nClear(); loadNotes();
-  };
-  async function loadNotes(){
-    const box = notes.querySelector('#nList');
-    const { data } = await sb.from('session_notes').select('*').eq('client_id', client.id).order('session_date',{ascending:false}).order('created_at',{ascending:false});
-    box.innerHTML='';
-    if(!data || data.length===0){ box.innerHTML='<p class="hint">Sin notas todavía.</p>'; return; }
-    data.forEach(n=>{
-      const r = el(`<div class="resource">
-        <div class="row-between"><div class="eyebrow" style="margin:0;">${fmtDate(n.session_date)}</div>
-        <div style="display:flex;gap:8px;"><button class="ghost" data-a="e">Editar</button><button class="ghost" data-a="d">Borrar</button></div></div>
-        <p class="prewrap" style="font-size:14px;line-height:1.6;margin:8px 0 0;">${esc(n.body)}</p>
-      </div>`);
-      r.querySelector('[data-a="e"]').onclick = ()=>{ noteEditing=n.id; notes.querySelector('#nDate').value=n.session_date; notes.querySelector('#nBody').value=n.body; notes.querySelector('#nSave').textContent='Guardar cambios'; notes.querySelector('#nCancel').classList.remove('hidden'); notes.scrollIntoView({behavior:'smooth'}); };
-      r.querySelector('[data-a="d"]').onclick = async ()=>{ if(!confirm('¿Borrar esta nota? No se puede deshacer.')) return; await sb.from('session_notes').delete().eq('id', n.id); if(noteEditing===n.id) nClear(); loadNotes(); };
-      box.appendChild(r);
-    });
-  }
-  container.appendChild(notes);
-  loadNotes();
-
-  // ===== CAPA 2: devolución visible =====
-  let fbEditing = null;
-  const fb = el(`<div class="card">
-    <div class="eyebrow" style="color:var(--teal);">Visible para ${esc(client.name || 'el cliente')} al publicar</div>
-    <h2>Devolución y plan de acción</h2>
-    <label>Título</label><input type="text" id="fTitle" placeholder="Ej: Devolución — primera sesión"/>
-    <label>Devolución</label><textarea id="fBody" style="min-height:120px;"></textarea>
-    <label>Plan de acción (un paso por línea)</label><textarea id="fPlan" style="min-height:100px;" placeholder="Averiguar costo de alquiler en Florianópolis&#10;Armar presupuesto de 3 meses&#10;..."></textarea>
-    <label class="check"><input type="checkbox" id="fPub"/> Publicar (el cliente la ve en "Tu plan")</label>
-    <p class="err" id="fErr"></p>
-    <div style="display:flex;gap:10px;"><button class="primary" id="fSave">Guardar</button><button class="ghost hidden" id="fCancel">Cancelar</button></div>
-    <div id="fList" style="margin-top:18px;"></div>
-  </div>`);
-  const fClear = ()=>{ fbEditing=null; ['#fTitle','#fBody','#fPlan'].forEach(k=>fb.querySelector(k).value=''); fb.querySelector('#fPub').checked=false; fb.querySelector('#fCancel').classList.add('hidden'); fb.querySelector('#fErr').textContent=''; };
-  fb.querySelector('#fCancel').onclick = fClear;
-  fb.querySelector('#fSave').onclick = async ()=>{
-    const title = fb.querySelector('#fTitle').value.trim();
-    const body = fb.querySelector('#fBody').value.trim();
-    const action_plan = fb.querySelector('#fPlan').value.trim();
-    const published = fb.querySelector('#fPub').checked;
-    if(!title){ fb.querySelector('#fErr').textContent='Poné un título.'; return; }
-    const q = fbEditing
-      ? sb.from('client_feedback').update({ title, body, action_plan, published }).eq('id', fbEditing)
-      : sb.from('client_feedback').insert({ client_id: client.id, title, body, action_plan, published });
-    const { error } = await q;
-    if(error){ fb.querySelector('#fErr').textContent='No se pudo guardar: '+error.message; return; }
-    fClear(); loadFb();
-  };
-  async function loadFb(){
-    const box = fb.querySelector('#fList');
-    const { data } = await sb.from('client_feedback').select('*').eq('client_id', client.id).order('created_at',{ascending:false});
-    box.innerHTML='';
-    if(!data || data.length===0){ box.innerHTML='<p class="hint">Sin devoluciones todavía.</p>'; return; }
-    data.forEach(f=>{
-      const r = el(`<div class="sub-row" style="cursor:default;">
-        <div><div style="font-weight:600;">${esc(f.title)}</div><div class="hint">${fmtDate(f.created_at)}</div></div>
-        <div style="display:flex;gap:8px;align-items:center;"><span class="tag ${f.published?'pub':'draft'}">${f.published?'Publicada':'Borrador'}</span><button class="ghost" data-a="e">Editar</button><button class="ghost" data-a="d">Borrar</button></div>
-      </div>`);
-      r.querySelector('[data-a="e"]').onclick = ()=>{ fbEditing=f.id; fb.querySelector('#fTitle').value=f.title; fb.querySelector('#fBody').value=f.body||''; fb.querySelector('#fPlan').value=f.action_plan||''; fb.querySelector('#fPub').checked=f.published; fb.querySelector('#fCancel').classList.remove('hidden'); fb.scrollIntoView({behavior:'smooth'}); };
-      r.querySelector('[data-a="d"]').onclick = async ()=>{ if(!confirm('¿Borrar "'+f.title+'"? No se puede deshacer.')) return; await sb.from('client_feedback').delete().eq('id', f.id); if(fbEditing===f.id) fClear(); loadFb(); };
-      box.appendChild(r);
-    });
-  }
-  container.appendChild(fb);
-  loadFb();
 }
 
 init();
