@@ -63,6 +63,16 @@
   .hidden{display:none;}
   .banner{background:var(--amber-soft);border:1px solid var(--amber);border-radius:10px;padding:12px 14px;font-size:13.5px;margin-bottom:16px;}
   .center{max-width:340px;margin:70px auto;text-align:center;}
+  .prewrap{white-space:pre-wrap;}
+  .plan-list{margin:10px 0 0;padding-left:0;list-style:none;}
+  .plan-list li{padding:8px 0 8px 26px;position:relative;border-bottom:1px solid var(--line);font-size:14.5px;line-height:1.5;}
+  .plan-list li:last-child{border-bottom:none;}
+  .plan-list li::before{content:'→';position:absolute;left:4px;color:var(--amber);font-family:'IBM Plex Mono',monospace;}
+  .check{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--ink-dim);margin-bottom:14px;cursor:pointer;}
+  .check input{width:auto;margin:0;}
+  .tag.draft{color:var(--ink-dim);}
+  .tag.pub{color:var(--teal);border-color:var(--teal);}
+  .private-badge{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--danger);}
 </style>
 </head>
 <body>
@@ -96,6 +106,8 @@ const SUB_LABEL = {A:'Tolerancia a la frustración', B:'Locus de control', C:'Fl
 
 let state = { screen:'loading', session:null, profile:null, tab:'test', hasTest:null };
 
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function fmtDate(d){ return new Date(d.length===10 ? d+'T12:00:00' : d).toLocaleDateString('es-AR'); }
 function el(html){ const d=document.createElement('div'); d.innerHTML=html.trim(); return d.firstElementChild; }
 function ytEmbed(url){
   try{ const m = url.match(/(?:youtu\.be\/|v=|embed\/)([\w-]{6,})/); if(m) return 'https://www.youtube.com/embed/'+m[1]; }catch(e){}
@@ -277,6 +289,7 @@ function renderDashboard(){
     <h1>Hola, ${state.profile && state.profile.name ? state.profile.name : state.session.user.email}</h1>
     <div class="tabs" id="tabs">
       ${state.hasTest ? '' : '<button class="tab" data-tab="test">Test pre-sesión</button>'}
+      <button class="tab" data-tab="plan">Tu plan</button>
       <button class="tab" data-tab="experiencia">Experiencia de emigrar</button>
       <button class="tab" data-tab="testimonios">Testimonios</button>
       <button class="tab" data-tab="seguridad">Seguridad para el nómade</button>
@@ -292,6 +305,7 @@ function renderDashboard(){
   });
   const content = wrap.querySelector('#tabContent');
   if(state.tab==='test' && !state.hasTest) renderTest(content);
+  else if(state.tab==='plan') renderClientPlan(content);
   else if(state.tab==='experiencia') renderResourceList(content,'experiencia','Todavía no hay contenido cargado en esta sección.');
   else if(state.tab==='testimonios') renderResourceList(content,'testimonio','Todavía no hay testimonios cargados.');
   else if(state.tab==='seguridad') content.appendChild(el(`<div class="card"><p class="lead" style="margin:0;">Estamos preparando el kit de emergencia del nómade — con información específica para actuar ante robos, vuelos perdidos y otras situaciones que pueden pasar viajando. Vas a verlo acá apenas esté listo.</p></div>`));
@@ -346,6 +360,26 @@ async function renderTest(container){
   container.appendChild(card);
 }
 
+// ---------- TU PLAN (devoluciones publicadas por Valentina) ----------
+async function renderClientPlan(container){
+  container.appendChild(el(`<p class="hint">Cargando...</p>`));
+  const { data: items, error } = await sb.from('client_feedback').select('*').eq('client_id', state.session.user.id).eq('published', true).order('created_at',{ascending:false});
+  container.innerHTML = '';
+  if(error || !items || items.length===0){
+    container.appendChild(el(`<div class="card"><p class="lead" style="margin:0;">Después de tu sesión, Valentina va a dejarte acá tu devolución y tu plan de acción personalizado.</p></div>`));
+    return;
+  }
+  items.forEach(it=>{
+    const steps = (it.action_plan||'').split('\n').map(x=>x.trim()).filter(Boolean);
+    container.appendChild(el(`<div class="card">
+      <div class="eyebrow">${fmtDate(it.created_at)}</div>
+      <h2>${esc(it.title)}</h2>
+      ${it.body ? `<p class="lead prewrap" style="margin:0 0 6px;">${esc(it.body)}</p>` : ''}
+      ${steps.length ? `<div class="section-title" style="margin-top:16px;">Tu plan de acción</div><ul class="plan-list">${steps.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>` : ''}
+    </div>`));
+  });
+}
+
 async function renderResourceList(container, category, emptyMsg){
   container.appendChild(el(`<p class="hint">Cargando...</p>`));
   const { data: items } = await sb.from('resources').select('*').eq('category', category).order('created_at', {ascending:false});
@@ -387,6 +421,7 @@ function renderAdmin(container){
   const tabs = el(`<div class="tabs" style="margin-bottom:16px;">
     <button class="tab active" data-a="contenido">Agregar contenido</button>
     <button class="tab" data-a="tests">Tests recibidos</button>
+    <button class="tab" data-a="clientes">Clientes y notas</button>
   </div>`);
   const sub = el(`<div id="adminSub"></div>`);
   container.appendChild(tabs); container.appendChild(sub);
@@ -394,6 +429,7 @@ function renderAdmin(container){
     tabs.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t.dataset.a===which));
     sub.innerHTML='';
     if(which==='contenido') renderAdminContenido(sub);
+    else if(which==='clientes') renderAdminClientes(sub);
     else renderAdminTests(sub);
   };
   tabs.querySelectorAll('.tab').forEach(t=> t.onclick = ()=> show(t.dataset.a));
@@ -516,6 +552,142 @@ async function renderAdminTests(container){
     row.onclick = ()=> detail.classList.toggle('hidden');
     listEl.appendChild(row); listEl.appendChild(detail);
   });
+}
+
+// ---------- ADMIN: CLIENTES Y NOTAS (dos capas) ----------
+async function renderAdminClientes(container){
+  container.innerHTML = '';
+  container.appendChild(el(`<p class="hint">Cargando...</p>`));
+  const [{ data: clients, error }, { data: subs }] = await Promise.all([
+    sb.from('profiles').select('id,name,is_admin').order('name',{ascending:true}),
+    sb.from('test_submissions').select('user_id,answers,submitted_at')
+  ]);
+  container.innerHTML = '';
+  if(error){ container.appendChild(el(`<div class="card"><p class="err">No se pudo cargar: ${esc(error.message)}. ¿Corriste el SQL supabase/02_notas.sql?</p></div>`)); return; }
+  const list = (clients||[]).filter(c=>!c.is_admin);
+  const subBy = {}; (subs||[]).forEach(x=> subBy[x.user_id]=x);
+  const card = el(`<div class="card"><h2>Clientes</h2><div id="cl"></div></div>`);
+  const cl = card.querySelector('#cl');
+  if(list.length===0) cl.innerHTML = '<p class="hint">Todavía no hay clientes invitados.</p>';
+  list.forEach(c=>{
+    const t = subBy[c.id];
+    const tag = t ? (()=>{ const r=scoreSubmission(t.answers); const low=Object.values(r.levels).includes('low'); return `<div class="tag ${low?'low':'high'}">${esc(r.label)}</div>`; })() : '<div class="tag draft">Sin test</div>';
+    const row = el(`<div class="sub-row"><div style="font-weight:600;">${esc(c.name || 'Sin nombre')}</div>${tag}</div>`);
+    row.onclick = ()=> renderAdminCliente(container, c, t);
+    cl.appendChild(row);
+  });
+  container.appendChild(card);
+}
+
+function renderAdminCliente(container, client, test){
+  container.innerHTML = '';
+  const back = el(`<button class="back">← Todos los clientes</button>`);
+  back.onclick = ()=> renderAdminClientes(container);
+  container.appendChild(back);
+  container.appendChild(el(`<h2 style="font-size:22px;">${esc(client.name || 'Sin nombre')}</h2>`));
+
+  if(test){
+    const { sub, levels, profile } = scoreSubmission(test.answers);
+    container.appendChild(el(`<div class="detail" style="margin-bottom:16px;">
+      <strong>Test (${fmtDate(test.submitted_at)}):</strong> ${esc(profile)}<br/>
+      A — ${SUB_LABEL.A}: ${sub.A}/20 <span class="tag ${levels.A}">${levels.A}</span><br/>
+      B — ${SUB_LABEL.B}: ${sub.B}/20 <span class="tag ${levels.B}">${levels.B}</span><br/>
+      C — ${SUB_LABEL.C}: ${sub.C}/20 <span class="tag ${levels.C}">${levels.C}</span>
+    </div>`));
+  } else {
+    container.appendChild(el(`<p class="hint" style="margin-bottom:16px;">Todavía no completó el test pre-sesión.</p>`));
+  }
+
+  // ===== CAPA 1: notas privadas =====
+  let noteEditing = null;
+  const notes = el(`<div class="card">
+    <div class="private-badge">Privado · solo vos</div>
+    <h2 id="nTitle">Notas de sesión</h2>
+    <label>Fecha de sesión</label><input type="date" id="nDate"/>
+    <label>Notas</label><textarea id="nBody" style="min-height:140px;" placeholder="Observaciones clínicas, hipótesis, lo que dijo, lo que no dijo..."></textarea>
+    <p class="err" id="nErr"></p>
+    <div style="display:flex;gap:10px;"><button class="primary" id="nSave">Guardar nota</button><button class="ghost hidden" id="nCancel">Cancelar</button></div>
+    <div id="nList" style="margin-top:18px;"></div>
+  </div>`);
+  const today = ()=> new Date().toLocaleDateString('en-CA');
+  const nClear = ()=>{ noteEditing=null; notes.querySelector('#nDate').value=today(); notes.querySelector('#nBody').value=''; notes.querySelector('#nSave').textContent='Guardar nota'; notes.querySelector('#nCancel').classList.add('hidden'); notes.querySelector('#nErr').textContent=''; };
+  nClear();
+  notes.querySelector('#nCancel').onclick = nClear;
+  notes.querySelector('#nSave').onclick = async ()=>{
+    const session_date = notes.querySelector('#nDate').value || today();
+    const body = notes.querySelector('#nBody').value.trim();
+    if(!body){ notes.querySelector('#nErr').textContent='La nota está vacía.'; return; }
+    const q = noteEditing
+      ? sb.from('session_notes').update({ session_date, body }).eq('id', noteEditing)
+      : sb.from('session_notes').insert({ client_id: client.id, session_date, body });
+    const { error } = await q;
+    if(error){ notes.querySelector('#nErr').textContent='No se pudo guardar: '+error.message; return; }
+    nClear(); loadNotes();
+  };
+  async function loadNotes(){
+    const box = notes.querySelector('#nList');
+    const { data } = await sb.from('session_notes').select('*').eq('client_id', client.id).order('session_date',{ascending:false}).order('created_at',{ascending:false});
+    box.innerHTML='';
+    if(!data || data.length===0){ box.innerHTML='<p class="hint">Sin notas todavía.</p>'; return; }
+    data.forEach(n=>{
+      const r = el(`<div class="resource">
+        <div class="row-between"><div class="eyebrow" style="margin:0;">${fmtDate(n.session_date)}</div>
+        <div style="display:flex;gap:8px;"><button class="ghost" data-a="e">Editar</button><button class="ghost" data-a="d">Borrar</button></div></div>
+        <p class="prewrap" style="font-size:14px;line-height:1.6;margin:8px 0 0;">${esc(n.body)}</p>
+      </div>`);
+      r.querySelector('[data-a="e"]').onclick = ()=>{ noteEditing=n.id; notes.querySelector('#nDate').value=n.session_date; notes.querySelector('#nBody').value=n.body; notes.querySelector('#nSave').textContent='Guardar cambios'; notes.querySelector('#nCancel').classList.remove('hidden'); notes.scrollIntoView({behavior:'smooth'}); };
+      r.querySelector('[data-a="d"]').onclick = async ()=>{ if(!confirm('¿Borrar esta nota? No se puede deshacer.')) return; await sb.from('session_notes').delete().eq('id', n.id); if(noteEditing===n.id) nClear(); loadNotes(); };
+      box.appendChild(r);
+    });
+  }
+  container.appendChild(notes);
+  loadNotes();
+
+  // ===== CAPA 2: devolución visible =====
+  let fbEditing = null;
+  const fb = el(`<div class="card">
+    <div class="eyebrow" style="color:var(--teal);">Visible para ${esc(client.name || 'el cliente')} al publicar</div>
+    <h2>Devolución y plan de acción</h2>
+    <label>Título</label><input type="text" id="fTitle" placeholder="Ej: Devolución — primera sesión"/>
+    <label>Devolución</label><textarea id="fBody" style="min-height:120px;"></textarea>
+    <label>Plan de acción (un paso por línea)</label><textarea id="fPlan" style="min-height:100px;" placeholder="Averiguar costo de alquiler en Florianópolis&#10;Armar presupuesto de 3 meses&#10;..."></textarea>
+    <label class="check"><input type="checkbox" id="fPub"/> Publicar (el cliente la ve en "Tu plan")</label>
+    <p class="err" id="fErr"></p>
+    <div style="display:flex;gap:10px;"><button class="primary" id="fSave">Guardar</button><button class="ghost hidden" id="fCancel">Cancelar</button></div>
+    <div id="fList" style="margin-top:18px;"></div>
+  </div>`);
+  const fClear = ()=>{ fbEditing=null; ['#fTitle','#fBody','#fPlan'].forEach(k=>fb.querySelector(k).value=''); fb.querySelector('#fPub').checked=false; fb.querySelector('#fCancel').classList.add('hidden'); fb.querySelector('#fErr').textContent=''; };
+  fb.querySelector('#fCancel').onclick = fClear;
+  fb.querySelector('#fSave').onclick = async ()=>{
+    const title = fb.querySelector('#fTitle').value.trim();
+    const body = fb.querySelector('#fBody').value.trim();
+    const action_plan = fb.querySelector('#fPlan').value.trim();
+    const published = fb.querySelector('#fPub').checked;
+    if(!title){ fb.querySelector('#fErr').textContent='Poné un título.'; return; }
+    const q = fbEditing
+      ? sb.from('client_feedback').update({ title, body, action_plan, published }).eq('id', fbEditing)
+      : sb.from('client_feedback').insert({ client_id: client.id, title, body, action_plan, published });
+    const { error } = await q;
+    if(error){ fb.querySelector('#fErr').textContent='No se pudo guardar: '+error.message; return; }
+    fClear(); loadFb();
+  };
+  async function loadFb(){
+    const box = fb.querySelector('#fList');
+    const { data } = await sb.from('client_feedback').select('*').eq('client_id', client.id).order('created_at',{ascending:false});
+    box.innerHTML='';
+    if(!data || data.length===0){ box.innerHTML='<p class="hint">Sin devoluciones todavía.</p>'; return; }
+    data.forEach(f=>{
+      const r = el(`<div class="sub-row" style="cursor:default;">
+        <div><div style="font-weight:600;">${esc(f.title)}</div><div class="hint">${fmtDate(f.created_at)}</div></div>
+        <div style="display:flex;gap:8px;align-items:center;"><span class="tag ${f.published?'pub':'draft'}">${f.published?'Publicada':'Borrador'}</span><button class="ghost" data-a="e">Editar</button><button class="ghost" data-a="d">Borrar</button></div>
+      </div>`);
+      r.querySelector('[data-a="e"]').onclick = ()=>{ fbEditing=f.id; fb.querySelector('#fTitle').value=f.title; fb.querySelector('#fBody').value=f.body||''; fb.querySelector('#fPlan').value=f.action_plan||''; fb.querySelector('#fPub').checked=f.published; fb.querySelector('#fCancel').classList.remove('hidden'); fb.scrollIntoView({behavior:'smooth'}); };
+      r.querySelector('[data-a="d"]').onclick = async ()=>{ if(!confirm('¿Borrar "'+f.title+'"? No se puede deshacer.')) return; await sb.from('client_feedback').delete().eq('id', f.id); if(fbEditing===f.id) fClear(); loadFb(); };
+      box.appendChild(r);
+    });
+  }
+  container.appendChild(fb);
+  loadFb();
 }
 
 init();
