@@ -241,6 +241,55 @@
   .tag.mid{color:var(--amber);border-color:var(--amber);background:var(--amber-soft);}
   .tag.high{color:var(--teal);border-color:var(--teal);background:var(--teal-soft);}
 
+  /* ---------- tu plan (cliente) ---------- */
+  .plan-card{position:relative;overflow:hidden;background:var(--bg-raised);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--line);border-radius:var(--radius);padding:26px;margin-bottom:16px;}
+  .plan-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--teal),var(--amber));}
+  .plan-card h2{font-size:24px;margin-bottom:10px;}
+  .prewrap{white-space:pre-wrap;}
+  .plan-label{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin:22px 0 8px;}
+  .plan-steps{list-style:none;margin:0;padding:0;counter-reset:st;}
+  .plan-steps li{counter-increment:st;display:flex;gap:14px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--line);font-size:15px;line-height:1.55;color:var(--ink);}
+  .plan-steps li:last-child{border-bottom:none;}
+  .plan-steps li::before{content:counter(st);flex-shrink:0;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--amber);background:var(--amber-soft);border:1px solid rgba(227,168,87,.45);}
+
+  /* ---------- admin: clientes y notas ---------- */
+  .cl-row{width:100%;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 6px;background:none;border:none;border-bottom:1px solid var(--line);color:var(--ink);font-family:'Inter',sans-serif;font-size:15px;text-align:left;cursor:pointer;transition:background .2s, padding .25s var(--ease);border-radius:10px;}
+  .cl-row:last-child{border-bottom:none;}
+  .cl-row:hover{background:rgba(255,255,255,.03);padding-left:12px;}
+  .cl-row:hover .cl-name{color:var(--amber);}
+  .cl-name{font-weight:600;transition:color .2s;}
+  .cl-left{display:flex;align-items:center;gap:12px;}
+  .cl-left .avatar{width:32px;height:32px;font-size:14px;}
+  .back{display:inline-flex;align-items:center;gap:6px;background:none;border:none;padding:0;margin-bottom:14px;color:var(--ink-dim);font-size:13.5px;cursor:pointer;font-family:'Inter',sans-serif;transition:color .2s;}
+  .back:hover{color:var(--amber);}
+  .cl-head{display:flex;align-items:center;gap:14px;margin-bottom:18px;}
+  .cl-head .avatar{width:46px;height:46px;font-size:20px;}
+  .cl-head h2{font-size:26px;margin:0;}
+  .layer-badge{display:inline-flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:100px;margin-bottom:12px;}
+  .layer-badge svg{width:13px;height:13px;}
+  .layer-private{color:var(--danger);background:var(--danger-soft);border:1px solid rgba(201,123,99,.45);}
+  .layer-public{color:var(--teal);background:var(--teal-soft);border:1px solid rgba(91,154,160,.45);}
+  .card.private{border-color:rgba(201,123,99,.25);}
+  .note{padding:14px 0;border-bottom:1px solid var(--line);animation:paneIn .4s var(--ease) both;}
+  .note:last-child{border-bottom:none;}
+  .note-top{display:flex;justify-content:space-between;align-items:center;gap:10px;}
+  .note-date{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--amber);}
+  .note p{font-size:14px;line-height:1.65;color:var(--ink-dim);margin:8px 0 0;}
+  .switch{display:flex;align-items:center;gap:12px;margin:4px 0 16px;cursor:pointer;font-size:14px;color:var(--ink-dim);user-select:none;}
+  .switch input{position:absolute;opacity:0;width:0;height:0;}
+  .switch-track{position:relative;width:42px;height:24px;flex-shrink:0;border-radius:100px;background:var(--line-strong);transition:background .25s;}
+  .switch-track::after{content:'';position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:var(--ink);transition:transform .3s var(--ease);}
+  .switch input:checked + .switch-track{background:var(--teal);}
+  .switch input:checked + .switch-track::after{transform:translateX(18px);}
+  .switch input:focus-visible + .switch-track{outline:2px solid var(--amber);outline-offset:3px;}
+  .tag.draft{color:var(--ink-dim);}
+  .tag.pub{color:var(--teal);border-color:var(--teal);background:var(--teal-soft);}
+  .mini-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px;}
+  .mini{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:10px;padding:10px 12px;}
+  .mini b{display:block;font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:500;margin-bottom:2px;}
+  .mini b.low{color:var(--danger);} .mini b.mid{color:var(--amber);} .mini b.high{color:var(--teal);}
+  .mini span{font-size:11.5px;color:var(--ink-faint);line-height:1.3;display:block;}
+
   /* ---------- toasts ---------- */
   #toasts{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:60;display:flex;flex-direction:column;gap:8px;align-items:center;width:calc(100% - 32px);max-width:420px;}
   .toast{padding:12px 18px;border-radius:12px;font-size:14px;background:rgba(31,36,51,.95);backdrop-filter:blur(12px);border:1px solid var(--line-strong);box-shadow:0 20px 40px -20px rgba(0,0,0,.8);animation:toastIn .45s var(--ease);}
@@ -307,7 +356,8 @@ function ytEmbed(url){
   return null;
 }
 function greeting(){ const h=new Date().getHours(); return h<12?'Buen día':h<20?'Buenas tardes':'Buenas noches'; }
-function fmtDate(d){ try{ return new Date(d).toLocaleDateString('es-AR',{day:'numeric',month:'short',year:'numeric'}); }catch(e){ return ''; } }
+// Las fechas sin hora (YYYY-MM-DD) se fijan al mediodía para que no se corran un día por la zona horaria
+function fmtDate(d){ try{ return new Date(String(d).length===10 ? d+'T12:00:00' : d).toLocaleDateString('es-AR',{day:'numeric',month:'short',year:'numeric'}); }catch(e){ return ''; } }
 function toast(msg, kind='ok'){
   const t=document.createElement('div'); t.className='toast '+kind; t.textContent=msg;
   document.getElementById('toasts').appendChild(t);
@@ -327,6 +377,8 @@ const ICON={
   shield: svg('<path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/>'),
   clip: svg('<rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4h6v3H9zM9 12h6M9 16h4"/>'),
   panel: svg('<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 20V9"/>'),
+  map: svg('<path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>'),
+  eye: svg('<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>'),
   check: svg('<path d="M5 12l5 5 9-10"/>'),
   info: svg('<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>'),
   chevron: svg('<path d="M6 9l6 6 6-6"/>'),
@@ -530,6 +582,7 @@ function renderDashboard(){
   const display = (state.profile && state.profile.name) ? state.profile.name : state.session.user.email;
   const tabs = [
     !state.hasTest && {id:'test', label:'Test pre-sesión', icon:ICON.clip},
+    {id:'plan', label:'Tu plan', icon:ICON.map},
     {id:'experiencia', label:'Experiencia de emigrar', icon:ICON.compass},
     {id:'testimonios', label:'Testimonios', icon:ICON.quote},
     {id:'seguridad', label:'Seguridad para el nómade', icon:ICON.shield},
@@ -581,6 +634,7 @@ function paintTab(wrap){
   const pane = el(`<div class="tab-pane"></div>`);
   content.appendChild(pane);
   if(state.tab==='test' && !state.hasTest) renderTest(pane);
+  else if(state.tab==='plan') renderClientPlan(pane);
   else if(state.tab==='experiencia') renderResourceList(pane,'experiencia','Todavía no hay contenido cargado en esta sección.');
   else if(state.tab==='testimonios') renderResourceList(pane,'testimonio','Todavía no hay testimonios cargados.');
   else if(state.tab==='seguridad') pane.appendChild(el(`<div class="card soon">
@@ -699,6 +753,26 @@ async function renderTest(container){
   showQ(1);
 }
 
+// ---------- TU PLAN (devoluciones publicadas por Valentina) ----------
+async function renderClientPlan(container){
+  container.innerHTML = skeleton(1);
+  const { data: items, error } = await sb.from('client_feedback').select('*').eq('client_id', state.session.user.id).eq('published', true).order('created_at',{ascending:false});
+  container.innerHTML = '';
+  if(error || !items || items.length===0){
+    container.appendChild(el(`<div class="card empty"><div class="empty-icon">${ICON.map}</div><p class="lead" style="margin:0 auto;">Después de tu sesión, Valentina va a dejarte acá tu devolución y tu plan de acción personalizado.</p></div>`));
+    return;
+  }
+  items.forEach((it,i)=>{
+    const steps = (it.action_plan||'').split('\n').map(x=>x.trim()).filter(Boolean);
+    container.appendChild(el(`<article class="plan-card rv" style="--d:${Math.min(i,6)}">
+      <div class="eyebrow">${fmtDate(it.created_at)}</div>
+      <h2>${esc(it.title)}</h2>
+      ${it.body ? `<p class="res-body prewrap" style="margin:0;">${esc(it.body)}</p>` : ''}
+      ${steps.length ? `<div class="plan-label">Tu plan de acción</div><ol class="plan-steps">${steps.map(x=>`<li>${esc(x)}</li>`).join('')}</ol>` : ''}
+    </article>`));
+  });
+}
+
 // ---------- RECURSOS ----------
 async function renderResourceList(container, category, emptyMsg){
   container.innerHTML = skeleton(2);
@@ -762,6 +836,7 @@ function renderAdmin(container){
   const tabs = el(`<div class="sub-tabs">
     <button class="sub-tab active" data-a="contenido">Agregar contenido</button>
     <button class="sub-tab" data-a="tests">Tests recibidos</button>
+    <button class="sub-tab" data-a="clientes">Clientes y notas</button>
   </div>`);
   const sub = el(`<div></div>`);
   container.appendChild(tabs); container.appendChild(sub);
@@ -770,6 +845,7 @@ function renderAdmin(container){
     sub.innerHTML='';
     const pane = el(`<div class="tab-pane"></div>`); sub.appendChild(pane);
     if(which==='contenido') renderAdminContenido(pane);
+    else if(which==='clientes') renderAdminClientes(pane);
     else renderAdminTests(pane);
   };
   tabs.querySelectorAll('.sub-tab').forEach(t=> t.onclick = ()=> show(t.dataset.a));
@@ -902,6 +978,160 @@ async function renderAdminTests(container){
     row.querySelector('.t-head').onclick = ()=>{ const open = row.classList.toggle('open'); row.querySelector('.t-head').setAttribute('aria-expanded',open); };
     listEl.appendChild(row);
   });
+}
+
+// ---------- ADMIN: CLIENTES Y NOTAS (dos capas) ----------
+async function renderAdminClientes(container){
+  container.innerHTML = skeleton(1);
+  const [{ data: clients, error }, { data: subs }] = await Promise.all([
+    sb.from('profiles').select('id,name,is_admin').order('name',{ascending:true}),
+    sb.from('test_submissions').select('user_id,answers,submitted_at')
+  ]);
+  container.innerHTML = '';
+  if(error){ container.appendChild(el(`<div class="card"><p class="err">No se pudo cargar: ${esc(error.message)}. ¿Corriste el SQL supabase/02_notas.sql?</p></div>`)); return; }
+  const list = (clients||[]).filter(c=>!c.is_admin);
+  const subBy = {}; (subs||[]).forEach(x=> subBy[x.user_id]=x);
+  const card = el(`<div class="card"><h2>Clientes</h2><p class="hint" style="margin-top:-4px;">Tocá un cliente para ver su test, tus notas privadas y la devolución que va a ver.</p><div id="cl"></div></div>`);
+  const cl = card.querySelector('#cl');
+  if(list.length===0) cl.innerHTML = '<p class="hint">Todavía no hay clientes invitados.</p>';
+  list.forEach((c,i)=>{
+    const t = subBy[c.id];
+    const tag = t ? (()=>{ const r=scoreSubmission(t.answers); const low=Object.values(r.levels).includes('low'); return `<span class="tag ${low?'low':'high'}">${esc(r.label)}</span>`; })() : '<span class="tag draft">Sin test</span>';
+    const initial = esc(String(c.name||'?').trim().charAt(0).toUpperCase());
+    const row = el(`<button class="cl-row" style="animation:paneIn .4s var(--ease) both;animation-delay:${Math.min(i,10)*40}ms">
+      <span class="cl-left"><span class="avatar">${initial}</span><span class="cl-name">${esc(c.name || 'Sin nombre')}</span></span>${tag}
+    </button>`);
+    row.onclick = ()=> renderAdminCliente(container, c, t);
+    cl.appendChild(row);
+  });
+  container.appendChild(card);
+}
+
+function renderAdminCliente(container, client, test){
+  container.innerHTML = '';
+  const pane = el(`<div class="tab-pane"></div>`);
+  container.appendChild(pane);
+  const back = el(`<button class="back">← Todos los clientes</button>`);
+  back.onclick = ()=> renderAdminClientes(container);
+  pane.appendChild(back);
+  const cname = client.name || 'Sin nombre';
+  pane.appendChild(el(`<div class="cl-head"><span class="avatar">${esc(cname.trim().charAt(0).toUpperCase())}</span><h2>${esc(cname)}</h2></div>`));
+
+  if(test){
+    const { sub, levels, profile } = scoreSubmission(test.answers);
+    pane.appendChild(el(`<div class="card">
+      <div class="eyebrow" style="margin-bottom:6px;">Test pre-sesión · ${fmtDate(test.submitted_at)}</div>
+      <div style="font-weight:600;">${esc(profile)}</div>
+      <div class="mini-metrics">
+        ${['A','B','C'].map(k=>`<div class="mini"><b class="${levels[k]}">${sub[k]}/20</b><span>${k} · ${SUB_LABEL[k]}</span></div>`).join('')}
+      </div>
+    </div>`));
+  } else {
+    pane.appendChild(el(`<div class="card"><p class="hint" style="margin:0;">Todavía no completó el test pre-sesión.</p></div>`));
+  }
+
+  const today = ()=> new Date().toLocaleDateString('en-CA');
+
+  // ===== CAPA 1: notas privadas =====
+  let noteEditing = null;
+  const notes = el(`<div class="card private">
+    <div class="layer-badge layer-private">${ICON.lock} Privado · solo vos</div>
+    <h2 id="nTitle">Notas de sesión</h2>
+    <div class="field"><label for="nDate">Fecha de sesión</label><input type="date" id="nDate"/></div>
+    <div class="field"><label for="nBody">Notas</label><textarea id="nBody" style="min-height:140px;" placeholder="Observaciones clínicas, hipótesis, lo que dijo, lo que no dijo..."></textarea></div>
+    <p class="err" id="nErr"></p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;"><button class="primary" id="nSave"><span>Guardar nota</span>${ICON.arrow}</button><button class="ghost hidden" id="nCancel">Cancelar</button></div>
+    <div id="nList" style="margin-top:20px;"></div>
+  </div>`);
+  const nClear = ()=>{ noteEditing=null; notes.querySelector('#nDate').value=today(); notes.querySelector('#nBody').value=''; notes.querySelector('#nSave span').textContent='Guardar nota'; notes.querySelector('#nCancel').classList.add('hidden'); notes.querySelector('#nErr').textContent=''; };
+  nClear();
+  notes.querySelector('#nCancel').onclick = nClear;
+  notes.querySelector('#nSave').onclick = async ()=>{
+    const session_date = notes.querySelector('#nDate').value || today();
+    const body = notes.querySelector('#nBody').value.trim();
+    const btn = notes.querySelector('#nSave');
+    if(!body){ showErr(notes.querySelector('#nErr'),'La nota está vacía.'); return; }
+    btn.classList.add('loading');
+    const wasEditing = !!noteEditing;
+    const q = noteEditing
+      ? sb.from('session_notes').update({ session_date, body }).eq('id', noteEditing)
+      : sb.from('session_notes').insert({ client_id: client.id, session_date, body });
+    const { error } = await q;
+    btn.classList.remove('loading');
+    if(error){ showErr(notes.querySelector('#nErr'),'No se pudo guardar: '+error.message); return; }
+    toast(wasEditing ? 'Nota actualizada.' : 'Nota guardada.');
+    nClear(); loadNotes();
+  };
+  async function loadNotes(){
+    const box = notes.querySelector('#nList');
+    box.innerHTML = skeleton(1);
+    const { data } = await sb.from('session_notes').select('*').eq('client_id', client.id).order('session_date',{ascending:false}).order('created_at',{ascending:false});
+    box.innerHTML='';
+    if(!data || data.length===0){ box.innerHTML='<p class="hint">Sin notas todavía.</p>'; return; }
+    data.forEach((n,i)=>{
+      const r = el(`<div class="note" style="animation-delay:${Math.min(i,10)*40}ms">
+        <div class="note-top"><span class="note-date">${fmtDate(n.session_date)}</span>
+        <div class="adm-actions"><button class="ghost" data-a="e">Editar</button><button class="ghost danger" data-a="d">Borrar</button></div></div>
+        <p class="prewrap">${esc(n.body)}</p>
+      </div>`);
+      r.querySelector('[data-a="e"]').onclick = ()=>{ noteEditing=n.id; notes.querySelector('#nDate').value=n.session_date; notes.querySelector('#nBody').value=n.body; notes.querySelector('#nSave span').textContent='Guardar cambios'; notes.querySelector('#nCancel').classList.remove('hidden'); notes.scrollIntoView({behavior:'smooth', block:'start'}); };
+      r.querySelector('[data-a="d"]').onclick = async ()=>{ if(!confirm('¿Borrar esta nota? No se puede deshacer.')) return; await sb.from('session_notes').delete().eq('id', n.id); if(noteEditing===n.id) nClear(); toast('Nota eliminada.'); loadNotes(); };
+      box.appendChild(r);
+    });
+  }
+  pane.appendChild(notes);
+  loadNotes();
+
+  // ===== CAPA 2: devolución visible para el cliente =====
+  let fbEditing = null;
+  const fb = el(`<div class="card">
+    <div class="layer-badge layer-public">${ICON.eye} Visible para ${esc(cname)} al publicar</div>
+    <h2>Devolución y plan de acción</h2>
+    <div class="field"><label for="fTitle">Título</label><input type="text" id="fTitle" placeholder="Ej: Devolución — primera sesión"/></div>
+    <div class="field"><label for="fBody">Devolución</label><textarea id="fBody" style="min-height:120px;"></textarea></div>
+    <div class="field"><label for="fPlan">Plan de acción (un paso por línea)</label><textarea id="fPlan" style="min-height:100px;" placeholder="Averiguar costo de alquiler en Florianópolis&#10;Armar presupuesto de 3 meses&#10;..."></textarea></div>
+    <label class="switch"><input type="checkbox" id="fPub"/><span class="switch-track"></span><span>Publicar — el cliente la ve en "Tu plan"</span></label>
+    <p class="err" id="fErr"></p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;"><button class="primary" id="fSave"><span>Guardar</span>${ICON.arrow}</button><button class="ghost hidden" id="fCancel">Cancelar</button></div>
+    <div id="fList" style="margin-top:20px;"></div>
+  </div>`);
+  const fClear = ()=>{ fbEditing=null; ['#fTitle','#fBody','#fPlan'].forEach(k=>fb.querySelector(k).value=''); fb.querySelector('#fPub').checked=false; fb.querySelector('#fSave span').textContent='Guardar'; fb.querySelector('#fCancel').classList.add('hidden'); fb.querySelector('#fErr').textContent=''; };
+  fb.querySelector('#fCancel').onclick = fClear;
+  fb.querySelector('#fSave').onclick = async ()=>{
+    const title = fb.querySelector('#fTitle').value.trim();
+    const body = fb.querySelector('#fBody').value.trim();
+    const action_plan = fb.querySelector('#fPlan').value.trim();
+    const published = fb.querySelector('#fPub').checked;
+    const btn = fb.querySelector('#fSave');
+    if(!title){ showErr(fb.querySelector('#fErr'),'Poné un título.'); return; }
+    btn.classList.add('loading');
+    const q = fbEditing
+      ? sb.from('client_feedback').update({ title, body, action_plan, published }).eq('id', fbEditing)
+      : sb.from('client_feedback').insert({ client_id: client.id, title, body, action_plan, published });
+    const { error } = await q;
+    btn.classList.remove('loading');
+    if(error){ showErr(fb.querySelector('#fErr'),'No se pudo guardar: '+error.message); return; }
+    toast(published ? 'Publicada: '+cname+' ya la ve en "Tu plan".' : 'Guardada como borrador.');
+    fClear(); loadFb();
+  };
+  async function loadFb(){
+    const box = fb.querySelector('#fList');
+    box.innerHTML = skeleton(1);
+    const { data } = await sb.from('client_feedback').select('*').eq('client_id', client.id).order('created_at',{ascending:false});
+    box.innerHTML='';
+    if(!data || data.length===0){ box.innerHTML='<p class="hint">Sin devoluciones todavía.</p>'; return; }
+    data.forEach((f,i)=>{
+      const r = el(`<div class="adm-row" style="animation-delay:${Math.min(i,10)*40}ms">
+        <div><div style="font-weight:600;">${esc(f.title)}</div><div class="hint">${fmtDate(f.created_at)}</div></div>
+        <div class="adm-actions" style="align-items:center;"><span class="tag ${f.published?'pub':'draft'}">${f.published?'Publicada':'Borrador'}</span><button class="ghost" data-a="e">Editar</button><button class="ghost danger" data-a="d">Borrar</button></div>
+      </div>`);
+      r.querySelector('[data-a="e"]').onclick = ()=>{ fbEditing=f.id; fb.querySelector('#fTitle').value=f.title; fb.querySelector('#fBody').value=f.body||''; fb.querySelector('#fPlan').value=f.action_plan||''; fb.querySelector('#fPub').checked=f.published; fb.querySelector('#fSave span').textContent='Guardar cambios'; fb.querySelector('#fCancel').classList.remove('hidden'); fb.scrollIntoView({behavior:'smooth', block:'start'}); };
+      r.querySelector('[data-a="d"]').onclick = async ()=>{ if(!confirm('¿Borrar "'+f.title+'"? No se puede deshacer.')) return; await sb.from('client_feedback').delete().eq('id', f.id); if(fbEditing===f.id) fClear(); toast('Devolución eliminada.'); loadFb(); };
+      box.appendChild(r);
+    });
+  }
+  pane.appendChild(fb);
+  loadFb();
 }
 
 init();
