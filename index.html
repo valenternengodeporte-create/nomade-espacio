@@ -956,18 +956,19 @@ function renderAdminContenido(container){
 async function renderAdminTests(container){
   const card = el(`<div class="card"><h2>Tests recibidos</h2><div id="testList">${skeleton(1)}</div></div>`);
   container.appendChild(card);
-  const { data: subs } = await sb.from('test_submissions').select('*, profiles(name)').order('submitted_at',{ascending:false});
+  const { data: subs } = await sb.from('test_submissions').select('*, profiles(name,email)').order('submitted_at',{ascending:false});
   const listEl = card.querySelector('#testList');
   listEl.innerHTML = '';
   if(!subs || subs.length===0){ listEl.innerHTML = '<p class="hint">Todavía no hay tests completados.</p>'; return; }
   subs.forEach(it=>{
     const { sub, levels, profile, label } = scoreSubmission(it.answers);
     const hasLow = Object.values(levels).includes('low');
-    const name = it.profiles && it.profiles.name ? it.profiles.name : it.user_id;
+    const pr = it.profiles || {};
+    const name = pr.name || pr.email || 'Sin nombre';
     const metric = k => `<div class="metric"><div class="metric-top"><span>${k} — ${SUB_LABEL[k]}</span><span>${sub[k]}/20 <span class="tag ${levels[k]}">${levels[k]}</span></span></div><div class="bar"><div class="bar-fill ${levels[k]}" style="--w:${Math.round(sub[k]/20*100)}%"></div></div></div>`;
     const row = el(`<div class="t-row">
       <button class="t-head" aria-expanded="false">
-        <div><div class="t-name">${esc(name)}</div><div class="hint">${new Date(it.submitted_at).toLocaleDateString('es-AR')}</div></div>
+        <div><div class="t-name">${esc(name)}</div><div class="hint">${pr.name && pr.email ? esc(pr.email)+' · ' : ''}${new Date(it.submitted_at).toLocaleDateString('es-AR')}</div></div>
         <div class="t-right"><span class="tag ${hasLow?'low':'high'}">${esc(label)}</span>${ICON.chevron}</div>
       </button>
       <div class="t-detail"><div class="t-inner"><div class="t-box">
@@ -984,7 +985,7 @@ async function renderAdminTests(container){
 async function renderAdminClientes(container){
   container.innerHTML = skeleton(1);
   const [{ data: clients, error }, { data: subs }] = await Promise.all([
-    sb.from('profiles').select('id,name,is_admin').order('name',{ascending:true}),
+    sb.from('profiles').select('id,name,email,is_admin').order('name',{ascending:true}),
     sb.from('test_submissions').select('user_id,answers,submitted_at')
   ]);
   container.innerHTML = '';
@@ -997,9 +998,10 @@ async function renderAdminClientes(container){
   list.forEach((c,i)=>{
     const t = subBy[c.id];
     const tag = t ? (()=>{ const r=scoreSubmission(t.answers); const low=Object.values(r.levels).includes('low'); return `<span class="tag ${low?'low':'high'}">${esc(r.label)}</span>`; })() : '<span class="tag draft">Sin test</span>';
-    const initial = esc(String(c.name||'?').trim().charAt(0).toUpperCase());
+    const shown = c.name || c.email || 'Sin nombre';
+    const initial = esc(String(shown).trim().charAt(0).toUpperCase());
     const row = el(`<button class="cl-row" style="animation:paneIn .4s var(--ease) both;animation-delay:${Math.min(i,10)*40}ms">
-      <span class="cl-left"><span class="avatar">${initial}</span><span class="cl-name">${esc(c.name || 'Sin nombre')}</span></span>${tag}
+      <span class="cl-left"><span class="avatar">${initial}</span><span class="cl-name">${esc(shown)}</span></span>${tag}
     </button>`);
     row.onclick = ()=> renderAdminCliente(container, c, t);
     cl.appendChild(row);
@@ -1014,8 +1016,8 @@ function renderAdminCliente(container, client, test){
   const back = el(`<button class="back">← Todos los clientes</button>`);
   back.onclick = ()=> renderAdminClientes(container);
   pane.appendChild(back);
-  const cname = client.name || 'Sin nombre';
-  pane.appendChild(el(`<div class="cl-head"><span class="avatar">${esc(cname.trim().charAt(0).toUpperCase())}</span><h2>${esc(cname)}</h2></div>`));
+  const cname = client.name || client.email || 'Sin nombre';
+  pane.appendChild(el(`<div class="cl-head"><span class="avatar">${esc(cname.trim().charAt(0).toUpperCase())}</span><div><h2>${esc(cname)}</h2>${client.name && client.email ? `<div class="hint">${esc(client.email)}</div>` : ''}</div></div>`));
 
   if(test){
     const { sub, levels, profile } = scoreSubmission(test.answers);
