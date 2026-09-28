@@ -211,7 +211,7 @@
   .chip{font-size:12.5px;color:var(--ink-dim);border:1px dashed var(--line-strong);padding:7px 12px;border-radius:100px;}
 
   /* ---------- admin ---------- */
-  .sub-tabs{display:flex;gap:6px;margin-bottom:18px;}
+  .sub-tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px;}
   .sub-tab{padding:8px 14px;border-radius:100px;border:1px solid var(--line-strong);background:none;color:var(--ink-dim);font-size:13px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;}
   .sub-tab.active{background:var(--teal-soft);border-color:var(--teal);color:var(--teal);}
   .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
@@ -393,6 +393,112 @@
     .draft-text{flex-basis:100%;}
   }
 
+  .own-add{margin-top:16px;}
+  .own-toggle{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:100px;border:1px dashed rgba(91,154,160,.6);background:var(--teal-soft);color:var(--teal);font-size:14px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s var(--ease);}
+  .own-toggle:hover{border-style:solid;transform:translateY(-1px);}
+  .own-form{margin-top:12px;padding:16px;border-radius:14px;background:var(--bg-raised);border:1px solid rgba(91,154,160,.35);animation:paneIn .35s var(--ease);}
+  .own-form .add-row{margin:0;}
+  .own-form .primary{padding:12px 18px;}
+  .own-badge{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--teal);background:var(--teal-soft);border:1px solid rgba(91,154,160,.45);border-radius:100px;padding:1px 7px;vertical-align:middle;text-decoration:none;}
+  .task .own-del{align-self:center;}
+  .own-summary{font-size:12.5px;color:var(--ink-dim);margin-top:6px;line-height:1.6;}
+  .own-done{text-decoration:line-through;color:var(--ink-faint);}
+
+  /* ---------- kit de seguridad (cliente) ---------- */
+  .kit-head{display:flex;gap:18px;align-items:flex-start;}
+  .kit-shield{flex-shrink:0;width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;color:var(--teal);background:var(--teal-soft);border:1px solid rgba(91,154,160,.45);}
+  .kit-shield svg{width:28px;height:28px;}
+  .kit-head-txt{flex:1;min-width:0;}
+  .kit-bar{height:8px;border-radius:8px;background:rgba(255,255,255,.07);overflow:hidden;margin:14px 0 6px;}
+  .kit-fill{height:100%;width:0;border-radius:8px;background:linear-gradient(90deg,var(--teal),var(--amber));transition:width .9s var(--ease);}
+  .kit-count{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--ink-dim);letter-spacing:.04em;}
+  .emer-card{margin-bottom:16px;padding:18px;border-radius:var(--radius);background:linear-gradient(135deg,rgba(201,123,99,.18),rgba(227,168,87,.1));border:1px solid rgba(201,123,99,.45);animation:paneIn .5s var(--ease);}
+  .emer-title{display:flex;align-items:center;gap:8px;font-weight:600;font-size:14px;margin-bottom:12px;}
+  .emer-title svg{color:var(--danger);}
+  .emer-title span{margin-left:auto;font-weight:400;font-size:11.5px;color:var(--ink-faint);}
+  .emer-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+  .emer-grid a{display:flex;flex-direction:column;align-items:center;gap:2px;padding:12px 6px;border-radius:12px;background:rgba(18,21,31,.55);border:1px solid var(--line);text-decoration:none;color:var(--ink);transition:transform .2s var(--ease), border-color .2s;}
+  .emer-grid a:hover{transform:translateY(-2px);border-color:var(--danger);}
+  .emer-grid a b{font-family:'IBM Plex Mono',monospace;font-size:21px;font-weight:500;color:var(--amber-hi);}
+  .emer-grid a span{font-size:11.5px;color:var(--ink-dim);text-align:center;}
+  .emer-grid a.wide{grid-column:1/-1;flex-direction:row;justify-content:center;gap:10px;}
+  .emer-grid a.wide b{font-size:16px;white-space:nowrap;}
+  .emer-grid a.wide span{text-align:left;}
+  .trail{list-style:none;margin:0;padding:0;position:relative;}
+  .trail::before{content:'';position:absolute;left:27px;top:28px;bottom:28px;width:2px;background:linear-gradient(var(--teal),var(--line-strong));}
+  .node{position:relative;margin-bottom:10px;animation:paneIn .45s var(--ease) both;}
+  .node:nth-child(2){animation-delay:.05s}.node:nth-child(3){animation-delay:.1s}.node:nth-child(4){animation-delay:.15s}.node:nth-child(5){animation-delay:.2s}.node:nth-child(6){animation-delay:.25s}.node:nth-child(7){animation-delay:.3s}
+  .node-btn{width:100%;display:flex;align-items:center;gap:14px;padding:10px 14px 10px 6px;border-radius:16px;border:1px solid transparent;background:none;color:var(--ink);text-align:left;cursor:pointer;font-family:'Inter',sans-serif;transition:all .25s var(--ease);}
+  .node-btn:hover:not(:disabled){background:var(--bg-raised);border-color:var(--line);transform:translateX(3px);}
+  .node-btn:disabled{cursor:not-allowed;}
+  .node-dot{position:relative;z-index:1;flex-shrink:0;width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;background:var(--bg-solid);border:2px solid var(--line-strong);color:var(--ink-faint);}
+  .node-dot svg{width:18px;height:18px;}
+  .node.done .node-dot{background:var(--teal);border-color:var(--teal);color:#12151F;}
+  .node.current .node-dot{border-color:var(--amber);background:var(--amber-soft);animation:ping 2.2s infinite;}
+  .node.locked{opacity:.5;}
+  .node.fresh .node-dot{animation:unlock .8s var(--ease), ping 2.2s .8s infinite;}
+  @keyframes unlock{0%{transform:scale(.6) rotate(-20deg);}60%{transform:scale(1.2) rotate(8deg);}100%{transform:none;}}
+  .node-txt{flex:1;min-width:0;}
+  .node-txt b{display:block;font-size:15px;font-weight:600;margin-bottom:2px;}
+  .node-txt span{display:block;font-size:12.5px;color:var(--ink-dim);line-height:1.4;}
+  .node-go{flex-shrink:0;font-size:12.5px;color:var(--ink-faint);white-space:nowrap;}
+  .node.current .node-go{color:var(--amber);font-weight:600;}
+  /* lector */
+  .sheet{position:fixed;inset:0;z-index:55;background:rgba(8,10,15,.78);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:16px;animation:paneIn .3s var(--ease);}
+  .sheet.out{opacity:0;transition:opacity .25s;}
+  .sheet-inner{width:100%;max-width:540px;max-height:92vh;overflow-y:auto;background:var(--bg-solid);border:1px solid var(--line-strong);border-radius:22px;padding:20px 22px 22px;box-shadow:0 40px 80px -30px rgba(0,0,0,.8);}
+  .sheet-top{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+  .sheet-ico{font-size:24px;}
+  .sheet-title{flex:1;font-family:'Fraunces',serif;font-size:18px;}
+  .sheet-x{background:none;border:none;color:var(--ink-dim);font-size:16px;cursor:pointer;width:34px;height:34px;border-radius:50%;}
+  .sheet-x:hover{background:rgba(255,255,255,.06);color:var(--ink);}
+  .dots{display:flex;gap:5px;margin-bottom:18px;}
+  .dots i{flex:1;height:4px;border-radius:4px;background:rgba(255,255,255,.08);transition:background .4s var(--ease);}
+  .dots i.on{background:linear-gradient(90deg,var(--teal),var(--amber));}
+  .scard{min-height:220px;display:flex;flex-direction:column;}
+  .scard.in-right{animation:inRight .45s var(--ease);} .scard.in-left{animation:inLeft .45s var(--ease);}
+  .scard-n{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:10px;}
+  .scard h3{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(22px,5vw,27px);line-height:1.2;margin:0 0 12px;}
+  .scard h3 em{font-style:normal;font-family:'IBM Plex Mono',monospace;color:var(--amber);}
+  .scard-b,.scard p{font-size:15.5px;line-height:1.7;color:var(--ink-dim);}
+  .scard-b b,.scard p b{color:var(--ink);}
+  .sheet-nav{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:22px;}
+  .qopts{display:flex;flex-direction:column;gap:8px;}
+  .qopt{padding:14px 16px;border-radius:12px;border:1px solid var(--line-strong);background:var(--bg-deep);color:var(--ink);font-size:15px;text-align:left;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s var(--ease);}
+  .qopt:hover:not(:disabled){border-color:var(--amber);transform:translateX(3px);}
+  .qopt.right{background:var(--teal);border-color:var(--teal);color:#12151F;font-weight:600;animation:pop .4s var(--ease);}
+  .qopt.wrong{border-color:var(--danger);color:var(--danger);animation:shake .4s;opacity:.7;}
+  .qwhy{color:var(--amber) !important;font-size:14px !important;margin:12px 0 0;}
+  .badge-card{text-align:center;align-items:center;}
+  .badge-big{width:92px;height:92px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:44px;margin:8px auto 14px;background:var(--teal-soft);border:2px solid var(--teal);animation:thump2 .7s var(--ease);box-shadow:0 0 40px -6px rgba(91,154,160,.6);}
+  @keyframes thump2{0%{transform:scale(2);opacity:0;}60%{opacity:1;}100%{transform:none;}}
+  .unlock{display:inline-flex;align-items:center;gap:6px;justify-content:center;flex-wrap:wrap;background:var(--amber-soft);border:1px solid rgba(227,168,87,.4);border-radius:10px;padding:8px 12px;font-size:14px !important;margin:0 0 10px !important;}
+  .unlock svg{width:15px;height:15px;color:var(--amber);}
+  .badge-card .primary{margin-top:12px;}
+  .zitem{display:flex;flex-direction:column;gap:2px;padding:12px 0;border-bottom:1px solid var(--line);font-size:14.5px;line-height:1.5;}
+  .zitem:last-of-type{border-bottom:none;}
+  .zitem b{color:var(--ink);}
+  .znote{color:var(--ink-faint);font-size:13px;}
+  .zmap,.ztel{color:var(--teal);text-decoration:none;font-size:13.5px;}
+  .ztel{font-family:'IBM Plex Mono',monospace;}
+  .zmap:hover,.ztel:hover{text-decoration:underline;}
+  .zbtn{display:inline-block;margin-top:12px;padding:10px 16px;border-radius:100px;background:var(--teal-soft);border:1px solid var(--teal);color:var(--teal);text-decoration:none;font-size:14px;}
+  /* admin */
+  .zone-assign{display:flex;gap:10px;}
+  .zone-assign select{flex:1;}
+  .zone-form code{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--amber);}
+  .req-card{border-color:rgba(91,154,160,.4);}
+  @media (max-width:560px){
+    .kit-head{flex-direction:column;gap:12px;}
+    .emer-grid{grid-template-columns:repeat(2,1fr);}
+    .emer-grid a.wide{flex-direction:column;gap:2px;}
+    .emer-grid a.wide span{text-align:center;}
+    .sheet{padding:0;align-items:flex-end;}
+    .sheet-inner{max-height:94vh;border-radius:22px 22px 0 0;}
+    .zone-assign{flex-direction:column;}
+    .node-go{display:none;}
+  }
+
   /* ---------- toasts ---------- */
   #toasts{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:60;display:flex;flex-direction:column;gap:8px;align-items:center;width:calc(100% - 32px);max-width:420px;}
   .toast{padding:12px 18px;border-radius:12px;font-size:14px;background:rgba(31,36,51,.95);backdrop-filter:blur(12px);border:1px solid var(--line-strong);box-shadow:0 20px 40px -20px rgba(0,0,0,.8);animation:toastIn .45s var(--ease);}
@@ -480,6 +586,7 @@ const ICON={
   shield: svg('<path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/>'),
   clip: svg('<rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4h6v3H9zM9 12h6M9 16h4"/>'),
   panel: svg('<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 20V9"/>'),
+  plus: svg('<path d="M12 5v14M5 12h14"/>'),
   map: svg('<path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>'),
   eye: svg('<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>'),
   check: svg('<path d="M5 12l5 5 9-10"/>'),
@@ -740,13 +847,7 @@ function paintTab(wrap){
   else if(state.tab==='plan') renderClientPlan(pane);
   else if(state.tab==='experiencia') renderResourceList(pane,'experiencia','Todavía no hay contenido cargado en esta sección.');
   else if(state.tab==='testimonios') renderResourceList(pane,'testimonio','Todavía no hay testimonios cargados.');
-  else if(state.tab==='seguridad') pane.appendChild(el(`<div class="card soon">
-      <div class="soon-icon">${ICON.shield}</div>
-      <div class="soon-tag">En preparación</div>
-      <h2>Kit de emergencia del <em>nómade</em></h2>
-      <p class="lead">Estamos preparando el kit de emergencia del nómade — con información específica para actuar ante robos, vuelos perdidos y otras situaciones que pueden pasar viajando. Vas a verlo acá apenas esté listo.</p>
-      <div class="chips"><span class="chip">Robos</span><span class="chip">Vuelos perdidos</span><span class="chip">Y más situaciones</span></div>
-    </div>`));
+  else if(state.tab==='seguridad') renderSafety(pane);
   else if(state.tab==='admin' && isAdmin) renderAdmin(pane);
 }
 
@@ -897,9 +998,13 @@ async function renderClientPlan(container){
   const ids = items.map(i=>i.id);
   const { data: prog } = await sb.from('plan_progress').select('feedback_id,item_id').in('feedback_id', ids);
   const done = new Set((prog||[]).map(p=>p.feedback_id+':'+p.item_id));
+  // Tareas que sumó el propio cliente
+  const { data: own } = await sb.from('client_tasks').select('*').in('feedback_id', ids).order('created_at',{ascending:true});
+  (own||[]).forEach(o=>{ if(o.done) done.add(o.feedback_id+':own-'+o.id); });
   items.forEach((fb,i)=>{
-    const tasks = Array.isArray(fb.items) ? fb.items : [];
-    if(tasks.length) container.appendChild(renderRoute(fb, tasks, done, i));
+    const base = Array.isArray(fb.items) ? fb.items : [];
+    const mine = (own||[]).filter(o=>o.feedback_id===fb.id).map(ownToTask);
+    if(base.length || mine.length) container.appendChild(renderRoute(fb, [...base, ...mine], done, i));
     else container.appendChild(renderLegacyPlan(fb, i));
   });
 }
@@ -915,11 +1020,13 @@ function renderLegacyPlan(it, i){
   </article>`);
 }
 
+const ownToTask = o => ({ id:'own-'+o.id, dbId:o.id, own:true, cat:o.cat, when:o.stage, text:o.text });
+
 function renderRoute(fb, tasks, done, i){
   const key = t => fb.id+':'+t.id;
   const dleft = daysUntil(fb.departure_date);
   const countdown = dleft==null ? '' : dleft>1 ? `Faltan <b>${dleft}</b> días` : dleft===1 ? `¡Salís <b>mañana</b>!` : dleft===0 ? `¡<b>Hoy</b> es el día!` : `Ya estás en <b>ruta</b>`;
-  const cats = ROUTE_CATS.filter(c=>tasks.some(t=>t.cat===c.id));
+  const cats = () => ROUTE_CATS.filter(c=>tasks.some(t=>t.cat===c.id));
   let filter = 'todo';
   let openCat = null;
 
@@ -942,11 +1049,22 @@ function renderRoute(fb, tasks, done, i){
     ${fb.body ? `<div class="letter"><div class="letter-from">${ICON.quote} Mensaje de Valentina</div><p class="prewrap">${esc(fb.body)}</p></div>` : ''}
     <div class="when-tabs" role="tablist">
       <button class="when active" data-w="todo">Todo</button>
-      ${ROUTE_WHEN.filter(w=>tasks.some(t=>t.when===w.id)).map(w=>`<button class="when" data-w="${w.id}">${w.label}</button>`).join('')}
+      ${ROUTE_WHEN.map(w=>`<button class="when" data-w="${w.id}">${w.label}</button>`).join('')}
     </div>
     <p class="hint stamps-hint">Cada sello se completa cuando tachás todas sus tareas. Tocá uno para abrirlo.</p>
     <div class="stamps"></div>
     <div class="stamp-panel"></div>
+    <div class="own-add">
+      <button class="own-toggle" type="button">${ICON.plus}<span>Sumá una tarea tuya</span></button>
+      <div class="own-form hidden">
+        <p class="hint" style="margin:0 0 10px;">Algo que sabés que tenés que hacer y no está en la lista. Valentina también la va a ver.</p>
+        <div class="grid-2">
+          <div class="field"><label>Categoría</label><select class="own-cat">${ROUTE_CATS.map(c=>`<option value="${c.id}">${c.icon} ${c.label}</option>`).join('')}</select></div>
+          <div class="field"><label>¿Cuándo?</label><select class="own-when">${ROUTE_WHEN.map(w=>`<option value="${w.id}">${w.label}</option>`).join('')}</select></div>
+        </div>
+        <div class="add-row"><input type="text" class="own-text" placeholder="Ej: Vender la bici antes de irme" maxlength="160"/><button class="primary own-save" type="button"><span>Sumar</span>${ICON.arrow}</button></div>
+      </div>
+    </div>
   </article>`);
 
   const stampsEl = root.querySelector('.stamps');
@@ -967,7 +1085,7 @@ function renderRoute(fb, tasks, done, i){
   function drawStamps(){
     stampsEl.innerHTML = '';
     const vis = visible();
-    cats.forEach(c=>{
+    cats().forEach(c=>{
       const ct = vis.filter(t=>t.cat===c.id);
       if(!ct.length) return;
       const n = ct.filter(t=>done.has(key(t))).length;
@@ -1000,11 +1118,13 @@ function renderRoute(fb, tasks, done, i){
       const li = el(`<li class="task ${isDone?'done':''}">
         <button class="tick" role="checkbox" aria-checked="${isDone}" aria-label="Marcar como hecha">${ICON.check}</button>
         <div class="task-body">
-          <span class="task-text">${esc(t.text)}</span>
+          <span class="task-text">${esc(t.text)}${t.own ? ' <span class="own-badge">tuya</span>' : ''}</span>
           <span class="task-when">${whenLabel(t.when)}${t.link ? ` · <a href="${esc(t.link)}" target="_blank" rel="noopener" class="link">abrir link ↗</a>` : ''}</span>
         </div>
+        ${t.own ? '<button class="x own-del" title="Quitar tarea">✕</button>' : ''}
       </li>`);
       li.querySelector('.tick').onclick = ()=> toggle(t, li);
+      if(t.own) li.querySelector('.own-del').onclick = ()=> removeOwn(t);
       ul.appendChild(li);
     });
     panel.appendChild(box);
@@ -1017,9 +1137,11 @@ function renderRoute(fb, tasks, done, i){
     // Optimista: se marca al instante y se revierte si falla
     if(was) done.delete(k); else done.add(k);
     li.classList.toggle('done', !was); li.querySelector('.tick').setAttribute('aria-checked', !was);
-    const { error } = was
-      ? await sb.from('plan_progress').delete().eq('feedback_id', fb.id).eq('item_id', t.id)
-      : await sb.from('plan_progress').insert({ feedback_id: fb.id, item_id: t.id, client_id: state.session.user.id });
+    const { error } = t.own
+      ? await sb.from('client_tasks').update({ done: !was }).eq('id', t.dbId)
+      : was
+        ? await sb.from('plan_progress').delete().eq('feedback_id', fb.id).eq('item_id', t.id)
+        : await sb.from('plan_progress').insert({ feedback_id: fb.id, item_id: t.id, client_id: state.session.user.id });
     busy = false;
     if(error){
       if(was) done.add(k); else done.delete(k);
@@ -1039,6 +1161,42 @@ function renderRoute(fb, tasks, done, i){
     root.querySelectorAll('.when').forEach(x=>x.classList.toggle('active', x===b));
     drawStamps(); drawPanel();
   });
+
+  // ----- tareas propias -----
+  const ownForm = root.querySelector('.own-form');
+  root.querySelector('.own-toggle').onclick = ()=>{
+    ownForm.classList.toggle('hidden');
+    if(!ownForm.classList.contains('hidden')){
+      if(openCat) root.querySelector('.own-cat').value = openCat;
+      if(filter!=='todo') root.querySelector('.own-when').value = filter;
+      root.querySelector('.own-text').focus();
+    }
+  };
+  const ownText = root.querySelector('.own-text');
+  ownText.onkeydown = e=>{ if(e.key==='Enter'){ e.preventDefault(); root.querySelector('.own-save').click(); } };
+  root.querySelector('.own-save').onclick = async ()=>{
+    const text = ownText.value.trim();
+    if(!text){ ownText.focus(); return; }
+    const btn = root.querySelector('.own-save');
+    const cat = root.querySelector('.own-cat').value, stage = root.querySelector('.own-when').value;
+    btn.classList.add('loading');
+    const { data, error } = await sb.from('client_tasks').insert({ feedback_id: fb.id, client_id: state.session.user.id, cat, stage, text }).select().single();
+    btn.classList.remove('loading');
+    if(error || !data){ toast('No se pudo sumar la tarea. Probá de nuevo.','bad'); return; }
+    tasks.push(ownToTask(data));
+    ownText.value = '';
+    openCat = cat;
+    updateRing(); drawStamps(); drawPanel();
+    toast('Tarea sumada a tu hoja de ruta.');
+  };
+  async function removeOwn(t){
+    if(!confirm('¿Quitar "'+t.text+'" de tu hoja de ruta?')) return;
+    const { error } = await sb.from('client_tasks').delete().eq('id', t.dbId);
+    if(error){ toast('No se pudo quitar. Probá de nuevo.','bad'); return; }
+    tasks.splice(tasks.indexOf(t),1);
+    done.delete(key(t));
+    updateRing(); drawStamps(); drawPanel();
+  }
 
   requestAnimationFrame(()=>{ updateRing(); });
   drawStamps();
@@ -1060,6 +1218,301 @@ function celebrate(root){
   }
   root.appendChild(layer);
   setTimeout(()=>layer.remove(), 2600);
+}
+
+// ============================================================
+// KIT DE SEGURIDAD — misiones que se desbloquean en orden
+// Las misiones generales valen para todo Brasil; la última ("Tu zona")
+// se arma con la zona que Valentina le asigna al cliente en el panel.
+// ============================================================
+const SAFETY_MISSIONS = [
+  { id:'numeros', icon:'📞', title:'Números que salvan', sub:'Los 4 que tenés que saber de memoria',
+    cards:[
+      {h:'Ambulancia: <em>192</em>', b:'Es el <b>SAMU</b>: ambulancia pública, gratuita y 24 horas, para cualquier persona que esté en Brasil. No te piden documentos. Decí <i>"preciso de uma ambulância"</i> y la dirección.'},
+      {h:'Policía: <em>190</em>', b:'<b>Polícia Militar</b>. Para un robo que está pasando, violencia o peligro inmediato.'},
+      {h:'Bomberos: <em>193</em>', b:'<b>Corpo de Bombeiros</b>. Incendios, rescates y accidentes en el mar, ríos o montaña.'},
+      {h:'Mujeres: <em>180</em>', b:'<b>Central de Atendimento à Mulher</b>. Gratuita y las 24 horas, para situaciones de violencia.'},
+      {h:'Un truco', b:'Guardalos en tu celular con una "A" adelante (por ejemplo <b>"A SAMU 192"</b>) para que aparezcan primeros en tus contactos.'},
+    ],
+    quiz:{ q:'Te descomponés en la playa y necesitás una ambulancia. ¿A qué número llamás?', opts:['190','192','193'], a:1,
+           why:'192 es el SAMU, la ambulancia pública. 190 es la policía y 193 los bomberos.' } },
+
+  { id:'salud', icon:'🩺', title:'Salud gratis: el SUS', sub:'Dónde te atienden sin pagar',
+    cards:[
+      {h:'Brasil tiene salud pública gratuita', b:'El <b>SUS</b> (Sistema Único de Saúde) atiende a cualquier persona que esté en el país, también a extranjeros. Las urgencias no se cobran.'},
+      {h:'UPA: urgencias 24 horas', b:'<b>Unidade de Pronto Atendimento</b>. Fiebre alta, cortes, dolor fuerte, a cualquier hora. Para una urgencia <b>no necesitás Cartão SUS</b>: llevá tu DNI o pasaporte.'},
+      {h:'UBS o "posto de saúde"', b:'Es la <b>atención primaria</b>: consultas, controles, vacunas y recetas, en horario comercial y con turno. Si vas a quedarte, sacá el <b>Cartão SUS</b> en la UBS de tu barrio (en general piden documento, CPF y comprobante de domicilio).'},
+      {h:'El seguro de viaje igual importa', b:'El SUS cubre la urgencia, pero puede haber mucha espera. El seguro te da acceso a clínicas privadas, medicamentos y repatriación. Tené el número de asistencia guardado.'},
+    ],
+    quiz:{ q:'Son las 3 de la mañana y tenés fiebre muy alta. ¿Adónde vas?', opts:['A la UBS (posto de saúde)','A la UPA','Al consulado'], a:1,
+           why:'La UPA atiende urgencias las 24 horas. La UBS trabaja en horario comercial y con turno.' } },
+
+  { id:'robo', icon:'🚨', title:'Si te roban', sub:'Qué hacer en los primeros minutos',
+    cards:[
+      {h:'Primero, vos', b:'No te resistas. Nada de lo que llevás vale más que vos. Alejate hacia un lugar con gente.'},
+      {h:'Bloqueá todo', b:'Tarjetas desde la app del banco o por teléfono. Celular: pedí a tu compañía el bloqueo por <b>IMEI</b> (anotalo hoy: marcá <b>*#06#</b>). Cambiá la contraseña de tu mail.'},
+      {h:'Hacé el B.O.', b:'El <b>Boletim de Ocorrência</b> es la denuncia policial. Lo necesitás para el seguro, para bloquear y para reemplazar documentos. En muchos estados se hace online; si no, en cualquier <i>delegacia</i>. En "Tu zona" tenés el link.'},
+      {h:'Prevenir es más fácil', b:'Celular guardado en la calle y en las paradas de colectivo. Una tarjeta separada de la otra. Copia de tus documentos en la nube.'},
+    ],
+    quiz:{ q:'¿Cómo se llama la denuncia policial en Brasil?', opts:['Boletim de Ocorrência (B.O.)','Cartão SUS','CPF'], a:0,
+           why:'El B.O. es la denuncia. El Cartão SUS es para salud y el CPF es tu número fiscal.' } },
+
+  { id:'documentos', icon:'🛂', title:'Documentos perdidos', sub:'Pasaporte o DNI',
+    cards:[
+      {h:'El DNI también sirve', b:'Como argentino/a podés entrar y estar en Brasil con tu <b>DNI vigente y en buen estado</b> (acuerdo Mercosur). Si perdés uno de los dos, el otro te respalda. Por eso conviene viajar con ambos, guardados en lugares distintos.'},
+      {h:'Paso 1: el B.O.', b:'Hacé el <b>Boletim de Ocorrência</b> por pérdida o robo. Es lo primero que te van a pedir.'},
+      {h:'Paso 2: el consulado', b:'El <b>consulado argentino</b> puede darte documentación de emergencia para volver o seguir viaje. Pedí turno; si es urgente, llamá a la guardia. El número está en "Tu zona".'},
+      {h:'Tip: todo en la nube', b:'Sacales foto al pasaporte, el DNI, el seguro y los pasajes, y guardalas en Drive o en tu mail. Te ahorra horas.'},
+    ],
+    quiz:{ q:'Perdiste el pasaporte. ¿Qué hacés primero?', opts:['Voy directo al aeropuerto','Hago el B.O. y contacto al consulado','Espero a ver si aparece'], a:1,
+           why:'Con el B.O. hecho, el consulado puede ayudarte con la documentación.' } },
+
+  { id:'vuelos', icon:'✈️', title:'Vuelos demorados o cancelados', sub:'Lo que la aerolínea te debe',
+    cards:[
+      {h:'Hay reglas, y te protegen', b:'En Brasil la <b>ANAC</b> (Resolución 400) obliga a la aerolínea a asistirte si tu vuelo se demora o se cancela, <b>aunque sea por mal clima</b>.'},
+      {h:'Según las horas de espera', b:'Desde <b>2 horas</b>: comida o un voucher. Desde <b>4 horas</b>: alojamiento y traslado si tenés que pasar la noche. Además te tienen que ofrecer otro vuelo o el reembolso.'},
+      {h:'Guardá todo', b:'Si la aerolínea no te asiste, podés pagar vos y pedir el reembolso con los comprobantes. Si no responde, reclamá en <b>consumidor.gov.br</b>, la plataforma oficial.'},
+      {h:'Si el vuelo lo perdiste vos', b:'Hablá con la aerolínea cuanto antes. Si no vas a tomar la ida, <b>avisá antes de la hora del vuelo</b> para que no te cancelen la vuelta.'},
+    ],
+    quiz:{ q:'Tu vuelo lleva 4 horas de demora y ya es de noche. ¿Qué te tiene que dar la aerolínea?', opts:['Nada, fue por el clima','Solo una botella de agua','Alojamiento y traslado'], a:2,
+           why:'Desde 4 horas, si tenés que pasar la noche, corresponde alojamiento y traslado, incluso con mal clima.' } },
+
+  { id:'estafas', icon:'🕵️', title:'Estafas comunes', sub:'Las que más les pasan a los recién llegados',
+    cards:[
+      {h:'La maquinita de la tarjeta', b:'Antes de poner la clave, <b>mirá el monto en la pantalla</b>. Un cero de más es la estafa más común en playas y bares.'},
+      {h:'Alquileres falsos', b:'Nunca pagues una seña por un lugar que no viste o fuera de una plataforma. Desconfiá de los precios muy bajos y del apuro ("hay otro interesado").'},
+      {h:'Pix a desconocidos', b:'El Pix es instantáneo y casi imposible de revertir. No lo uses por mensajes de "un conocido que cambió de número".'},
+      {h:'Taxis y apps', b:'Usá apps (Uber, 99) o taxis con taxímetro. Chequeá la patente antes de subir.'},
+    ],
+    quiz:{ q:'Te pasan la maquinita para pagar. ¿Qué hacés antes de poner la clave?', opts:['Reviso el monto en la pantalla','Pago rápido para no demorar','Le paso la clave al mozo'], a:0,
+           why:'Siempre mirá el monto antes de confirmar: es la forma más simple de evitar un cobro de más.' } },
+
+  { id:'zona', icon:'📍', title:'Tu zona', sub:'Lugares y contactos donde vas a estar', zone:true },
+];
+
+const telLink = n => `tel:${String(n).replace(/[^\d+]/g,'')}`;
+const mapLink = (name, zoneName) => 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(name+', '+(zoneName||''));
+const safeUrl = u => /^https?:\/\//i.test(String(u||'').trim()) ? String(u).trim() : '';
+
+// Arma las tarjetas de la misión "Tu zona" desde los datos cargados por Valentina
+function zoneCards(z){
+  const c = z.content || {};
+  const cards = [];
+  const health = c.health || [];
+  if(health.length) cards.push({ h:'Salud en '+esc(z.name), b: health.map(x=>`<div class="zitem"><b>${esc(x.name)}</b>${x.addr?`<span>${esc(x.addr)}</span>`:''}${x.note?`<span class="znote">${esc(x.note)}</span>`:''}<a class="zmap" href="${mapLink(x.name, z.name)}" target="_blank" rel="noopener">Ver en el mapa ↗</a></div>`).join('') });
+  const police = c.police || [];
+  const report = c.report && safeUrl(c.report.url);
+  if(police.length || report) cards.push({ h:'Policía y denuncias', b:
+    police.map(x=>`<div class="zitem"><b>${esc(x.name)}</b>${x.addr?`<span>${esc(x.addr)}</span>`:''}${x.phone?`<a class="ztel" href="${telLink(x.phone)}">${esc(x.phone)}</a>`:''}${x.note?`<span class="znote">${esc(x.note)}</span>`:''}</div>`).join('')
+    + (report ? `<a class="zbtn" href="${esc(report)}" target="_blank" rel="noopener">${esc(c.report.label||'Hacer el B.O. online')} ↗</a>` : '') });
+  const k = c.consulate;
+  if(k && (k.name || k.phone || k.emergency)) cards.push({ h:'Tu consulado', b:`<div class="zitem"><b>${esc(k.name||'Consulado argentino')}</b>${k.addr?`<span>${esc(k.addr)}</span>`:''}
+    ${k.phone?`<span>Teléfono: <a class="ztel" href="${telLink(k.phone)}">${esc(k.phone)}</a></span>`:''}
+    ${k.emergency?`<span>Guardia (urgencias): <a class="ztel" href="${telLink(k.emergency)}">${esc(k.emergency)}</a></span>`:''}
+    ${safeUrl(k.web)?`<a class="zmap" href="${esc(safeUrl(k.web))}" target="_blank" rel="noopener">Sitio oficial ↗</a>`:''}</div>` });
+  if(c.tips) cards.push({ h:'Consejos de Valentina', b:`<p class="prewrap" style="margin:0;">${esc(c.tips)}</p>` });
+  if(!cards.length) cards.push({ h:esc(z.name), b:'Valentina está terminando de cargar la información de esta zona.' });
+  return cards;
+}
+
+async function renderSafety(container){
+  container.innerHTML = skeleton(2);
+  const me = state.session.user.id;
+  const [{ data: cs }, { data: prog }, { data: reqs }] = await Promise.all([
+    sb.from('client_safety').select('*').eq('client_id', me).maybeSingle(),
+    sb.from('safety_progress').select('mission_id').eq('client_id', me),
+    sb.from('zone_requests').select('*').eq('client_id', me).eq('resolved', false),
+  ]);
+  let zone = null;
+  if(cs && cs.zone_id){ const { data: z } = await sb.from('safety_zones').select('*').eq('id', cs.zone_id).maybeSingle(); zone = z; }
+  const done = new Set((prog||[]).map(p=>p.mission_id));
+  let pendingReq = (reqs||[])[0] || null;
+  container.innerHTML = '';
+
+  const root = el(`<div class="kit">
+    <div class="kit-head card">
+      <div class="kit-shield">${ICON.shield}</div>
+      <div class="kit-head-txt">
+        <div class="eyebrow" style="margin:0 0 4px;">Kit de emergencia del nómade</div>
+        <h2 style="margin:0 0 4px;">Desbloqueá tu kit, misión por misión</h2>
+        <p class="hint" style="margin:0;">Cada misión dura 2 minutos y termina con una pregunta. Al acertarla, se abre la siguiente.</p>
+        <div class="kit-bar"><div class="kit-fill"></div></div>
+        <div class="kit-count"></div>
+      </div>
+    </div>
+    <div class="emer"></div>
+    <ol class="trail"></ol>
+  </div>`);
+  container.appendChild(root);
+
+  const unlockedUpTo = ()=>{ let i=0; while(i<SAFETY_MISSIONS.length && done.has(SAFETY_MISSIONS[i].id)) i++; return i; };
+
+  function drawHead(){
+    const n = SAFETY_MISSIONS.filter(m=>done.has(m.id)).length;
+    root.querySelector('.kit-fill').style.width = (n/SAFETY_MISSIONS.length*100)+'%';
+    root.querySelector('.kit-count').textContent = n===SAFETY_MISSIONS.length ? '¡Kit completo! Lo tenés siempre a mano acá.' : `${n} de ${SAFETY_MISSIONS.length} misiones`;
+  }
+  // Tarjeta de emergencia: aparece al completar la primera misión
+  function drawEmergency(){
+    const box = root.querySelector('.emer');
+    if(!done.has('numeros')){ box.innerHTML=''; return; }
+    const k = zone && zone.content && zone.content.consulate;
+    box.innerHTML = `<div class="emer-card">
+      <div class="emer-title">${ICON.shield} Tu tarjeta de emergencia <span>tocá para llamar</span></div>
+      <div class="emer-grid">
+        <a href="tel:192"><b>192</b><span>Ambulancia</span></a>
+        <a href="tel:190"><b>190</b><span>Policía</span></a>
+        <a href="tel:193"><b>193</b><span>Bomberos</span></a>
+        <a href="tel:180"><b>180</b><span>Mujeres</span></a>
+        ${k && k.emergency ? `<a href="${telLink(k.emergency)}" class="wide"><b>${esc(k.emergency)}</b><span>Guardia del consulado argentino</span></a>` : ''}
+      </div>
+    </div>`;
+  }
+  function drawTrail(fresh){
+    const ol = root.querySelector('.trail');
+    const up = unlockedUpTo();
+    ol.innerHTML = '';
+    SAFETY_MISSIONS.forEach((m,i)=>{
+      const isDone = done.has(m.id), isCur = i===up, locked = i>up;
+      const title = m.zone ? (zone ? 'Tu zona: '+esc(zone.name) : 'Tu zona') : m.title;
+      const sub = m.zone && !zone ? (pendingReq ? 'Pediste: '+esc(pendingReq.place)+'. Valentina la está preparando.' : 'Todavía no tenés zona asignada') : m.sub;
+      const li = el(`<li class="node ${isDone?'done':''} ${isCur?'current':''} ${locked?'locked':''} ${fresh===m.id?'fresh':''}">
+        <button class="node-btn" ${locked?'disabled':''} aria-label="${locked?'Bloqueada: ':''}${m.title}">
+          <span class="node-dot">${isDone?ICON.check:locked?ICON.lock:`<span>${m.icon}</span>`}</span>
+          <span class="node-txt"><b>${title}</b><span>${sub}</span></span>
+          <span class="node-go">${isDone?'Repasar':isCur?'Empezar →':''}</span>
+        </button>
+      </li>`);
+      if(!locked) li.querySelector('.node-btn').onclick = ()=> openMission(m);
+      ol.appendChild(li);
+    });
+  }
+  function redraw(fresh){ drawHead(); drawEmergency(); drawTrail(fresh); }
+
+  // ----- lector de misión (hoja a pantalla completa) -----
+  function openMission(m){
+    const cards = m.zone ? (zone ? zoneCards(zone) : null) : m.cards;
+    const sheet = el(`<div class="sheet" role="dialog" aria-modal="true" aria-label="${esc(m.title)}">
+      <div class="sheet-inner">
+        <div class="sheet-top"><span class="sheet-ico">${m.icon}</span><div class="sheet-title">${m.zone && zone ? 'Tu zona: '+esc(zone.name) : m.title}</div><button class="sheet-x" aria-label="Cerrar">✕</button></div>
+        <div class="dots"></div>
+        <div class="sheet-body"></div>
+      </div>
+    </div>`);
+    document.body.appendChild(sheet);
+    document.body.style.overflow='hidden';
+    const body = sheet.querySelector('.sheet-body');
+    const close = ()=>{ sheet.classList.add('out'); document.body.style.overflow=''; setKeys(null); setTimeout(()=>sheet.remove(),250); };
+    sheet.querySelector('.sheet-x').onclick = close;
+    sheet.onclick = e=>{ if(e.target===sheet) close(); };
+
+    // Sin zona asignada: formulario para pedirla
+    if(!cards){
+      sheet.querySelector('.dots').innerHTML='';
+      body.innerHTML = `<div class="scard">
+        <h3>¿Dónde vas a estar?</h3>
+        <p>Valentina arma la info de cada lugar a mano (salud, policía, consulado) para que sea confiable. Contale adónde vas y la va a sumar a tu kit.</p>
+        ${pendingReq ? `<p class="banner" style="margin:0 0 14px;">Ya pediste <b>${esc(pendingReq.place)}</b>. Te avisamos cuando esté lista.</p>` : ''}
+        <div class="field"><input type="text" class="zreq" placeholder="Ej: Itacaré, Bahía" maxlength="80"/></div>
+        <button class="primary wide zsend"><span>${pendingReq?'Pedir otra zona':'Pedir mi zona'}</span>${ICON.arrow}</button>
+      </div>`;
+      const inp = body.querySelector('.zreq');
+      setTimeout(()=>inp.focus(),300);
+      body.querySelector('.zsend').onclick = async ()=>{
+        const place = inp.value.trim(); if(!place){ inp.focus(); return; }
+        const btn = body.querySelector('.zsend'); btn.classList.add('loading');
+        const { data, error } = await sb.from('zone_requests').insert({ client_id: me, place }).select().single();
+        btn.classList.remove('loading');
+        if(error){ toast('No se pudo enviar. Probá de nuevo.','bad'); return; }
+        pendingReq = data || { place };
+        toast('¡Listo! Valentina recibió tu pedido.');
+        close(); drawTrail();
+      };
+      return;
+    }
+
+    const steps = cards.length + 1; // tarjetas + cierre (quiz o confirmación)
+    let idx = 0;
+    const dots = sheet.querySelector('.dots');
+    dots.innerHTML = Array.from({length:steps}).map(()=>'<i></i>').join('');
+    const paintDots = ()=> dots.querySelectorAll('i').forEach((d,i)=>{ d.classList.toggle('on', i<=idx); });
+
+    function show(dir=1){
+      paintDots();
+      body.innerHTML = '';
+      if(idx < cards.length){
+        const c = cards[idx];
+        const card = el(`<div class="scard ${dir>0?'in-right':'in-left'}">
+          <div class="scard-n">${idx+1} / ${cards.length}</div>
+          <h3>${c.h}</h3>
+          <div class="scard-b">${c.b}</div>
+          <div class="sheet-nav">
+            <button class="ghost" ${idx===0?'disabled':''} data-a="prev">← Atrás</button>
+            <button class="primary" data-a="next"><span>${idx===cards.length-1?(m.quiz?'Ir a la pregunta':'Terminar'):'Siguiente'}</span>${ICON.arrow}</button>
+          </div>
+        </div>`);
+        card.querySelector('[data-a="prev"]').onclick = ()=>{ if(idx>0){ idx--; show(-1); } };
+        card.querySelector('[data-a="next"]').onclick = ()=>{ idx++; show(1); };
+        body.appendChild(card);
+        return;
+      }
+      // Cierre
+      if(m.quiz && !done.has(m.id)) showQuiz(); else finish(done.has(m.id));
+    }
+
+    function showQuiz(){
+      const q = m.quiz;
+      const card = el(`<div class="scard in-right">
+        <div class="scard-n">Pregunta para desbloquear</div>
+        <h3>${q.q}</h3>
+        <div class="qopts">${q.opts.map((o,i)=>`<button class="qopt" data-i="${i}">${o}</button>`).join('')}</div>
+        <p class="qwhy hidden"></p>
+      </div>`);
+      body.appendChild(card);
+      card.querySelectorAll('.qopt').forEach(b=> b.onclick = ()=>{
+        const i = +b.dataset.i;
+        if(i===q.a){
+          b.classList.add('right');
+          card.querySelectorAll('.qopt').forEach(x=>x.disabled=true);
+          setTimeout(()=>finish(false), 650);
+        } else {
+          b.classList.add('wrong'); b.disabled = true;
+          const w = card.querySelector('.qwhy'); w.textContent = 'Casi. Probá con otra opción.'; w.classList.remove('hidden');
+        }
+      });
+    }
+
+    async function finish(already){
+      if(!already){
+        const { error } = await sb.from('safety_progress').insert({ client_id: me, mission_id: m.id });
+        if(error && !String(error.message||'').includes('duplicate')){ toast('No se pudo guardar tu avance. Probá de nuevo.','bad'); return; }
+        done.add(m.id);
+      }
+      const next = SAFETY_MISSIONS[SAFETY_MISSIONS.findIndex(x=>x.id===m.id)+1];
+      const all = SAFETY_MISSIONS.every(x=>done.has(x.id));
+      body.innerHTML = '';
+      body.appendChild(el(`<div class="scard badge-card in-right">
+        <div class="badge-big">${m.icon}</div>
+        <h3>${already ? 'Repaso completo' : '¡Misión cumplida!'}</h3>
+        <p>${m.quiz && !already ? esc(m.quiz.why) : ''}</p>
+        ${!already && next ? `<p class="unlock">${ICON.lock} Desbloqueaste: <b>${next.zone ? 'Tu zona' : next.title}</b></p>` : ''}
+        ${!already && m.id==='numeros' ? '<p class="unlock">Tu tarjeta de emergencia ya está arriba de todo, lista para llamar.</p>' : ''}
+        ${!already && all ? '<p class="unlock">Completaste todo el kit. Buen viaje.</p>' : ''}
+        <button class="primary wide" data-a="ok"><span>Volver al kit</span>${ICON.arrow}</button>
+      </div>`));
+      idx = steps-1; paintDots();
+      body.querySelector('[data-a="ok"]').onclick = ()=>{ close(); redraw(already?null:(next&&next.id)); };
+    }
+
+    setKeys(e=>{
+      if(e.key==='Escape') close();
+      else if(e.key==='ArrowRight' && idx<cards.length){ idx++; show(1); }
+      else if(e.key==='ArrowLeft' && idx>0 && idx<=cards.length-1){ idx--; show(-1); }
+    });
+    show(1);
+  }
+
+  redraw();
 }
 
 // ---------- RECURSOS ----------
@@ -1126,6 +1579,7 @@ function renderAdmin(container){
     <button class="sub-tab active" data-a="contenido">Agregar contenido</button>
     <button class="sub-tab" data-a="tests">Tests recibidos</button>
     <button class="sub-tab" data-a="clientes">Clientes y notas</button>
+    <button class="sub-tab" data-a="seguridad">Kit de seguridad</button>
   </div>`);
   const sub = el(`<div></div>`);
   container.appendChild(tabs); container.appendChild(sub);
@@ -1135,6 +1589,7 @@ function renderAdmin(container){
     const pane = el(`<div class="tab-pane"></div>`); sub.appendChild(pane);
     if(which==='contenido') renderAdminContenido(pane);
     else if(which==='clientes') renderAdminClientes(pane);
+    else if(which==='seguridad') renderAdminSafety(pane);
     else renderAdminTests(pane);
   };
   tabs.querySelectorAll('.sub-tab').forEach(t=> t.onclick = ()=> show(t.dataset.a));
@@ -1321,6 +1776,8 @@ function renderAdminCliente(container, client, test){
     pane.appendChild(el(`<div class="card"><p class="hint" style="margin:0;">Todavía no completó el test pre-sesión.</p></div>`));
   }
 
+  renderClientSafetyCard(pane, client, cname);
+
   const today = ()=> new Date().toLocaleDateString('en-CA');
 
   // ===== CAPA 1: notas privadas =====
@@ -1480,13 +1937,17 @@ function renderAdminCliente(container, client, test){
     const { data } = await sb.from('client_feedback').select('*').eq('client_id', client.id).order('created_at',{ascending:false});
     const ids = (data||[]).map(f=>f.id);
     const { data: prog } = ids.length ? await sb.from('plan_progress').select('feedback_id').in('feedback_id', ids) : { data: [] };
+    const { data: own } = ids.length ? await sb.from('client_tasks').select('feedback_id,text,done,cat').in('feedback_id', ids) : { data: [] };
     box.innerHTML='';
     if(!data || data.length===0){ box.innerHTML='<p class="hint">Sin hojas de ruta todavía.</p>'; return; }
     data.forEach((f,i)=>{
       const total = Array.isArray(f.items) ? f.items.length : 0;
-      const doneN = (prog||[]).filter(p=>p.feedback_id===f.id).length;
+      const mine = (own||[]).filter(o=>o.feedback_id===f.id);
+      const doneN = (prog||[]).filter(p=>p.feedback_id===f.id).length + mine.filter(o=>o.done).length;
+      const all = total + mine.length;
       const r = el(`<div class="adm-row" style="animation-delay:${Math.min(i,10)*40}ms">
-        <div><div style="font-weight:600;">${esc(f.title)}${f.destination?` · ${esc(f.destination)}`:''}</div><div class="hint">${fmtDate(f.created_at)}${total?` · ${esc(cname)} completó ${doneN}/${total}`:''}</div></div>
+        <div><div style="font-weight:600;">${esc(f.title)}${f.destination?` · ${esc(f.destination)}`:''}</div><div class="hint">${fmtDate(f.created_at)}${all?` · ${esc(cname)} completó ${doneN}/${all}`:''}</div>
+        ${mine.length ? `<div class="own-summary"><span class="own-badge">sumó ${mine.length}</span> ${mine.map(o=>`<span class="${o.done?'own-done':''}">${catById(o.cat).icon} ${esc(o.text)}</span>`).join(' · ')}</div>` : ''}</div>
         <div class="adm-actions" style="align-items:center;"><span class="tag ${f.published?'pub':'draft'}">${f.published?'Publicada':'Borrador'}</span><button class="ghost" data-a="e">Editar</button><button class="ghost danger" data-a="d">Borrar</button></div>
       </div>`);
       r.querySelector('[data-a="e"]').onclick = ()=>{
@@ -1505,6 +1966,154 @@ function renderAdminCliente(container, client, test){
   refresh();
   pane.appendChild(fb);
   loadFb();
+}
+
+// ---------- ADMIN: KIT DE SEGURIDAD (zonas y pedidos) ----------
+// Formato de líneas: campos separados por " | "
+const toLines = (arr, keys) => (arr||[]).map(o=>keys.map(k=>o[k]||'').join(' | ').replace(/( \| )+$/,'')).join('\n');
+const fromLines = (txt, keys) => String(txt||'').split('\n').map(l=>l.trim()).filter(Boolean).map(l=>{ const p=l.split('|').map(s=>s.trim()); const o={}; keys.forEach((k,i)=>{ if(p[i]) o[k]=p[i]; }); return o; }).filter(o=>o[keys[0]]);
+
+async function renderAdminSafety(container){
+  container.innerHTML = skeleton(2);
+  const [{ data: zones }, { data: reqs }, { data: people }] = await Promise.all([
+    sb.from('safety_zones').select('*').order('name',{ascending:true}),
+    sb.from('zone_requests').select('*').eq('resolved', false).order('created_at',{ascending:false}),
+    sb.from('profiles').select('id,name,email'),
+  ]);
+  container.innerHTML = '';
+  if(!zones){ container.appendChild(el(`<div class="card"><p class="err">No se pudo cargar. ¿Corriste el SQL 04_kit_seguridad.sql?</p></div>`)); return; }
+  const who = id => { const p=(people||[]).find(x=>x.id===id); return p ? (p.name||p.email||'Cliente') : 'Cliente'; };
+
+  // Pedidos de zona
+  if((reqs||[]).length){
+    const rc = el(`<div class="card req-card"><div class="layer-badge layer-public">${ICON.map} Pedidos de zona</div><h2>Te pidieron estas zonas</h2><div class="rl"></div></div>`);
+    reqs.forEach(r=>{
+      const row = el(`<div class="adm-row"><div><div style="font-weight:600;">${esc(r.place)}</div><div class="hint">${esc(who(r.client_id))} · ${fmtDate(r.created_at)}</div></div>
+        <div class="adm-actions"><button class="ghost" data-a="new">Crear zona</button><button class="ghost" data-a="ok">Resuelto</button></div></div>`);
+      row.querySelector('[data-a="new"]').onclick = ()=>{ openZoneForm(null, r.place); };
+      row.querySelector('[data-a="ok"]').onclick = async ()=>{ await sb.from('zone_requests').update({ resolved:true }).eq('id', r.id); toast('Pedido marcado como resuelto. Asignale la zona desde su ficha.'); renderAdminSafety(container); };
+      rc.querySelector('.rl').appendChild(row);
+    });
+    container.appendChild(rc);
+  }
+
+  // Lista de zonas
+  const lc = el(`<div class="card"><h2>Zonas cargadas</h2><p class="hint" style="margin-top:-4px;">Cada zona se carga una sola vez y sirve para todos los clientes que vayan ahí. La asignás desde la ficha de cada cliente.</p><div class="zl"></div><button class="ghost" data-a="add" style="margin-top:12px;">${ICON.plus} Nueva zona</button></div>`);
+  const zl = lc.querySelector('.zl');
+  if(!zones.length) zl.innerHTML = '<p class="hint">Todavía no hay zonas.</p>';
+  zones.forEach((z,i)=>{
+    const c = z.content||{};
+    const row = el(`<div class="adm-row" style="animation-delay:${Math.min(i,10)*40}ms"><div><div style="font-weight:600;">📍 ${esc(z.name)}${z.state?` <span class="hint">· ${esc(z.state)}</span>`:''}</div>
+      <div class="hint">${(c.health||[]).length} de salud · ${(c.police||[]).length} de policía${c.consulate&&c.consulate.name?' · consulado':''} · actualizada ${fmtDate(z.updated_at||z.created_at)}</div></div>
+      <div class="adm-actions"><button class="ghost" data-a="e">Editar</button></div></div>`);
+    row.querySelector('[data-a="e"]').onclick = ()=> openZoneForm(z);
+    zl.appendChild(row);
+  });
+  lc.querySelector('[data-a="add"]').onclick = ()=> openZoneForm(null);
+  container.appendChild(lc);
+
+  const formSlot = el(`<div></div>`);
+  container.appendChild(formSlot);
+
+  function openZoneForm(z, presetName){
+    const c = (z && z.content) || {};
+    const k = c.consulate || {};
+    formSlot.innerHTML = '';
+    const f = el(`<div class="card zone-form">
+      <h2>${z ? 'Editando: '+esc(z.name) : 'Nueva zona'}</h2>
+      <div class="grid-2">
+        <div class="field"><label>Nombre de la zona</label><input type="text" id="zName" placeholder="Ej: Florianópolis"/></div>
+        <div class="field"><label>Estado</label><input type="text" id="zState" placeholder="Ej: Santa Catarina"/></div>
+      </div>
+      <div class="field"><label>Salud — una por línea: <code>Nombre | Dirección o barrio | Nota</code></label><textarea id="zHealth" style="min-height:110px;" placeholder="UPA Norte da Ilha | Vargem Grande | Urgencias 24 h"></textarea></div>
+      <div class="field"><label>Policía — una por línea: <code>Nombre | Dirección | Teléfono | Nota</code></label><textarea id="zPolice" style="min-height:80px;" placeholder="DEAT (policía del turista) | Av. ... | (21) 2332-2429 | Atiende extranjeros"></textarea></div>
+      <div class="grid-2">
+        <div class="field"><label>Denuncia online: texto del botón</label><input type="text" id="zRepL" placeholder="Hacer el B.O. online"/></div>
+        <div class="field"><label>Denuncia online: link</label><input type="text" id="zRepU" placeholder="https://..."/></div>
+      </div>
+      <div class="builder-title" style="margin-top:6px;">Consulado argentino</div>
+      <div class="grid-2">
+        <div class="field"><label>Nombre</label><input type="text" id="kName"/></div>
+        <div class="field"><label>Dirección</label><input type="text" id="kAddr"/></div>
+        <div class="field"><label>Teléfono</label><input type="text" id="kPhone"/></div>
+        <div class="field"><label>Guardia (urgencias)</label><input type="text" id="kEmer"/></div>
+      </div>
+      <div class="field"><label>Sitio web del consulado</label><input type="text" id="kWeb" placeholder="https://..."/></div>
+      <div class="field"><label>Tus consejos para esta zona</label><textarea id="zTips" placeholder="Barrios, horarios, playas, lo que sabés por experiencia..."></textarea></div>
+      <p class="err" id="zErr"></p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;"><button class="primary" id="zSave"><span>Guardar zona</span>${ICON.arrow}</button><button class="ghost" id="zCancel">Cancelar</button>${z?'<button class="ghost danger" id="zDel">Borrar zona</button>':''}</div>
+    </div>`);
+    const $ = s => f.querySelector(s);
+    $('#zName').value = z ? z.name : (presetName||'');
+    $('#zState').value = (z && z.state) || '';
+    $('#zHealth').value = toLines(c.health, ['name','addr','note']);
+    $('#zPolice').value = toLines(c.police, ['name','addr','phone','note']);
+    $('#zRepL').value = (c.report && c.report.label) || '';
+    $('#zRepU').value = (c.report && c.report.url) || '';
+    $('#kName').value = k.name||''; $('#kAddr').value = k.addr||''; $('#kPhone').value = k.phone||''; $('#kEmer').value = k.emergency||''; $('#kWeb').value = k.web||'';
+    $('#zTips').value = c.tips || '';
+    $('#zCancel').onclick = ()=>{ formSlot.innerHTML=''; };
+    if(z) $('#zDel').onclick = async ()=>{
+      if(!confirm('¿Borrar la zona "'+z.name+'"? Los clientes que la tengan asignada se quedan sin zona.')) return;
+      const { error } = await sb.from('safety_zones').delete().eq('id', z.id);
+      if(error){ showErr($('#zErr'),'No se pudo borrar: '+error.message); return; }
+      toast('Zona borrada.'); renderAdminSafety(container);
+    };
+    $('#zSave').onclick = async ()=>{
+      const name = $('#zName').value.trim();
+      if(!name){ showErr($('#zErr'),'Poné el nombre de la zona.'); return; }
+      const content = {
+        health: fromLines($('#zHealth').value, ['name','addr','note']),
+        police: fromLines($('#zPolice').value, ['name','addr','phone','note']),
+        report: { label: $('#zRepL').value.trim(), url: $('#zRepU').value.trim() },
+        consulate: { name:$('#kName').value.trim(), addr:$('#kAddr').value.trim(), phone:$('#kPhone').value.trim(), emergency:$('#kEmer').value.trim(), web:$('#kWeb').value.trim() },
+        tips: $('#zTips').value.trim(),
+      };
+      const row = { name, state: $('#zState').value.trim() || null, content };
+      const btn = $('#zSave'); btn.classList.add('loading');
+      const { error } = z ? await sb.from('safety_zones').update(row).eq('id', z.id) : await sb.from('safety_zones').insert(row);
+      btn.classList.remove('loading');
+      if(error){ showErr($('#zErr'), error.message.includes('duplicate') ? 'Ya existe una zona con ese nombre.' : 'No se pudo guardar: '+error.message); return; }
+      toast(z ? 'Zona actualizada.' : 'Zona creada. Asignala desde la ficha del cliente.');
+      renderAdminSafety(container);
+    };
+    formSlot.appendChild(f);
+    f.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+}
+
+// Tarjeta dentro de la ficha del cliente: asignar zona y ver avance
+async function renderClientSafetyCard(pane, client, cname){
+  const card = el(`<div class="card">
+    <div class="layer-badge layer-public">${ICON.shield} Kit de seguridad</div>
+    <h2>Zona de ${esc(cname)}</h2>
+    <div class="zone-assign">
+      <select id="csZone"><option value="">Sin zona asignada</option></select>
+      <button class="primary" id="csSave"><span>Asignar</span>${ICON.arrow}</button>
+    </div>
+    <p class="hint" id="csInfo" style="margin:10px 0 0;"></p>
+  </div>`);
+  pane.appendChild(card);
+  const [{ data: zones }, { data: cs }, { data: prog }, { data: reqs }] = await Promise.all([
+    sb.from('safety_zones').select('id,name').order('name',{ascending:true}),
+    sb.from('client_safety').select('*').eq('client_id', client.id).maybeSingle(),
+    sb.from('safety_progress').select('mission_id').eq('client_id', client.id),
+    sb.from('zone_requests').select('place').eq('client_id', client.id).eq('resolved', false),
+  ]);
+  const sel = card.querySelector('#csZone');
+  (zones||[]).forEach(z=> sel.appendChild(el(`<option value="${z.id}">${esc(z.name)}</option>`)));
+  if(cs && cs.zone_id) sel.value = cs.zone_id;
+  const n = (prog||[]).length;
+  const pend = (reqs||[]).map(r=>r.place);
+  card.querySelector('#csInfo').innerHTML = `Completó <b>${n} de ${SAFETY_MISSIONS.length}</b> misiones.` + (pend.length ? ` Pidió zona: <b>${esc(pend.join(', '))}</b> — creala en "Kit de seguridad" y asignala acá.` : '');
+  card.querySelector('#csSave').onclick = async ()=>{
+    const btn = card.querySelector('#csSave'); btn.classList.add('loading');
+    const zone_id = sel.value || null;
+    const { error } = await sb.from('client_safety').upsert({ client_id: client.id, zone_id }, { onConflict:'client_id' });
+    btn.classList.remove('loading');
+    if(error){ toast('No se pudo asignar: '+error.message,'bad'); return; }
+    toast(zone_id ? 'Zona asignada: '+sel.options[sel.selectedIndex].text+'.' : 'Zona quitada.');
+  };
 }
 
 init();
