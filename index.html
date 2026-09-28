@@ -290,6 +290,109 @@
   .mini b.low{color:var(--danger);} .mini b.mid{color:var(--amber);} .mini b.high{color:var(--teal);}
   .mini span{font-size:11.5px;color:var(--ink-faint);line-height:1.3;display:block;}
 
+  /* ---------- hoja de ruta (cliente) ---------- */
+  .route{position:relative;margin-bottom:28px;}
+  .pass{display:flex;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,rgba(227,168,87,.16),rgba(91,154,160,.14));border:1px solid rgba(227,168,87,.3);box-shadow:0 24px 60px -32px rgba(227,168,87,.5);}
+  .pass-main{flex:1;padding:22px 22px 20px;min-width:0;}
+  .pass-label{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .pass-dest{font-family:'Fraunces',serif;font-size:clamp(26px,6vw,36px);line-height:1.05;margin-bottom:14px;overflow-wrap:anywhere;}
+  .pass-meta{display:flex;gap:22px;flex-wrap:wrap;}
+  .pass-meta span{display:block;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:2px;}
+  .pass-meta b{font-weight:500;font-size:14px;}
+  .pass-count{display:inline-block;margin-top:14px;padding:6px 12px;border-radius:100px;background:rgba(18,21,31,.5);font-size:13px;color:var(--ink-dim);}
+  .pass-count b{color:var(--amber);font-weight:600;}
+  .pass-stub{position:relative;width:118px;flex-shrink:0;display:flex;align-items:center;justify-content:center;border-left:2px dashed rgba(255,255,255,.18);}
+  .pass-stub::before,.pass-stub::after{content:'';position:absolute;left:-11px;width:20px;height:20px;border-radius:50%;background:var(--bg);}
+  .pass-stub::before{top:-10px;} .pass-stub::after{bottom:-10px;}
+  .ring{width:84px;height:84px;transform:rotate(-90deg);}
+  .ring circle{fill:none;stroke-width:7;}
+  .ring-bg{stroke:rgba(255,255,255,.1);}
+  .ring-fg{stroke:var(--amber);stroke-linecap:round;stroke-dasharray:214;stroke-dashoffset:214;transition:stroke-dashoffset 1s var(--ease);}
+  .ring-num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .ring-num b{font-family:'IBM Plex Mono',monospace;font-size:17px;font-weight:500;}
+  .ring-num span{font-size:10.5px;color:var(--ink-faint);}
+  .letter{position:relative;margin:16px 0 0;padding:18px 20px;border-radius:14px;background:rgba(242,239,233,.05);border:1px solid var(--line);}
+  .letter-from{display:flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);margin-bottom:8px;}
+  .letter-from svg{width:15px;height:15px;}
+  .letter p{margin:0;font-family:'Fraunces',serif;font-style:italic;font-size:16.5px;line-height:1.6;color:var(--ink);}
+  .when-tabs{display:flex;gap:6px;margin:20px 0 6px;overflow-x:auto;scrollbar-width:none;}
+  .when-tabs::-webkit-scrollbar{display:none;}
+  .when{white-space:nowrap;padding:8px 14px;border-radius:100px;border:1px solid var(--line-strong);background:none;color:var(--ink-dim);font-size:13px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;}
+  .when:hover{color:var(--ink);}
+  .when.active{background:var(--amber-soft);border-color:rgba(227,168,87,.6);color:var(--amber);}
+  .stamps-hint{margin:8px 0 12px;}
+  .stamps{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:12px;}
+  .stamp{position:relative;aspect-ratio:1;border-radius:50%;border:2px dashed var(--line-strong);background:var(--bg-raised);color:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;font-family:'Inter',sans-serif;transition:transform .35s var(--ease), border-color .3s, background .3s;overflow:hidden;}
+  .stamp:hover{transform:translateY(-3px) rotate(-2deg);border-color:rgba(227,168,87,.6);}
+  .stamp.open{border-style:solid;border-color:var(--amber);background:var(--amber-soft);}
+  .stamp-ico{font-size:26px;line-height:1;margin-bottom:2px;transition:transform .3s var(--ease);}
+  .stamp:hover .stamp-ico{transform:scale(1.15);}
+  .stamp-name{font-size:12.5px;font-weight:600;text-align:center;padding:0 8px;line-height:1.2;}
+  .stamp-count{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-faint);}
+  .stamp-seal{position:absolute;top:50%;left:50%;padding:3px 10px;border:2px solid var(--teal);border-radius:6px;color:var(--teal);font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:13px;letter-spacing:.14em;background:rgba(18,21,31,.72);transform:translate(-50%,-50%) rotate(-16deg) scale(0);opacity:0;pointer-events:none;}
+  .stamp.sealed{border-style:solid;border-color:rgba(91,154,160,.6);background:var(--teal-soft);}
+  .stamp.sealed .stamp-seal{opacity:1;transform:translate(-50%,-50%) rotate(-16deg) scale(1);}
+  .stamp.sealed .stamp-ico,.stamp.sealed .stamp-name{opacity:.55;}
+  .stamp.just .stamp-seal{animation:thump .55s var(--ease);}
+  .stamp.just{animation:shakeS .45s .1s;}
+  @keyframes thump{0%{transform:translate(-50%,-50%) rotate(-16deg) scale(2.4);opacity:0;}60%{opacity:1;}100%{transform:translate(-50%,-50%) rotate(-16deg) scale(1);opacity:1;}}
+  @keyframes shakeS{30%{transform:scale(.94);}60%{transform:scale(1.04);}}
+  .panel-box{margin-top:14px;padding:18px;border-radius:var(--radius);background:var(--bg-raised);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(227,168,87,.35);animation:paneIn .45s var(--ease);}
+  .panel-head{display:flex;align-items:center;gap:12px;margin-bottom:6px;}
+  .panel-ico{font-size:28px;}
+  .panel-head b{display:block;font-family:'Fraunces',serif;font-weight:500;font-size:19px;}
+  .panel-head span{font-size:12.5px;color:var(--ink-faint);}
+  .tasks{list-style:none;margin:0;padding:0;}
+  .task{display:flex;gap:14px;align-items:flex-start;padding:13px 0;border-bottom:1px solid var(--line);}
+  .task:last-child{border-bottom:none;}
+  .tick{flex-shrink:0;width:28px;height:28px;border-radius:9px;border:1.5px solid var(--line-strong);background:var(--bg-deep);color:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .25s var(--ease);padding:0;}
+  .tick svg{width:16px;height:16px;}
+  .tick:hover{border-color:var(--teal);}
+  .task.done .tick{background:var(--teal);border-color:var(--teal);color:#12151F;animation:pop .35s var(--ease);}
+  .task-body{flex:1;min-width:0;}
+  .task-text{display:block;font-size:15px;line-height:1.45;position:relative;transition:color .3s;}
+  .task.done .task-text{color:var(--ink-faint);text-decoration:line-through;text-decoration-color:rgba(91,154,160,.7);}
+  .task-when{display:block;font-size:12px;color:var(--ink-faint);margin-top:3px;}
+  .confetti{position:absolute;inset:0;pointer-events:none;overflow:visible;z-index:5;}
+  .confetti i{position:absolute;top:30%;width:8px;height:12px;border-radius:2px;opacity:0;animation:conf 2.2s var(--ease) forwards;}
+  @keyframes conf{0%{opacity:1;transform:translate(0,0) rotate(0);}100%{opacity:0;transform:translate(var(--x),420px) rotate(var(--r));}}
+
+  /* ---------- hoja de ruta (editor admin) ---------- */
+  .builder{margin:6px 0 18px;padding:16px;border-radius:14px;background:var(--bg-deep);border:1px solid var(--line);}
+  .builder-title{font-weight:600;font-size:14px;margin-bottom:12px;}
+  .cat-picker{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
+  .cat-chip{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:100px;border:1px solid var(--line-strong);background:none;color:var(--ink-dim);font-size:13px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;}
+  .cat-chip:hover{color:var(--ink);border-color:#46506a;}
+  .cat-chip.active{background:var(--amber-soft);border-color:var(--amber);color:var(--ink);}
+  .cat-chip em{font-style:normal;font-family:'IBM Plex Mono',monospace;font-size:11px;background:var(--amber);color:#12151F;border-radius:100px;padding:0 6px;}
+  .when-pick{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
+  .when-pick .hint{margin-right:4px;}
+  .when-chip{padding:5px 11px;border-radius:100px;border:1px solid var(--line-strong);background:none;color:var(--ink-dim);font-size:12.5px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;white-space:nowrap;}
+  .when-chip.active{background:var(--teal-soft);border-color:var(--teal);color:var(--teal);}
+  .when-chip.mini{padding:3px 9px;font-size:11.5px;}
+  .when-chip.mini:hover{border-color:var(--teal);color:var(--teal);}
+  .ideas{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:12px;}
+  .ideas .hint{width:100%;margin-bottom:2px;}
+  .idea{padding:7px 12px;border-radius:10px;border:1px dashed rgba(227,168,87,.45);background:rgba(227,168,87,.05);color:var(--ink);font-size:13px;cursor:pointer;font-family:'Inter',sans-serif;text-align:left;transition:all .2s var(--ease);}
+  .idea:hover{background:var(--amber-soft);border-style:solid;transform:translateY(-1px);}
+  .add-row{display:flex;gap:8px;margin-bottom:14px;}
+  .add-row input{flex:1;}
+  .draft-group{margin-top:10px;}
+  .draft-cat{font-size:12.5px;font-weight:600;color:var(--ink-dim);margin-bottom:4px;}
+  .draft-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;background:rgba(255,255,255,.03);margin-bottom:4px;animation:paneIn .3s var(--ease);}
+  .draft-text{flex:1;font-size:14px;min-width:0;}
+  .x{background:none;border:none;color:var(--ink-faint);cursor:pointer;font-size:13px;padding:4px 6px;border-radius:6px;white-space:nowrap;}
+  .x:hover{color:var(--ink);background:rgba(255,255,255,.06);}
+  @media (max-width:560px){
+    .pass-stub{width:96px;}
+    .ring{width:70px;height:70px;}
+    .stamps{grid-template-columns:repeat(3,1fr);gap:8px;}
+    .stamp-ico{font-size:22px;}
+    .stamp-name{font-size:11px;}
+    .draft-item{flex-wrap:wrap;}
+    .draft-text{flex-basis:100%;}
+  }
+
   /* ---------- toasts ---------- */
   #toasts{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:60;display:flex;flex-direction:column;gap:8px;align-items:center;width:calc(100% - 32px);max-width:420px;}
   .toast{padding:12px 18px;border-radius:12px;font-size:14px;background:rgba(31,36,51,.95);backdrop-filter:blur(12px);border:1px solid var(--line-strong);box-shadow:0 20px 40px -20px rgba(0,0,0,.8);animation:toastIn .45s var(--ease);}
@@ -753,24 +856,210 @@ async function renderTest(container){
   showQ(1);
 }
 
-// ---------- TU PLAN (devoluciones publicadas por Valentina) ----------
+// ---------- HOJA DE RUTA: categorías y sugerencias ----------
+const ROUTE_CATS = [
+  {id:'docs',    icon:'🛂', label:'Papeles',        hint:'Documentos y trámites',
+   ideas:['Pasaporte vigente (mínimo 6 meses)','Revisar si necesito visa','Tramitar CPF (Brasil)','Apostillar título y partida de nacimiento','Copias digitales de todos los documentos en la nube']},
+  {id:'plata',   icon:'💸', label:'Plata',          hint:'Presupuesto y cómo cobrar',
+   ideas:['Presupuesto para los primeros 3 meses','Fondo de emergencia (incluye pasaje de vuelta)','Cuenta o tarjeta para cobrar en USD','Averiguar costo de vida del destino','Definir cómo voy a sacar efectivo']},
+  {id:'trabajo', icon:'💼', label:'Trabajo',        hint:'Remoto o en destino',
+   ideas:['Actualizar CV en el idioma local','Decidir: trabajo remoto, local o ambos','Contactar 5 lugares antes de viajar','Averiguar salario mínimo y pagos típicos','Actualizar LinkedIn / portfolio']},
+  {id:'casa',    icon:'🏡', label:'Dónde vivir',    hint:'Alojamiento',
+   ideas:['Reservar las primeras noches','Averiguar voluntariados (Worldpackers, Workaway)','Sumarme a grupos de alquiler de la ciudad','Elegir un barrio seguro para arrancar']},
+  {id:'salud',   icon:'🩺', label:'Salud',          hint:'Seguro y cuidados',
+   ideas:['Contratar seguro de viaje','Chequeo médico antes de salir','Llevar receta de medicación habitual','Revisar vacunas recomendadas']},
+  {id:'conexion',icon:'📱', label:'Conexión',       hint:'Chip, apps e idioma',
+   ideas:['eSIM o chip local','Instalar apps de transporte y bancos del destino','Descargar mapas offline','Aprender 20 frases básicas del idioma']},
+  {id:'red',     icon:'🤝', label:'Tu gente',       hint:'Red y comunidad',
+   ideas:['Contactar argentinos que vivan en el destino','Unirme a grupos de la ciudad','Acordar horario fijo de llamadas con la familia']},
+  {id:'mente',   icon:'🧭', label:'Tu cabeza',      hint:'Lo emocional',
+   ideas:['Escribir mi "para qué" de este viaje','Definir mi plan B si el A no funciona','Qué voy a hacer los días que extrañe','Armar un ritual de despedida']},
+];
+const ROUTE_WHEN = [
+  {id:'antes',   label:'Antes de salir'},
+  {id:'llegada', label:'Al llegar'},
+  {id:'mes',     label:'Primer mes'},
+];
+const catById = id => ROUTE_CATS.find(c=>c.id===id) || ROUTE_CATS[0];
+const whenLabel = id => (ROUTE_WHEN.find(w=>w.id===id)||ROUTE_WHEN[0]).label;
+const uid = () => Math.random().toString(36).slice(2,10);
+function daysUntil(d){ if(!d) return null; const t=new Date(d+'T12:00:00'); const n=new Date(); n.setHours(12,0,0,0); return Math.round((t-n)/86400000); }
+
+// ---------- TU PLAN (vista del cliente) ----------
 async function renderClientPlan(container){
-  container.innerHTML = skeleton(1);
+  container.innerHTML = skeleton(2);
   const { data: items, error } = await sb.from('client_feedback').select('*').eq('client_id', state.session.user.id).eq('published', true).order('created_at',{ascending:false});
   container.innerHTML = '';
   if(error || !items || items.length===0){
-    container.appendChild(el(`<div class="card empty"><div class="empty-icon">${ICON.map}</div><p class="lead" style="margin:0 auto;">Después de tu sesión, Valentina va a dejarte acá tu devolución y tu plan de acción personalizado.</p></div>`));
+    container.appendChild(el(`<div class="card empty"><div class="empty-icon">${ICON.map}</div><p class="lead" style="margin:0 auto;">Después de tu sesión, Valentina va a dejarte acá tu hoja de ruta personalizada.</p></div>`));
     return;
   }
-  items.forEach((it,i)=>{
-    const steps = (it.action_plan||'').split('\n').map(x=>x.trim()).filter(Boolean);
-    container.appendChild(el(`<article class="plan-card rv" style="--d:${Math.min(i,6)}">
-      <div class="eyebrow">${fmtDate(it.created_at)}</div>
-      <h2>${esc(it.title)}</h2>
-      ${it.body ? `<p class="res-body prewrap" style="margin:0;">${esc(it.body)}</p>` : ''}
-      ${steps.length ? `<div class="plan-label">Tu plan de acción</div><ol class="plan-steps">${steps.map(x=>`<li>${esc(x)}</li>`).join('')}</ol>` : ''}
-    </article>`));
+  const ids = items.map(i=>i.id);
+  const { data: prog } = await sb.from('plan_progress').select('feedback_id,item_id').in('feedback_id', ids);
+  const done = new Set((prog||[]).map(p=>p.feedback_id+':'+p.item_id));
+  items.forEach((fb,i)=>{
+    const tasks = Array.isArray(fb.items) ? fb.items : [];
+    if(tasks.length) container.appendChild(renderRoute(fb, tasks, done, i));
+    else container.appendChild(renderLegacyPlan(fb, i));
   });
+}
+
+// Devoluciones viejas (antes de la hoja de ruta): pasos por línea
+function renderLegacyPlan(it, i){
+  const steps = (it.action_plan||'').split('\n').map(x=>x.trim()).filter(Boolean);
+  return el(`<article class="plan-card rv" style="--d:${Math.min(i,6)}">
+    <div class="eyebrow">${fmtDate(it.created_at)}</div>
+    <h2>${esc(it.title)}</h2>
+    ${it.body ? `<p class="res-body prewrap" style="margin:0;">${esc(it.body)}</p>` : ''}
+    ${steps.length ? `<div class="plan-label">Tu plan de acción</div><ol class="plan-steps">${steps.map(x=>`<li>${esc(x)}</li>`).join('')}</ol>` : ''}
+  </article>`);
+}
+
+function renderRoute(fb, tasks, done, i){
+  const key = t => fb.id+':'+t.id;
+  const dleft = daysUntil(fb.departure_date);
+  const countdown = dleft==null ? '' : dleft>1 ? `Faltan <b>${dleft}</b> días` : dleft===1 ? `¡Salís <b>mañana</b>!` : dleft===0 ? `¡<b>Hoy</b> es el día!` : `Ya estás en <b>ruta</b>`;
+  const cats = ROUTE_CATS.filter(c=>tasks.some(t=>t.cat===c.id));
+  let filter = 'todo';
+  let openCat = null;
+
+  const root = el(`<article class="route rv" style="--d:${Math.min(i,6)}">
+    <div class="pass">
+      <div class="pass-main">
+        <div class="pass-label">Hoja de ruta · ${esc(fb.title)}</div>
+        <div class="pass-dest">${esc(fb.destination || 'Tu próximo destino')}</div>
+        <div class="pass-meta">
+          ${fb.departure_date ? `<div><span>Salida</span><b>${fmtDate(fb.departure_date)}</b></div>` : ''}
+          <div><span>Pasajero/a</span><b>${esc((state.profile&&state.profile.name)||'Vos')}</b></div>
+        </div>
+        ${countdown ? `<div class="pass-count">${countdown}</div>` : ''}
+      </div>
+      <div class="pass-stub">
+        <svg class="ring" viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="34" class="ring-bg"/><circle cx="40" cy="40" r="34" class="ring-fg"/></svg>
+        <div class="ring-num"><b id="pct">0%</b><span>listo</span></div>
+      </div>
+    </div>
+    ${fb.body ? `<div class="letter"><div class="letter-from">${ICON.quote} Mensaje de Valentina</div><p class="prewrap">${esc(fb.body)}</p></div>` : ''}
+    <div class="when-tabs" role="tablist">
+      <button class="when active" data-w="todo">Todo</button>
+      ${ROUTE_WHEN.filter(w=>tasks.some(t=>t.when===w.id)).map(w=>`<button class="when" data-w="${w.id}">${w.label}</button>`).join('')}
+    </div>
+    <p class="hint stamps-hint">Cada sello se completa cuando tachás todas sus tareas. Tocá uno para abrirlo.</p>
+    <div class="stamps"></div>
+    <div class="stamp-panel"></div>
+  </article>`);
+
+  const stampsEl = root.querySelector('.stamps');
+  const panel = root.querySelector('.stamp-panel');
+  const visible = () => tasks.filter(t=> filter==='todo' || t.when===filter);
+
+  function updateRing(){
+    const total = tasks.length, n = tasks.filter(t=>done.has(key(t))).length;
+    const pct = total ? Math.round(n/total*100) : 0;
+    root.querySelector('#pct').textContent = pct+'%';
+    const c = 2*Math.PI*34;
+    const fg = root.querySelector('.ring-fg');
+    fg.style.strokeDasharray = c;
+    fg.style.strokeDashoffset = c*(1-pct/100);
+    return pct;
+  }
+
+  function drawStamps(){
+    stampsEl.innerHTML = '';
+    const vis = visible();
+    cats.forEach(c=>{
+      const ct = vis.filter(t=>t.cat===c.id);
+      if(!ct.length) return;
+      const n = ct.filter(t=>done.has(key(t))).length;
+      const complete = n===ct.length;
+      const b = el(`<button class="stamp ${complete?'sealed':''} ${openCat===c.id?'open':''}" data-c="${c.id}" aria-expanded="${openCat===c.id}">
+        <span class="stamp-ico">${c.icon}</span>
+        <span class="stamp-name">${c.label}</span>
+        <span class="stamp-count">${n}/${ct.length}</span>
+        <span class="stamp-seal" aria-hidden="true">LISTO</span>
+      </button>`);
+      b.onclick = ()=>{ openCat = openCat===c.id ? null : c.id; drawStamps(); drawPanel(); };
+      stampsEl.appendChild(b);
+    });
+    if(!stampsEl.children.length) stampsEl.innerHTML = '<p class="hint">No hay tareas para esta etapa.</p>';
+  }
+
+  function drawPanel(){
+    panel.innerHTML = '';
+    if(!openCat) return;
+    const c = catById(openCat);
+    const ct = visible().filter(t=>t.cat===openCat);
+    if(!ct.length){ openCat=null; return; }
+    const box = el(`<div class="panel-box">
+      <div class="panel-head"><span class="panel-ico">${c.icon}</span><div><b>${c.label}</b><span>${c.hint}</span></div></div>
+      <ul class="tasks"></ul>
+    </div>`);
+    const ul = box.querySelector('.tasks');
+    ct.forEach(t=>{
+      const isDone = done.has(key(t));
+      const li = el(`<li class="task ${isDone?'done':''}">
+        <button class="tick" role="checkbox" aria-checked="${isDone}" aria-label="Marcar como hecha">${ICON.check}</button>
+        <div class="task-body">
+          <span class="task-text">${esc(t.text)}</span>
+          <span class="task-when">${whenLabel(t.when)}${t.link ? ` · <a href="${esc(t.link)}" target="_blank" rel="noopener" class="link">abrir link ↗</a>` : ''}</span>
+        </div>
+      </li>`);
+      li.querySelector('.tick').onclick = ()=> toggle(t, li);
+      ul.appendChild(li);
+    });
+    panel.appendChild(box);
+  }
+
+  let busy = false;
+  async function toggle(t, li){
+    if(busy) return; busy = true;
+    const k = key(t), was = done.has(k);
+    // Optimista: se marca al instante y se revierte si falla
+    if(was) done.delete(k); else done.add(k);
+    li.classList.toggle('done', !was); li.querySelector('.tick').setAttribute('aria-checked', !was);
+    const { error } = was
+      ? await sb.from('plan_progress').delete().eq('feedback_id', fb.id).eq('item_id', t.id)
+      : await sb.from('plan_progress').insert({ feedback_id: fb.id, item_id: t.id, client_id: state.session.user.id });
+    busy = false;
+    if(error){
+      if(was) done.add(k); else done.delete(k);
+      li.classList.toggle('done', was);
+      toast('No se pudo guardar. Probá de nuevo.','bad'); return;
+    }
+    const before = root.querySelector('.stamp.sealed[data-c="'+t.cat+'"]');
+    const pct = updateRing();
+    drawStamps();
+    const after = root.querySelector('.stamp.sealed[data-c="'+t.cat+'"]');
+    if(!was && after && !before){ after.classList.add('just'); toast('¡Sello conseguido! '+catById(t.cat).icon+' '+catById(t.cat).label); }
+    if(!was && pct===100) celebrate(root);
+  }
+
+  root.querySelectorAll('.when').forEach(b=> b.onclick = ()=>{
+    filter = b.dataset.w;
+    root.querySelectorAll('.when').forEach(x=>x.classList.toggle('active', x===b));
+    drawStamps(); drawPanel();
+  });
+
+  requestAnimationFrame(()=>{ updateRing(); });
+  drawStamps();
+  return root;
+}
+
+function celebrate(root){
+  toast('¡Hoja de ruta completa! Estás lista/o para despegar ✈️');
+  const layer = el(`<div class="confetti" aria-hidden="true"></div>`);
+  const colors = ['#E3A857','#F6C98A','#5B9AA0','#C97B63','#F2EFE9'];
+  for(let i=0;i<44;i++){
+    const p = document.createElement('i');
+    p.style.left = (Math.random()*100)+'%';
+    p.style.background = colors[i%colors.length];
+    p.style.animationDelay = (Math.random()*0.4)+'s';
+    p.style.setProperty('--x', (Math.random()*160-80)+'px');
+    p.style.setProperty('--r', (Math.random()*720-360)+'deg');
+    layer.appendChild(p);
+  }
+  root.appendChild(layer);
+  setTimeout(()=>layer.remove(), 2600);
 }
 
 // ---------- RECURSOS ----------
@@ -1084,54 +1373,136 @@ function renderAdminCliente(container, client, test){
   pane.appendChild(notes);
   loadNotes();
 
-  // ===== CAPA 2: devolución visible para el cliente =====
+  // ===== CAPA 2: hoja de ruta visible para el cliente =====
   let fbEditing = null;
+  let draft = [];          // tareas de la hoja de ruta en edición
+  let curCat = ROUTE_CATS[0].id;
+  let curWhen = 'antes';
   const fb = el(`<div class="card">
     <div class="layer-badge layer-public">${ICON.eye} Visible para ${esc(cname)} al publicar</div>
-    <h2>Devolución y plan de acción</h2>
-    <div class="field"><label for="fTitle">Título</label><input type="text" id="fTitle" placeholder="Ej: Devolución — primera sesión"/></div>
-    <div class="field"><label for="fBody">Devolución</label><textarea id="fBody" style="min-height:120px;"></textarea></div>
-    <div class="field"><label for="fPlan">Plan de acción (un paso por línea)</label><textarea id="fPlan" style="min-height:100px;" placeholder="Averiguar costo de alquiler en Florianópolis&#10;Armar presupuesto de 3 meses&#10;..."></textarea></div>
-    <label class="switch"><input type="checkbox" id="fPub"/><span class="switch-track"></span><span>Publicar — el cliente la ve en "Tu plan"</span></label>
+    <h2 id="fHead">Hoja de ruta</h2>
+    <div class="grid-2">
+      <div class="field"><label for="fDest">Destino</label><input type="text" id="fDest" placeholder="Ej: Florianópolis, Brasil"/></div>
+      <div class="field"><label for="fDate">Fecha de salida (opcional)</label><input type="date" id="fDate"/></div>
+    </div>
+    <div class="field"><label for="fTitle">Título</label><input type="text" id="fTitle" placeholder="Ej: Primera sesión"/></div>
+    <div class="field"><label for="fBody">Mensaje para ${esc(cname)}</label><textarea id="fBody" style="min-height:100px;" placeholder="Tu devolución en pocas líneas: qué viste, qué tiene a favor, en qué poner el foco."></textarea></div>
+
+    <div class="builder">
+      <div class="builder-title">Tareas <span class="hint" id="fCount"></span></div>
+      <div class="cat-picker" id="catPicker"></div>
+      <div class="when-pick" id="whenPick"></div>
+      <div class="ideas" id="ideas"></div>
+      <div class="add-row">
+        <input type="text" id="fTask" placeholder="Escribí una tarea propia y apretá Enter"/>
+        <button class="ghost" id="fAdd">Agregar</button>
+      </div>
+      <div class="draft" id="draft"></div>
+    </div>
+
+    <label class="switch"><input type="checkbox" id="fPub"/><span class="switch-track"></span><span>Publicar — ${esc(cname)} la ve en "Tu plan"</span></label>
     <p class="err" id="fErr"></p>
     <div style="display:flex;gap:10px;flex-wrap:wrap;"><button class="primary" id="fSave"><span>Guardar</span>${ICON.arrow}</button><button class="ghost hidden" id="fCancel">Cancelar</button></div>
     <div id="fList" style="margin-top:20px;"></div>
   </div>`);
-  const fClear = ()=>{ fbEditing=null; ['#fTitle','#fBody','#fPlan'].forEach(k=>fb.querySelector(k).value=''); fb.querySelector('#fPub').checked=false; fb.querySelector('#fSave span').textContent='Guardar'; fb.querySelector('#fCancel').classList.add('hidden'); fb.querySelector('#fErr').textContent=''; };
-  fb.querySelector('#fCancel').onclick = fClear;
-  fb.querySelector('#fSave').onclick = async ()=>{
-    const title = fb.querySelector('#fTitle').value.trim();
-    const body = fb.querySelector('#fBody').value.trim();
-    const action_plan = fb.querySelector('#fPlan').value.trim();
-    const published = fb.querySelector('#fPub').checked;
-    const btn = fb.querySelector('#fSave');
-    if(!title){ showErr(fb.querySelector('#fErr'),'Poné un título.'); return; }
+  const $ = s => fb.querySelector(s);
+
+  function drawPicker(){
+    $('#catPicker').innerHTML = ROUTE_CATS.map(c=>{
+      const n = draft.filter(t=>t.cat===c.id).length;
+      return `<button type="button" class="cat-chip ${c.id===curCat?'active':''}" data-c="${c.id}"><span>${c.icon}</span>${c.label}${n?`<em>${n}</em>`:''}</button>`;
+    }).join('');
+    $('#catPicker').querySelectorAll('.cat-chip').forEach(b=> b.onclick = ()=>{ curCat=b.dataset.c; drawPicker(); drawIdeas(); });
+    $('#whenPick').innerHTML = '<span class="hint">¿Cuándo?</span>' + ROUTE_WHEN.map(w=>`<button type="button" class="when-chip ${w.id===curWhen?'active':''}" data-w="${w.id}">${w.label}</button>`).join('');
+    $('#whenPick').querySelectorAll('.when-chip').forEach(b=> b.onclick = ()=>{ curWhen=b.dataset.w; drawPicker(); });
+  }
+  function drawIdeas(){
+    const c = catById(curCat);
+    const used = new Set(draft.map(t=>t.text));
+    const free = c.ideas.filter(x=>!used.has(x));
+    $('#ideas').innerHTML = free.length
+      ? '<span class="hint">Sugerencias — tocá para sumar:</span>' + free.map(x=>`<button type="button" class="idea">+ ${esc(x)}</button>`).join('')
+      : '<span class="hint">Ya sumaste todas las sugerencias de esta categoría.</span>';
+    $('#ideas').querySelectorAll('.idea').forEach((b,i)=> b.onclick = ()=> addTask(free[i]));
+  }
+  function drawDraft(){
+    const box = $('#draft');
+    $('#fCount').textContent = draft.length ? `· ${draft.length} en total` : '';
+    if(!draft.length){ box.innerHTML = '<p class="hint" style="margin:0;">Todavía no agregaste tareas.</p>'; return; }
+    box.innerHTML = ROUTE_CATS.filter(c=>draft.some(t=>t.cat===c.id)).map(c=>`
+      <div class="draft-group"><div class="draft-cat">${c.icon} ${c.label}</div>
+      ${draft.filter(t=>t.cat===c.id).map(t=>`<div class="draft-item" data-id="${t.id}">
+        <span class="draft-text">${esc(t.text)}</span>
+        <button type="button" class="when-chip mini" data-a="when" title="Cambiar etapa">${whenLabel(t.when)}</button>
+        <button type="button" class="x" data-a="link" title="Agregar link">${t.link?'🔗':'＋🔗'}</button>
+        <button type="button" class="x" data-a="del" title="Quitar">✕</button>
+      </div>`).join('')}</div>`).join('');
+    box.querySelectorAll('.draft-item').forEach(row=>{
+      const t = draft.find(x=>x.id===row.dataset.id);
+      row.querySelector('[data-a="del"]').onclick = ()=>{ draft = draft.filter(x=>x!==t); refresh(); };
+      row.querySelector('[data-a="when"]').onclick = ()=>{ const i=ROUTE_WHEN.findIndex(w=>w.id===t.when); t.when = ROUTE_WHEN[(i+1)%ROUTE_WHEN.length].id; drawDraft(); };
+      row.querySelector('[data-a="link"]').onclick = ()=>{ const v = prompt('Link para esta tarea (dejalo vacío para quitarlo):', t.link||''); if(v!==null){ t.link = v.trim(); drawDraft(); } };
+    });
+  }
+  function refresh(){ drawPicker(); drawIdeas(); drawDraft(); }
+  function addTask(text){
+    text = (text||'').trim(); if(!text) return;
+    draft.push({ id: uid(), cat: curCat, when: curWhen, text, link:'' });
+    refresh();
+  }
+  $('#fAdd').onclick = ()=>{ addTask($('#fTask').value); $('#fTask').value=''; $('#fTask').focus(); };
+  $('#fTask').onkeydown = e=>{ if(e.key==='Enter'){ e.preventDefault(); $('#fAdd').click(); } };
+
+  const fClear = ()=>{ fbEditing=null; draft=[]; ['#fTitle','#fBody','#fDest','#fDate','#fTask'].forEach(k=>$(k).value=''); $('#fPub').checked=false; $('#fHead').textContent='Hoja de ruta'; $('#fSave span').textContent='Guardar'; $('#fCancel').classList.add('hidden'); $('#fErr').textContent=''; refresh(); };
+  $('#fCancel').onclick = fClear;
+  $('#fSave').onclick = async ()=>{
+    const title = $('#fTitle').value.trim() || 'Tu hoja de ruta';
+    const body = $('#fBody').value.trim();
+    const destination = $('#fDest').value.trim() || null;
+    const departure_date = $('#fDate').value || null;
+    const published = $('#fPub').checked;
+    const btn = $('#fSave');
+    if(!draft.length && !body){ showErr($('#fErr'),'Agregá al menos una tarea o un mensaje.'); return; }
     btn.classList.add('loading');
+    const row = { title, body, destination, departure_date, items: draft, published };
     const q = fbEditing
-      ? sb.from('client_feedback').update({ title, body, action_plan, published }).eq('id', fbEditing)
-      : sb.from('client_feedback').insert({ client_id: client.id, title, body, action_plan, published });
+      ? sb.from('client_feedback').update(row).eq('id', fbEditing)
+      : sb.from('client_feedback').insert({ client_id: client.id, ...row });
     const { error } = await q;
     btn.classList.remove('loading');
-    if(error){ showErr(fb.querySelector('#fErr'),'No se pudo guardar: '+error.message); return; }
+    if(error){ showErr($('#fErr'),'No se pudo guardar: '+error.message+(error.message.includes('column')?' — ¿corriste el SQL 03_hoja_de_ruta.sql?':'')); return; }
     toast(published ? 'Publicada: '+cname+' ya la ve en "Tu plan".' : 'Guardada como borrador.');
     fClear(); loadFb();
   };
   async function loadFb(){
-    const box = fb.querySelector('#fList');
+    const box = $('#fList');
     box.innerHTML = skeleton(1);
     const { data } = await sb.from('client_feedback').select('*').eq('client_id', client.id).order('created_at',{ascending:false});
+    const ids = (data||[]).map(f=>f.id);
+    const { data: prog } = ids.length ? await sb.from('plan_progress').select('feedback_id').in('feedback_id', ids) : { data: [] };
     box.innerHTML='';
-    if(!data || data.length===0){ box.innerHTML='<p class="hint">Sin devoluciones todavía.</p>'; return; }
+    if(!data || data.length===0){ box.innerHTML='<p class="hint">Sin hojas de ruta todavía.</p>'; return; }
     data.forEach((f,i)=>{
+      const total = Array.isArray(f.items) ? f.items.length : 0;
+      const doneN = (prog||[]).filter(p=>p.feedback_id===f.id).length;
       const r = el(`<div class="adm-row" style="animation-delay:${Math.min(i,10)*40}ms">
-        <div><div style="font-weight:600;">${esc(f.title)}</div><div class="hint">${fmtDate(f.created_at)}</div></div>
+        <div><div style="font-weight:600;">${esc(f.title)}${f.destination?` · ${esc(f.destination)}`:''}</div><div class="hint">${fmtDate(f.created_at)}${total?` · ${esc(cname)} completó ${doneN}/${total}`:''}</div></div>
         <div class="adm-actions" style="align-items:center;"><span class="tag ${f.published?'pub':'draft'}">${f.published?'Publicada':'Borrador'}</span><button class="ghost" data-a="e">Editar</button><button class="ghost danger" data-a="d">Borrar</button></div>
       </div>`);
-      r.querySelector('[data-a="e"]').onclick = ()=>{ fbEditing=f.id; fb.querySelector('#fTitle').value=f.title; fb.querySelector('#fBody').value=f.body||''; fb.querySelector('#fPlan').value=f.action_plan||''; fb.querySelector('#fPub').checked=f.published; fb.querySelector('#fSave span').textContent='Guardar cambios'; fb.querySelector('#fCancel').classList.remove('hidden'); fb.scrollIntoView({behavior:'smooth', block:'start'}); };
-      r.querySelector('[data-a="d"]').onclick = async ()=>{ if(!confirm('¿Borrar "'+f.title+'"? No se puede deshacer.')) return; await sb.from('client_feedback').delete().eq('id', f.id); if(fbEditing===f.id) fClear(); toast('Devolución eliminada.'); loadFb(); };
+      r.querySelector('[data-a="e"]').onclick = ()=>{
+        fbEditing=f.id;
+        $('#fTitle').value=f.title||''; $('#fBody').value=f.body||''; $('#fDest').value=f.destination||''; $('#fDate').value=f.departure_date||'';
+        // Devoluciones viejas: cada línea del plan se convierte en una tarea editable
+        draft = (Array.isArray(f.items) && f.items.length) ? f.items.map(t=>({...t}))
+          : (f.action_plan||'').split('\n').map(x=>x.trim()).filter(Boolean).map(text=>({ id:uid(), cat:'mente', when:'antes', text, link:'' }));
+        $('#fPub').checked=f.published; $('#fHead').textContent='Editando: '+f.title; $('#fSave span').textContent='Guardar cambios'; $('#fCancel').classList.remove('hidden');
+        refresh(); fb.scrollIntoView({behavior:'smooth', block:'start'});
+      };
+      r.querySelector('[data-a="d"]').onclick = async ()=>{ if(!confirm('¿Borrar "'+f.title+'"? No se puede deshacer.')) return; await sb.from('client_feedback').delete().eq('id', f.id); if(fbEditing===f.id) fClear(); toast('Hoja de ruta eliminada.'); loadFb(); };
       box.appendChild(r);
     });
   }
+  refresh();
   pane.appendChild(fb);
   loadFb();
 }
