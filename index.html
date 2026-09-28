@@ -483,6 +483,12 @@
   .ztel{font-family:'IBM Plex Mono',monospace;}
   .zmap:hover,.ztel:hover{text-decoration:underline;}
   .zbtn{display:inline-block;margin-top:12px;padding:10px 16px;border-radius:100px;background:var(--teal-soft);border:1px solid var(--teal);color:var(--teal);text-decoration:none;font-size:14px;}
+  .zvideo{border-radius:14px;overflow:hidden;background:#0c0e15;margin:0 0 14px;}
+  .zvideo iframe{width:100%;aspect-ratio:16/9;border:0;display:block;}
+  .zvideo.vertical{max-width:300px;margin-left:auto;margin-right:auto;}
+  .zvideo.vertical iframe{aspect-ratio:9/16;}
+  .ztips{padding:14px 16px;border-radius:12px;background:var(--amber-soft);border:1px solid rgba(227,168,87,.35);color:var(--ink);}
+  .ztips-label{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:6px;}
   /* admin */
   .zone-assign{display:flex;gap:10px;}
   .zone-assign select{flex:1;}
@@ -561,7 +567,7 @@ function el(html){ const d=document.createElement('div'); d.innerHTML=html.trim(
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const nl2br = s => esc(s).replace(/\n/g,'<br>');
 function ytEmbed(url){
-  try{ const m = url.match(/(?:youtu\.be\/|v=|embed\/)([\w-]{6,})/); if(m) return 'https://www.youtube.com/embed/'+m[1]; }catch(e){}
+  try{ const m = url.match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([\w-]{6,})/); if(m) return 'https://www.youtube.com/embed/'+m[1]; }catch(e){}
   return null;
 }
 function greeting(){ const h=new Date().getHours(); return h<12?'Buen día':h<20?'Buenas tardes':'Buenas noches'; }
@@ -1310,7 +1316,11 @@ function zoneCards(z){
     ${k.phone?`<span>Teléfono: <a class="ztel" href="${telLink(k.phone)}">${esc(k.phone)}</a></span>`:''}
     ${k.emergency?`<span>Guardia (urgencias): <a class="ztel" href="${telLink(k.emergency)}">${esc(k.emergency)}</a></span>`:''}
     ${safeUrl(k.web)?`<a class="zmap" href="${esc(safeUrl(k.web))}" target="_blank" rel="noopener">Sitio oficial ↗</a>`:''}</div>` });
-  if(c.tips) cards.push({ h:'Consejos de Valentina', b:`<p class="prewrap" style="margin:0;">${esc(c.tips)}</p>` });
+  const vid = c.video && ytEmbed(c.video);
+  const vertical = c.video && /shorts\//.test(c.video);
+  if(vid || c.tips) cards.push({ h:'Consejos de Valentina', b:
+    (vid ? `<div class="zvideo ${vertical?'vertical':''}"><iframe src="${esc(vid)}" title="Consejos de Valentina sobre ${esc(z.name)}" loading="lazy" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe></div>` : '')
+    + (c.tips ? `<div class="ztips"><div class="ztips-label">Lo más importante</div><p class="prewrap" style="margin:0;">${esc(c.tips)}</p></div>` : '') });
   if(!cards.length) cards.push({ h:esc(z.name), b:'Valentina está terminando de cargar la información de esta zona.' });
   return cards;
 }
@@ -2039,7 +2049,8 @@ async function renderAdminSafety(container){
         <div class="field"><label>Guardia (urgencias)</label><input type="text" id="kEmer"/></div>
       </div>
       <div class="field"><label>Sitio web del consulado</label><input type="text" id="kWeb" placeholder="https://..."/></div>
-      <div class="field"><label>Tus consejos para esta zona</label><textarea id="zTips" placeholder="Barrios, horarios, playas, lo que sabés por experiencia..."></textarea></div>
+      <div class="field"><label>Video de la zona (link de YouTube, puede ser "No listado" o un Short)</label><input type="text" id="zVideo" placeholder="https://youtu.be/..."/></div>
+      <div class="field"><label>Tus consejos para esta zona — 3 o 4 líneas con lo más importante</label><textarea id="zTips" placeholder="Barrios, horarios, playas, lo que sabés por experiencia..."></textarea></div>
       <p class="err" id="zErr"></p>
       <div style="display:flex;gap:10px;flex-wrap:wrap;"><button class="primary" id="zSave"><span>Guardar zona</span>${ICON.arrow}</button><button class="ghost" id="zCancel">Cancelar</button>${z?'<button class="ghost danger" id="zDel">Borrar zona</button>':''}</div>
     </div>`);
@@ -2052,6 +2063,7 @@ async function renderAdminSafety(container){
     $('#zRepU').value = (c.report && c.report.url) || '';
     $('#kName').value = k.name||''; $('#kAddr').value = k.addr||''; $('#kPhone').value = k.phone||''; $('#kEmer').value = k.emergency||''; $('#kWeb').value = k.web||'';
     $('#zTips').value = c.tips || '';
+    $('#zVideo').value = c.video || '';
     $('#zCancel').onclick = ()=>{ formSlot.innerHTML=''; };
     if(z) $('#zDel').onclick = async ()=>{
       if(!confirm('¿Borrar la zona "'+z.name+'"? Los clientes que la tengan asignada se quedan sin zona.')) return;
@@ -2062,12 +2074,15 @@ async function renderAdminSafety(container){
     $('#zSave').onclick = async ()=>{
       const name = $('#zName').value.trim();
       if(!name){ showErr($('#zErr'),'Poné el nombre de la zona.'); return; }
+      const v = $('#zVideo').value.trim();
+      if(v && !ytEmbed(v)){ showErr($('#zErr'),'El link del video no parece de YouTube. Copialo desde "Compartir" en YouTube.'); return; }
       const content = {
         health: fromLines($('#zHealth').value, ['name','addr','note']),
         police: fromLines($('#zPolice').value, ['name','addr','phone','note']),
         report: { label: $('#zRepL').value.trim(), url: $('#zRepU').value.trim() },
         consulate: { name:$('#kName').value.trim(), addr:$('#kAddr').value.trim(), phone:$('#kPhone').value.trim(), emergency:$('#kEmer').value.trim(), web:$('#kWeb').value.trim() },
         tips: $('#zTips').value.trim(),
+        video: $('#zVideo').value.trim(),
       };
       const row = { name, state: $('#zState').value.trim() || null, content };
       const btn = $('#zSave'); btn.classList.add('loading');
